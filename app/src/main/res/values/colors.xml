@@ -7,9 +7,10 @@
     <color name="calm_blue">#6A7FDB</color>
 
     <!-- Light Theme Colors -->
-    <color name="light_primary">#6A7FDB</color> <!-- Calm Blue -->
-    <color name="light_primary_variant">#5165BA</color> <!-- Slightly Darker Calm Blue -->
-    <color name="light_secondary">#A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
+
+    <color name="light_primary">#A3B2F2</color> <!-- Calm Blue -->
+    <color name="light_primary_variant">#6A7FDB</color> <!-- Slightly Darker Calm Blue -->
+    <color name="light_secondary">#5165BA</color> <!-- Slightly Lighter Calm Blue -->
     <color name="light_background">#FFFFFF</color> <!-- White Background -->
     <color name="light_surface">#F2F2F2</color> <!-- Light Gray Surface -->
     <color name="light_on_primary">#FFFFFF</color> <!-- White Text on Primary -->
@@ -18,8 +19,8 @@
     <color name="light_on_surface">#153131</color> <!-- Deep Teal Text on Surface -->
 
     <!-- Dark Theme Colors -->
-    <color name="dark_primary">#6A7FDB</color> <!-- Calm Blue -->
-    <color name="dark_primary_variant">#5165BA</color> <!-- Slightly Darker Calm Blue -->
+    <color name="dark_primary">#5165BA</color> <!-- Calm Blue -->
+    <color name="dark_primary_variant">#6A7FDB</color> <!-- Slightly Darker Calm Blue -->
     <color name="dark_secondary">#A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
     <color name="dark_background">#121212</color> <!-- Dark Background -->
     <color name="dark_surface">#1F1F1F</color> <!-- Darker Surface -->
