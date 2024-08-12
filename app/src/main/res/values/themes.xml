@@ -2,7 +2,26 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.FoodPlanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Primary Colors -->
+        <item name="colorPrimary">@color/light_primary</item>
+        <item name="colorPrimaryVariant">@color/light_primary_variant</item>
+        <item name="colorOnPrimary">@color/light_on_primary</item>
+
+        <!-- Secondary Colors -->
+        <item name="colorSecondary">@color/light_secondary</item>
+        <item name="colorOnSecondary">@color/light_on_secondary</item>
+
+        <!-- Background Colors -->
+        <item name="android:windowBackground">@color/light_background</item>
+        <item name="colorSurface">@color/light_surface</item>
+        <item name="colorOnSurface">@color/light_on_surface</item>
+
+        <!-- Text Colors -->
+        <item name="colorOnBackground">@color/light_on_background</item>
+
+        <!-- Error Colors -->
+        <item name="colorError">@color/light_primary_variant</item>
+        <item name="colorOnError">@color/light_on_primary</item>
     </style>
 
     <style name="Theme.FoodPlanner" parent="Base.Theme.FoodPlanner" />

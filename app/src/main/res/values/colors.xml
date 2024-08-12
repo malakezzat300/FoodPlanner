@@ -2,4 +2,30 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Custom Color -->
+    <color name="calm_blue">#6A7FDB</color>
+
+    <!-- Light Theme Colors -->
+    <color name="light_primary">#6A7FDB</color> <!-- Calm Blue -->
+    <color name="light_primary_variant">#5165BA</color> <!-- Slightly Darker Calm Blue -->
+    <color name="light_secondary">#A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
+    <color name="light_background">#FFFFFF</color> <!-- White Background -->
+    <color name="light_surface">#F2F2F2</color> <!-- Light Gray Surface -->
+    <color name="light_on_primary">#FFFFFF</color> <!-- White Text on Primary -->
+    <color name="light_on_secondary">#153131</color> <!-- Deep Teal Text on Secondary -->
+    <color name="light_on_background">#153131</color> <!-- Deep Teal Text -->
+    <color name="light_on_surface">#153131</color> <!-- Deep Teal Text on Surface -->
+
+    <!-- Dark Theme Colors -->
+    <color name="dark_primary">#6A7FDB</color> <!-- Calm Blue -->
+    <color name="dark_primary_variant">#5165BA</color> <!-- Slightly Darker Calm Blue -->
+    <color name="dark_secondary">#A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
+    <color name="dark_background">#121212</color> <!-- Dark Background -->
+    <color name="dark_surface">#1F1F1F</color> <!-- Darker Surface -->
+    <color name="dark_on_primary">#FFFFFF</color> <!-- White Text on Primary -->
+    <color name="dark_on_secondary">#FFFFFF</color> <!-- White Text on Secondary -->
+    <color name="dark_on_background">#F2F2F2</color> <!-- Light Gray Text on Background -->
+    <color name="dark_on_surface">#F2F2F2</color> <!-- Light Gray Text on Surface -->
+
 </resources>
