@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id">511013017939-7usg0tnq8f9gikvmhp8fngu7k11uu5p5.apps.googleusercontent.com</string>
+    <string name="app_name">Food Planner</string>
+    <string name="sign_up_with_email">تسجيل الدخول بالبريد الالكتروني</string>
+    <string name="login_with_email">الدخول بالبريد الالكتروني</string>
+    <string name="login_button">دخول</string>
+</resources>

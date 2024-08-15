@@ -11,6 +11,7 @@
     <color name="light_primary">#A3B2F2</color> <!-- Calm Blue -->
     <color name="light_primary_variant">#6A7FDB</color> <!-- Slightly Darker Calm Blue -->
     <color name="light_secondary">#5165BA</color> <!-- Slightly Lighter Calm Blue -->
+    <color name="light_secondary_transparent">#995165BA</color> <!-- Slightly Lighter Calm Blue -->
     <color name="light_background">#FFFFFF</color> <!-- White Background -->
     <color name="light_surface">#F2F2F2</color> <!-- Light Gray Surface -->
     <color name="light_on_primary">#FFFFFF</color> <!-- White Text on Primary -->
@@ -22,11 +23,14 @@
     <color name="dark_primary">#5165BA</color> <!-- Calm Blue -->
     <color name="dark_primary_variant">#6A7FDB</color> <!-- Slightly Darker Calm Blue -->
     <color name="dark_secondary">#A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
+    <color name="dark_secondary_transparent">#99A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
     <color name="dark_background">#121212</color> <!-- Dark Background -->
     <color name="dark_surface">#1F1F1F</color> <!-- Darker Surface -->
     <color name="dark_on_primary">#FFFFFF</color> <!-- White Text on Primary -->
     <color name="dark_on_secondary">#FFFFFF</color> <!-- White Text on Secondary -->
     <color name="dark_on_background">#F2F2F2</color> <!-- Light Gray Text on Background -->
     <color name="dark_on_surface">#F2F2F2</color> <!-- Light Gray Text on Surface -->
+
+
 
 </resources>
