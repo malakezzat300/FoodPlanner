@@ -19,6 +19,9 @@
         android:theme="@style/Theme.FoodPlanner"
         tools:targetApi="31">
         <activity
+            android:name=".view.TestActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.SignupActivity"
             android:exported="false" />
         <activity

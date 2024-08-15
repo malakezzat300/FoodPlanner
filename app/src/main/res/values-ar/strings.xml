@@ -5,4 +5,9 @@
     <string name="sign_up_with_email">تسجيل الدخول بالبريد الالكتروني</string>
     <string name="login_with_email">الدخول بالبريد الالكتروني</string>
     <string name="login_button">دخول</string>
+    <string name="email">البريد الالكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="sign_up">تسجيل الدخول</string>
+    <string name="login_as_guest">دخول كضيف</string>
 </resources>

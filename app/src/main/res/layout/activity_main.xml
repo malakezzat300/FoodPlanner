@@ -20,17 +20,17 @@
 
 
     <Button
-        android:id="@+id/signupButton"
+        android:id="@+id/signupWithEmailButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="@string/sign_up_with_email"
         app:layout_constraintBottom_toTopOf="@+id/materialDivider"
-        app:layout_constraintEnd_toStartOf="@+id/loginButton"
+        app:layout_constraintEnd_toStartOf="@+id/loginWithEmailButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/loginWithEmailButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toTopOf="@+id/materialDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.833"
-        app:layout_constraintStart_toEndOf="@id/signupButton" />
+        app:layout_constraintStart_toEndOf="@id/signupWithEmailButton" />
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/materialDivider"
@@ -56,8 +56,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guestButton"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/guestButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="27dp"
+        android:text="@string/login_as_guest"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/googleLogInButton"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

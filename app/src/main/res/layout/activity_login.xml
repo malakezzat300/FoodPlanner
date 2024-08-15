@@ -11,23 +11,24 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/imageView"
         android:layout_width="321dp"
-        android:layout_height="320dp"
+        android:layout_height="300dp"
         app:cardCornerRadius="50dp"
         app:cardElevation="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailEditText"
+                android:id="@+id/emailLoginInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="32dp"
                 android:hint="@string/email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -35,32 +36,35 @@
                 app:startIconDrawable="@drawable/email">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailLoginEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:inputType="textEmailAddress"
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/passwordEditText"
+                android:id="@+id/passwordLoginInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="37dp"
+                android:layout_marginTop="28dp"
                 android:hint="@string/password"
+                app:endIconDrawable="@drawable/custom_eye"
+                app:endIconMode="password_toggle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/emailEditText"
+                app:layout_constraintTop_toBottomOf="@+id/emailLoginInputLayout"
                 app:startIconContentDescription="icon"
-                app:endIconMode="password_toggle"
-                app:endIconDrawable="@drawable/custom_eye"
                 app:startIconDrawable="@drawable/lock">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordLoginEditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="textPassword"
-                    />
+                    android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,7 +76,20 @@
                 android:text="@string/login_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="18sp"
+                />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

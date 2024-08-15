@@ -9,4 +9,5 @@
     <string name="password">Password</string>
     <string name="username">Username</string>
     <string name="sign_up">Sign up</string>
+    <string name="login_as_guest">Login As Guest</string>
 </resources>
