@@ -63,6 +63,8 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth:22.1.1") // or latest version
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation ("com.google.android.gms:play-services-auth:20.7.0") // or latest version
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
 }
 
 //apply plugin: 'com.google.gms.google-services'
