@@ -1,24 +1,20 @@
 package com.malakezzat.foodplanner.view;
 
+import static com.malakezzat.foodplanner.view.SignupActivity.EMAIL_MODE;
+import static com.malakezzat.foodplanner.view.SignupActivity.PASSWORD_MODE;
+import static com.malakezzat.foodplanner.view.SignupActivity.checkValidation;
 import static com.malakezzat.foodplanner.view.SignupActivity.isValidEmail;
 import static com.malakezzat.foodplanner.view.SignupActivity.isValidPassword;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,7 +29,7 @@ import com.malakezzat.foodplanner.R;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String USER = "user";
-    private TextInputLayout emaiInputLayout , passwordInputLayout;
+    private TextInputLayout emailInputLayout, passwordInputLayout;
     private TextInputEditText inputEmail, inputPassword;
     private MaterialButton btnLogin;
     private ProgressBar progressBar;
@@ -47,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        emaiInputLayout = findViewById(R.id.emailLoginInputLayout);
+        emailInputLayout = findViewById(R.id.emailLoginInputLayout);
         passwordInputLayout = findViewById(R.id.passwordLoginInputLayout);
         btnLogin = findViewById(R.id.loginButton);
         inputEmail = findViewById(R.id.emailLoginEditText);
@@ -58,13 +54,13 @@ public class LoginActivity extends AppCompatActivity {
             String email = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
 
-            if (!isValidEmail(email)) {
+            boolean emailV = checkValidation(emailInputLayout,email,EMAIL_MODE);
+            boolean passwordV = checkValidation(passwordInputLayout,password,PASSWORD_MODE);
+
+            if(emailV || passwordV){
                 return;
             }
 
-            if (!isValidPassword(password)) {
-                return;
-            }
             progressBar.setVisibility(View.VISIBLE);
 
             // Create user with email and password
@@ -78,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.d("LoginActivity", "signInWithEmailAndPassword:success");
                                 Toast.makeText(LoginActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent(LoginActivity.this, TestActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 FirebaseUser currentUser = auth.getCurrentUser();
                                 intent.putExtra(USER,currentUser.getDisplayName());
                                 startActivity(intent);
@@ -86,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                                 progressBar.setVisibility(View.GONE);
                                 // Sign in failed, display a message to the user
                                 Log.w("LoginActivity", "signInWithEmailAndPassword:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, "Login failed.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Check the Email and Password.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -95,27 +91,20 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail.setOnFocusChangeListener((v, hasFocus)->{
             if (!hasFocus) {
                 String email = inputEmail.getText().toString().trim();
-                if (!isValidEmail(email)) {
-                    emaiInputLayout.setHelperText("Invalid email format");
-                    emaiInputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
-                } else {
-                    emaiInputLayout.setHelperText("");
-                }
+                checkValidation(emailInputLayout,email,EMAIL_MODE);
             }
         });
 
         inputPassword.setOnFocusChangeListener((v, hasFocus)->{
             if (!hasFocus) {
                 String password = inputPassword.getText().toString().trim();
-                if (!isValidPassword(password)) {
-                    passwordInputLayout.setHelperText("Password must be at least 8 characters and contain letters and numbers and symbol");
-                    passwordInputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
-                } else {
-                    passwordInputLayout.setHelperText("");
-                }
+                checkValidation(passwordInputLayout,password,PASSWORD_MODE);
+
             }
         });
 
     }
+
+
 
 }

@@ -2,9 +2,7 @@ package com.malakezzat.foodplanner.view;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -25,11 +23,14 @@ import com.malakezzat.foodplanner.R;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private TextInputLayout emaiInputLayout , passwordInputLayout;
+    private TextInputLayout userInputLayout,emailInputLayout, passwordInputLayout;
     private TextInputEditText inputUser,inputEmail, inputPassword;
     private MaterialButton btnSignUp;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    public static final int EMAIL_MODE = 1;
+    public static final int PASSWORD_MODE = 2;
+    public static final int USER_MODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,9 @@ public class SignupActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance();
 
+        userInputLayout = findViewById(R.id.userInputLayout);
         inputUser = findViewById(R.id.userEditText);
-        emaiInputLayout = findViewById(R.id.emailInputLayout);
+        emailInputLayout = findViewById(R.id.emailInputLayout);
         passwordInputLayout = findViewById(R.id.passwordInputLayout);
         btnSignUp = findViewById(R.id.signupButton);
         inputEmail = findViewById(R.id.emailEditText);
@@ -53,13 +55,14 @@ public class SignupActivity extends AppCompatActivity {
             String email = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
 
-            if (!isValidEmail(email)) {
+            boolean usernameV = checkValidation(userInputLayout,username,USER_MODE);
+            boolean emailV = checkValidation(emailInputLayout,email,EMAIL_MODE);
+            boolean passwordV = checkValidation(passwordInputLayout,password,PASSWORD_MODE);
+
+            if( usernameV || emailV || passwordV){
                 return;
             }
 
-            if (!isValidPassword(password)) {
-                return;
-            }
             progressBar.setVisibility(View.VISIBLE);
 
             // Create user with email and password
@@ -89,27 +92,24 @@ public class SignupActivity extends AppCompatActivity {
                     });
         });
 
+        inputUser.setOnFocusChangeListener((v, hasFocus)->{
+            if (!hasFocus) {
+                String username = inputUser.getText().toString().trim();
+                checkValidation(userInputLayout,username,USER_MODE);
+            }
+        });
+
         inputEmail.setOnFocusChangeListener((v, hasFocus)->{
             if (!hasFocus) {
                 String email = inputEmail.getText().toString().trim();
-                if (!isValidEmail(email)) {
-                    emaiInputLayout.setHelperText("Invalid email format");
-                    emaiInputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
-                } else {
-                    emaiInputLayout.setHelperText("");
-                }
+                checkValidation(emailInputLayout,email,EMAIL_MODE);
             }
         });
 
         inputPassword.setOnFocusChangeListener((v, hasFocus)->{
             if (!hasFocus) {
                 String password = inputPassword.getText().toString().trim();
-                if (!isValidPassword(password)) {
-                    passwordInputLayout.setHelperText("Password must be at least 8 characters and contain letters and numbers and symbol");
-                    passwordInputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
-                } else {
-                    passwordInputLayout.setHelperText("");
-                }
+                checkValidation(passwordInputLayout,password,PASSWORD_MODE);
             }
         });
     }
@@ -142,5 +142,49 @@ public class SignupActivity extends AppCompatActivity {
 
     public static boolean isSymbol(char c) {
         return !Character.isLetterOrDigit(c) && !Character.isWhitespace(c);
+    }
+
+    public static boolean checkValidation(TextInputLayout InputLayout,String text,int mode){
+        if(mode == 1) {
+            if (text.isEmpty()) {
+                InputLayout.setHelperText("Email Shouldn't be Empty");
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else if (!isValidEmail(text)) {
+                InputLayout.setHelperText("Invalid email format");
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else {
+                InputLayout.setHelperText("");
+                return false;
+            }
+        } else if (mode == 2) {
+            if (text.isEmpty()) {
+                InputLayout.setHelperText("Password Shouldn't be Empty");
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else if (!isValidPassword(text)) {
+                InputLayout.setHelperText("Password must be at least 8 characters and contain letters and numbers and symbol");
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else {
+                InputLayout.setHelperText("");
+                return false;
+            }
+        } else if(mode == 3) {
+            if (text.isEmpty()) {
+                InputLayout.setHelperText("Username Shouldn't be Empty");
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else if (text.substring(0,1).matches("^[0-9].*")) {
+                InputLayout.setHelperText("Username Shouldn't start with Number");
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else {
+                InputLayout.setHelperText("");
+                return false;
+            }
+        }
+        return true;
     }
 }

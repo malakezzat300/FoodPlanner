@@ -29,4 +29,28 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
+
+    <style name="Base.Theme.FoodPlanner.Main" parent="Theme.Material3.DayNight">
+        <!-- Customize your dark theme here. -->
+        <!-- Primary Colors -->
+        <item name="colorPrimary">@color/dark_primary</item>
+        <item name="colorPrimaryVariant">@color/dark_primary_variant</item>
+        <item name="colorOnPrimary">@color/dark_on_primary</item>
+
+        <!-- Secondary Colors -->
+        <item name="colorSecondary">@color/dark_secondary</item>
+        <item name="colorOnSecondary">@color/dark_on_secondary</item>
+
+        <!-- Background Colors -->
+        <item name="android:windowBackground">@color/dark_background</item>
+        <item name="colorSurface">@color/dark_surface</item>
+        <item name="colorOnSurface">@color/dark_on_surface</item>
+
+        <!-- Text Colors -->
+        <item name="colorOnBackground">@color/dark_on_background</item>
+
+        <!-- Error Colors -->
+        <item name="colorError">@color/dark_primary_variant</item>
+        <item name="colorOnError">@color/dark_on_primary</item>
+    </style>
 </resources>
