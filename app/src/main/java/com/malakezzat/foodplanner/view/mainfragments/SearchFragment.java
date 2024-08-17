@@ -47,10 +47,6 @@ import java.util.List;
 public class SearchFragment extends Fragment implements ISearchView, OnSearchListener {
 
     private static final String TAG = "SearchFragment";
-    private static final String KEY_SELECTED_RADIO_BUTTON = "selectedRadioButton";
-    private static final String KEY_SELECTED_SPINNER_ITEM = "selectedSpinnerItem";
-    private static final String KEY_SEARCH_TEXT = "searchText";
-    private String selectedSpinnerItem = "";
     RadioGroup radioGroup;
     RadioButton countryRadioButton, ingredientRadioButton,categoryRadioButton;
     Spinner itemSpinner;
@@ -111,11 +107,6 @@ public class SearchFragment extends Fragment implements ISearchView, OnSearchLis
         recyclerAdapter = new CarouselAdapter(context,meals,CarouselAdapter.SEARCH_FRAGMENT);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
-
-        if (savedInstanceState != null) {
-            selectedRadioButton = savedInstanceState.getInt(KEY_SELECTED_RADIO_BUTTON);
-            selectedSpinnerItem = savedInstanceState.getString(KEY_SELECTED_SPINNER_ITEM);
-        }
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             selectedRadioButton = checkedId;
