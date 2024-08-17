@@ -1,7 +1,5 @@
 package com.malakezzat.foodplanner.model.Remote;
 
-import com.malakezzat.foodplanner.model.data.MealList;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

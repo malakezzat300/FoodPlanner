@@ -1,14 +1,12 @@
 package com.malakezzat.foodplanner.view.mainfragments;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import com.malakezzat.foodplanner.model.Remote.*;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,17 +17,14 @@ import android.widget.Toast;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSource;
 import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.data.MealList;
 import com.malakezzat.foodplanner.presenter.HomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnHomeListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements IHomeView, OnHomeListener {
@@ -42,7 +37,6 @@ public class HomeFragment extends Fragment implements IHomeView, OnHomeListener 
     List<Meal> mealList;
     Context context;
     IHomePresenter iHomePresenter;
-    ProductRemoteDataSource productRemoteDataSource;
     public final static String MEALLIST = "mealList";
     private final static String TAG ="HomeFragment";
 
@@ -68,8 +62,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnHomeListener 
 
         context = view.getContext();
         mealList = new ArrayList<>();
-        productRemoteDataSource = new ProductRemoteDataSourceImpl();
-        iHomePresenter = new HomePresenter(this,productRemoteDataSource);
+        iHomePresenter = new HomePresenter(this,new ProductRemoteDataSourceImpl());
 
         if (savedInstanceState != null) {
             mealList = savedInstanceState.getParcelableArrayList(MEALLIST);
@@ -81,7 +74,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnHomeListener 
         layoutManager = new CarouselLayoutManager();
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CarouselAdapter(context,mealList,this);
+        adapter = new CarouselAdapter(context,mealList,this,CarouselAdapter.HOME_FRAGMENT);
         recyclerView.setAdapter(adapter);
 
         snapHelper = new CarouselSnapHelper();
@@ -99,7 +92,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnHomeListener 
     public void getMeals(List<Meal> mealList) {
         Log.i(TAG, "getMeals: " + mealList.get(0));
         this.mealList = mealList;
-        adapter = new CarouselAdapter(context, mealList,this);
+        adapter = new CarouselAdapter(context, mealList,CarouselAdapter.HOME_FRAGMENT);
         recyclerView.setAdapter(adapter);
     }
 
@@ -115,6 +108,6 @@ public class HomeFragment extends Fragment implements IHomeView, OnHomeListener 
 
     @Override
     public void removeFromFav(Meal meal) {
-        iHomePresenter.addToFav(meal);
+        iHomePresenter.removeFromFav(meal);
     }
 }

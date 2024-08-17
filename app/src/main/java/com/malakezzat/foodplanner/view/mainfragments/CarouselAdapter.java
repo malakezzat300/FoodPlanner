@@ -23,16 +23,32 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
     private List<Meal> mealList;
     private OnHomeListener onHomeListener;
     private Context context;
-    public CarouselAdapter(Context context, List<Meal> mealList, OnHomeListener onHomeListener) {
+    private int source;
+    public static final int HOME_FRAGMENT = 0;
+    public static final int SEARCH_FRAGMENT = 1;
+
+    public CarouselAdapter(Context context, List<Meal> mealList,int source) {
+        this.context = context;
+        this.mealList = mealList;
+        this.source = source;
+    }
+
+    public CarouselAdapter(Context context, List<Meal> mealList, OnHomeListener onHomeListener,int source) {
         this.context = context;
         this.mealList = mealList;
         this.onHomeListener = onHomeListener;
+        this.source = source;
     }
 
     @NonNull
     @Override
     public CarouselViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.daily_meal, parent, false);
+        View view = new View(context);
+        if(source == HOME_FRAGMENT) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.daily_meal, parent, false);
+        } else if(source == SEARCH_FRAGMENT){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.meal_row, parent, false);
+        }
         return new CarouselViewHolder(view);
     }
 
@@ -41,7 +57,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
         holder.cardTitle.setText(mealList.get(position).strMeal);
         Glide.with(context).load(mealList.get(position).strMealThumb)
                 .apply(new RequestOptions().override(200,200))
-                .placeholder(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.new_logo3)
                 .into(holder.cardImage);
         holder.favButton.setOnClickListener(v -> {
             holder.favButton.setImageResource(R.drawable.favorite_red);

@@ -5,9 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-
-public class Meal implements Data , Parcelable {
+public class Meal implements Data, Parcelable {
     public String idMeal;
     public String strMeal;
     public Object strDrinkAlternate;
@@ -61,7 +59,12 @@ public class Meal implements Data , Parcelable {
     public Object strImageSource;
     public Object strCreativeCommonsConfirmed;
     public Object dateModified;
+    public String idIngredient;
+    public String strIngredient;
+    public String strDescription;
+    public Object strType;
 
+    @NonNull
     @Override
     public String toString() {
         return "Meal{" +
@@ -118,6 +121,10 @@ public class Meal implements Data , Parcelable {
                 ", strImageSource=" + strImageSource +
                 ", strCreativeCommonsConfirmed=" + strCreativeCommonsConfirmed +
                 ", dateModified=" + dateModified +
+                ", idIngredient='" + idIngredient + '\'' + // Add new fields
+                ", strIngredient='" + strIngredient + '\'' +
+                ", strDescription='" + strDescription + '\'' +
+                ", strType=" + strType +
                 '}';
     }
 
@@ -130,7 +137,7 @@ public class Meal implements Data , Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(idMeal);
         dest.writeString(strMeal);
-        dest.writeValue(strDrinkAlternate); // Use writeValue for Object types
+        dest.writeValue(strDrinkAlternate);
         dest.writeString(strCategory);
         dest.writeString(strArea);
         dest.writeString(strInstructions);
@@ -181,6 +188,12 @@ public class Meal implements Data , Parcelable {
         dest.writeValue(strImageSource);
         dest.writeValue(strCreativeCommonsConfirmed);
         dest.writeValue(dateModified);
+
+        // Write new fields to the parcel
+        dest.writeString(idIngredient);
+        dest.writeString(strIngredient);
+        dest.writeString(strDescription);
+        dest.writeValue(strType);
     }
 
     protected Meal(Parcel in) {
@@ -237,6 +250,12 @@ public class Meal implements Data , Parcelable {
         strImageSource = in.readValue(Object.class.getClassLoader());
         strCreativeCommonsConfirmed = in.readValue(Object.class.getClassLoader());
         dateModified = in.readValue(Object.class.getClassLoader());
+
+        // Read new fields from the parcel
+        idIngredient = in.readString();
+        strIngredient = in.readString();
+        strDescription = in.readString();
+        strType = in.readValue(Object.class.getClassLoader());
     }
 
     public static final Creator<Meal> CREATOR = new Creator<Meal>() {
@@ -251,4 +270,3 @@ public class Meal implements Data , Parcelable {
         }
     };
 }
-

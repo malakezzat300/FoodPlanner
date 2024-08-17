@@ -12,7 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import com.malakezzat.foodplanner.model.Remote.Network.*;
+
 import com.malakezzat.foodplanner.model.data.CategoryList;
 import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
@@ -184,7 +184,8 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void getCategoriesList() {
+    public void getCategoriesList(NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Call<MealList> call = service.getCategoriesList();
         call.enqueue(new Callback<MealList>() {
             @Override
@@ -204,7 +205,8 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void getCountriesList() {
+    public void getCountriesList(NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Call<MealList> call = service.getCountriesList();
         call.enqueue(new Callback<MealList>() {
             @Override
@@ -224,7 +226,8 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void getIngredientsList() {
+    public void getIngredientsList(NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Log.i(TAG, "getIngredientsList: ");
 
         Call<MealList> call = service.getIngredientsList();
@@ -246,7 +249,8 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void filterByIngredient(String ingredient) {
+    public void filterByIngredient(String ingredient,NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Call<MealList> call = service.filterByIngredient(ingredient);
         call.enqueue(new Callback<MealList>() {
             @Override
@@ -266,7 +270,8 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void filterByCategory(String category) {
+    public void filterByCategory(String category,NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Call<MealList> call = service.filterByCategory(category);
         call.enqueue(new Callback<MealList>() {
             @Override
@@ -286,7 +291,8 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void filterByCountry(String country) {
+    public void filterByCountry(String country,NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Call<MealList> call = service.filterByCountry(country);
         call.enqueue(new Callback<MealList>() {
             @Override

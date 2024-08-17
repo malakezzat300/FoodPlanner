@@ -20,4 +20,6 @@
     <string name="category">Category</string>
     <string name="categories">Categories</string>
     <string name="countries">Countries</string>
+    <string name="enter_meal_country_or_ingredient">Enter Meal, Country or Ingredient</string>
+    <string name="enter_meal_name">Enter Meal Name</string>
 </resources>

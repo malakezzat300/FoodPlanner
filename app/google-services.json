@@ -15,8 +15,12 @@
       },
       "oauth_client": [
         {
-          "client_id": "511013017939-7usg0tnq8f9gikvmhp8fngu7k11uu5p5.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "511013017939-dj904jdbfngtn59f78vp48lst92d6j4j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.malakezzat.foodplanner",
+            "certificate_hash": "ca467811d85b2d15afb65ae2ddedd714dddf02bc"
+          }
         }
       ],
       "api_key": [
@@ -26,12 +30,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "511013017939-7usg0tnq8f9gikvmhp8fngu7k11uu5p5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

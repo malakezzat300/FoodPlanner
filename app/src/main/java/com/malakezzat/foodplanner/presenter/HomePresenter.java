@@ -5,10 +5,8 @@ import android.util.Log;
 import com.malakezzat.foodplanner.model.Remote.NetworkCallBack;
 import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSource;
 import com.malakezzat.foodplanner.model.data.Category;
-import com.malakezzat.foodplanner.model.data.CategoryList;
 import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.data.MealList;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
 
@@ -21,7 +19,7 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
     IHomeView iHomeView;
     ProductRemoteDataSource productRemoteDataSource;
     List<Meal> mealList;
-    public HomePresenter(IHomeView iHomeView,ProductRemoteDataSource productRemoteDataSource) {
+    public HomePresenter(IHomeView iHomeView, ProductRemoteDataSource productRemoteDataSource) {
         mealList = new ArrayList<>();
         this.iHomeView = iHomeView;
         this.productRemoteDataSource = productRemoteDataSource;
