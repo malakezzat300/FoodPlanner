@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Dark Theme Colors -->
+    <color name="primary">#5165BA</color> <!-- Calm Blue -->
+    <color name="primary_variant">#6A7FDB</color> <!-- Slightly Darker Calm Blue -->
+    <color name="secondary">#A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
+    <color name="secondary_transparent">#99A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
+    <color name="background">#3C3C3C</color> <!-- Dark Background -->
+    <color name="surface">#2E2E2E</color> <!-- Darker Surface -->
+    <color name="on_primary">#FFFFFF</color> <!-- White Text on Primary -->
+    <color name="on_secondary">#CAD9FF</color> <!-- Deep Teal Text on Secondary -->
+    <color name="on_background">#CAD9FF</color> <!-- Deep Teal Text -->
+    <color name="on_surface">#CAD9FF</color> <!-- Deep Teal Text on Surface -->
+</resources>

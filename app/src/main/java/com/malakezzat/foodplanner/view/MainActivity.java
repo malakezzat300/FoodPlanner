@@ -3,9 +3,11 @@ package com.malakezzat.foodplanner.view;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private BottomNavigationView navView;
     boolean doubleBackToExitPressedOnce = false;
+    ImageView userImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +29,17 @@ public class MainActivity extends AppCompatActivity {
 
         navView = findViewById(R.id.nav_view);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
-        // This line connects the BottomNavigationView with the NavController
         NavigationUI.setupWithNavController(navView, navController);
+
+        Toolbar toolbar = findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+        userImage = findViewById(R.id.userImage);
+        userImage.setImageResource(R.drawable.account_circle);
 
         navView.setOnNavigationItemSelectedListener(item -> {
 

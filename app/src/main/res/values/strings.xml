@@ -15,4 +15,10 @@
     <string name="search">Search</string>
     <string name="lists">Lists</string>
     <string name="favorite">Favorite</string>
+    <string name="daily_inspiration">Daily Inspiration</string>
+    <string name="country">Country</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="category">Category</string>
+    <string name="categories">Categories</string>
+    <string name="countries">Countries</string>
 </resources>
