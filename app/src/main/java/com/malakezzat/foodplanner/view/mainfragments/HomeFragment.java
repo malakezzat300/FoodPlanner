@@ -19,6 +19,8 @@ import com.google.android.material.carousel.CarouselSnapHelper;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.ProductLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.HomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
@@ -62,7 +64,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnHomeListener 
 
         context = view.getContext();
         mealList = new ArrayList<>();
-        iHomePresenter = new HomePresenter(this,new ProductRemoteDataSourceImpl());
+        iHomePresenter = new HomePresenter(this,new ProductRemoteDataSourceImpl(),new ProductLocalDataSourceImpl(AppDatabase.getInstance(context)));
 
         if (savedInstanceState != null) {
             mealList = savedInstanceState.getParcelableArrayList(MEALLIST);
@@ -92,7 +94,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnHomeListener 
     public void getMeals(List<Meal> mealList) {
         Log.i(TAG, "getMeals: " + mealList.get(0));
         this.mealList = mealList;
-        adapter = new CarouselAdapter(context, mealList,CarouselAdapter.HOME_FRAGMENT);
+        adapter = new CarouselAdapter(context, mealList,this,CarouselAdapter.HOME_FRAGMENT);
         recyclerView.setAdapter(adapter);
     }
 

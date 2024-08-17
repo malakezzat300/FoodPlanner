@@ -60,7 +60,15 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
                 .placeholder(R.drawable.new_logo3)
                 .into(holder.cardImage);
         holder.favButton.setOnClickListener(v -> {
-            holder.favButton.setImageResource(R.drawable.favorite_red);
+            if(holder.isFav){
+                holder.favButton.setImageResource(R.drawable.favorite_border);
+                onHomeListener.removeFromFav(mealList.get(position));
+                holder.isFav = true;
+            } else {
+                holder.favButton.setImageResource(R.drawable.favorite_red);
+                onHomeListener.addToFav(mealList.get(position));
+                holder.isFav = false;
+            }
         });
     }
 
@@ -72,12 +80,13 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
     public static class CarouselViewHolder extends RecyclerView.ViewHolder {
         ImageView cardImage,favButton;
         TextView cardTitle;
-
+        boolean isFav;
         public CarouselViewHolder(@NonNull View itemView) {
             super(itemView);
             cardImage = itemView.findViewById(R.id.cardImage);
             cardTitle = itemView.findViewById(R.id.cardTitle);
             favButton = itemView.findViewById(R.id.fav_button);
+            isFav = false;
         }
     }
 }

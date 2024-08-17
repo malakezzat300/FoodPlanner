@@ -1,60 +1,49 @@
 package com.malakezzat.foodplanner.view.mainfragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealDB;
+import com.malakezzat.foodplanner.model.local.ProductLocalDataSource;
+import com.malakezzat.foodplanner.model.local.ProductLocalDataSourceImpl;
+import com.malakezzat.foodplanner.presenter.FavPresenter;
+import com.malakezzat.foodplanner.presenter.interview.IFavPresenter;
+import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IFavView;
+import com.malakezzat.foodplanner.view.mainfragments.listeners.OnFavListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoriteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class FavoriteFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class FavoriteFragment extends Fragment implements IFavView, OnFavListener {
 
+    List<MealDB> mealDBS;
+    Context context;
+    RecyclerView recyclerView;
+    FavAdapter recyclerAdapter;
+    LinearLayoutManager layoutManager;
+    IFavPresenter iFavPresenter;
     public FavoriteFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FavoriteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FavoriteFragment newInstance(String param1, String param2) {
-        FavoriteFragment fragment = new FavoriteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -62,5 +51,36 @@ public class FavoriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_favorite, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        context = view.getContext();
+        mealDBS = new ArrayList<>();
+        recyclerView = view.findViewById(R.id.fav_recycler_view);
+        layoutManager = new LinearLayoutManager(context);
+        iFavPresenter = new FavPresenter(this,new ProductLocalDataSourceImpl(AppDatabase.getInstance(context)));
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerAdapter = new FavAdapter(context,mealDBS,this);
+        recyclerView.setAdapter(recyclerAdapter);
+
+        iFavPresenter.getStoredMeals().observe(getViewLifecycleOwner(), MealDB -> {
+            recyclerAdapter = new FavAdapter(context, MealDB, this);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(recyclerAdapter);
+        });
+
+
+    }
+
+    @Override
+    public void getStoredMeals(List<MealDB> meals) {
+        recyclerAdapter.setMeals(meals);
+    }
+
+    @Override
+    public void onClickRemoveMeal(MealDB mealDB) {
+        iFavPresenter.removeFromFav(mealDB);
     }
 }

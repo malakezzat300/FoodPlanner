@@ -16,7 +16,6 @@ import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.view.mainfragments.listeners.OnHomeListener;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnListsListener;
 
 import java.util.ArrayList;

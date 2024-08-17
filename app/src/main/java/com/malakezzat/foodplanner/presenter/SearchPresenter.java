@@ -69,10 +69,7 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
             } else if(((Meal) listOfItems.get(0)).strCategory != null){
                 iSearchView.getCategoryList((List<Meal>) listOfItems);
             }
-        } else if(listOfItems.get(0) instanceof Category){
-            //TODO categories
         }
-
     }
 
     @Override

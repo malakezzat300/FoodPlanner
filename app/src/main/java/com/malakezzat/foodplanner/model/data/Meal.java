@@ -5,15 +5,17 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.malakezzat.foodplanner.model.local.MealDB;
+
 public class Meal implements Data, Parcelable {
     public String idMeal;
     public String strMeal;
-    public Object strDrinkAlternate;
+    public String strDrinkAlternate;
     public String strCategory;
     public String strArea;
     public String strInstructions;
     public String strMealThumb;
-    public Object strTags;
+    public String strTags;
     public String strYoutube;
     public String strIngredient1;
     public String strIngredient2;
@@ -56,13 +58,13 @@ public class Meal implements Data, Parcelable {
     public String strMeasure19;
     public String strMeasure20;
     public String strSource;
-    public Object strImageSource;
-    public Object strCreativeCommonsConfirmed;
-    public Object dateModified;
+    public String strImageSource;
+    public String strCreativeCommonsConfirmed;
+    public String dateModified;
     public String idIngredient;
     public String strIngredient;
     public String strDescription;
-    public Object strType;
+    public String strType;
 
     @NonNull
     @Override
@@ -199,12 +201,12 @@ public class Meal implements Data, Parcelable {
     protected Meal(Parcel in) {
         idMeal = in.readString();
         strMeal = in.readString();
-        strDrinkAlternate = in.readValue(Object.class.getClassLoader());
+        strDrinkAlternate = in.readString();
         strCategory = in.readString();
         strArea = in.readString();
         strInstructions = in.readString();
         strMealThumb = in.readString();
-        strTags = in.readValue(Object.class.getClassLoader());
+        strTags = in.readString();
         strYoutube = in.readString();
         strIngredient1 = in.readString();
         strIngredient2 = in.readString();
@@ -247,15 +249,15 @@ public class Meal implements Data, Parcelable {
         strMeasure19 = in.readString();
         strMeasure20 = in.readString();
         strSource = in.readString();
-        strImageSource = in.readValue(Object.class.getClassLoader());
-        strCreativeCommonsConfirmed = in.readValue(Object.class.getClassLoader());
-        dateModified = in.readValue(Object.class.getClassLoader());
+        strImageSource = in.readString();
+        strCreativeCommonsConfirmed = in.readString();
+        dateModified = in.readString();
 
         // Read new fields from the parcel
         idIngredient = in.readString();
         strIngredient = in.readString();
         strDescription = in.readString();
-        strType = in.readValue(Object.class.getClassLoader());
+        strType = in.readString();
     }
 
     public static final Creator<Meal> CREATOR = new Creator<Meal>() {
@@ -269,4 +271,66 @@ public class Meal implements Data, Parcelable {
             return new Meal[size];
         }
     };
+
+    public MealDB toMealDB() {
+        MealDB mealDB = new MealDB();
+
+        mealDB.idMeal = this.idMeal;
+        mealDB.strMeal = this.strMeal;
+        mealDB.strDrinkAlternate = this.strDrinkAlternate;
+        mealDB.strCategory = this.strCategory;
+        mealDB.strArea = this.strArea;
+        mealDB.strInstructions = this.strInstructions;
+        mealDB.strMealThumb = this.strMealThumb;
+        mealDB.strTags = this.strTags;
+        mealDB.strYoutube = this.strYoutube;
+        mealDB.strIngredient1 = this.strIngredient1;
+        mealDB.strIngredient2 = this.strIngredient2;
+        mealDB.strIngredient3 = this.strIngredient3;
+        mealDB.strIngredient4 = this.strIngredient4;
+        mealDB.strIngredient5 = this.strIngredient5;
+        mealDB.strIngredient6 = this.strIngredient6;
+        mealDB.strIngredient7 = this.strIngredient7;
+        mealDB.strIngredient8 = this.strIngredient8;
+        mealDB.strIngredient9 = this.strIngredient9;
+        mealDB.strIngredient10 = this.strIngredient10;
+        mealDB.strIngredient11 = this.strIngredient11;
+        mealDB.strIngredient12 = this.strIngredient12;
+        mealDB.strIngredient13 = this.strIngredient13;
+        mealDB.strIngredient14 = this.strIngredient14;
+        mealDB.strIngredient15 = this.strIngredient15;
+        mealDB.strIngredient16 = this.strIngredient16;
+        mealDB.strIngredient17 = this.strIngredient17;
+        mealDB.strIngredient18 = this.strIngredient18;
+        mealDB.strIngredient19 = this.strIngredient19;
+        mealDB.strIngredient20 = this.strIngredient20;
+        mealDB.strMeasure1 = this.strMeasure1;
+        mealDB.strMeasure2 = this.strMeasure2;
+        mealDB.strMeasure3 = this.strMeasure3;
+        mealDB.strMeasure4 = this.strMeasure4;
+        mealDB.strMeasure5 = this.strMeasure5;
+        mealDB.strMeasure6 = this.strMeasure6;
+        mealDB.strMeasure7 = this.strMeasure7;
+        mealDB.strMeasure8 = this.strMeasure8;
+        mealDB.strMeasure9 = this.strMeasure9;
+        mealDB.strMeasure10 = this.strMeasure10;
+        mealDB.strMeasure11 = this.strMeasure11;
+        mealDB.strMeasure12 = this.strMeasure12;
+        mealDB.strMeasure13 = this.strMeasure13;
+        mealDB.strMeasure14 = this.strMeasure14;
+        mealDB.strMeasure15 = this.strMeasure15;
+        mealDB.strMeasure16 = this.strMeasure16;
+        mealDB.strMeasure17 = this.strMeasure17;
+        mealDB.strMeasure18 = this.strMeasure18;
+        mealDB.strMeasure19 = this.strMeasure19;
+        mealDB.strMeasure20 = this.strMeasure20;
+        mealDB.strSource = this.strSource;
+        mealDB.strImageSource = this.strImageSource;
+        mealDB.strCreativeCommonsConfirmed = this.strCreativeCommonsConfirmed;
+        mealDB.dateModified = this.dateModified;
+
+        return mealDB;
+    }
+
+
 }
