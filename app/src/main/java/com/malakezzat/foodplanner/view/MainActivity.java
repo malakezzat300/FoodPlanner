@@ -8,9 +8,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.malakezzat.foodplanner.R;
@@ -21,15 +26,16 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navView;
     boolean doubleBackToExitPressedOnce = false;
     ImageView userImage;
+    ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        viewPager = findViewById(R.id.viewPager);
         navView = findViewById(R.id.nav_view);
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupWithNavController(navView, navController);
 
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -41,24 +47,57 @@ public class MainActivity extends AppCompatActivity {
         userImage = findViewById(R.id.userImage);
         userImage.setImageResource(R.drawable.account_circle);
 
-        navView.setOnNavigationItemSelectedListener(item -> {
+        // Initialize the adapter with FragmentManager and behavior
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager.setAdapter(viewPagerAdapter);
 
+        // Set up the Bottom Navigation View
+        navView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == R.id.navigation_home) {
-                navController.navigate(R.id.homeFragment);
+                viewPager.setCurrentItem(0);
+                return true;
             } else if (itemId == R.id.navigation_search) {
-                navController.navigate(R.id.searchFragment);
+                viewPager.setCurrentItem(1);
+                return true;
             } else if (itemId == R.id.navigation_lists) {
-                navController.navigate(R.id.listsFragment);
+                viewPager.setCurrentItem(2);
+                return true;
             } else if (itemId == R.id.navigation_favorite) {
-                navController.navigate(R.id.favoriteFragment);
+                viewPager.setCurrentItem(3);
+                return true;
             }
 
-
-            return true;
+            return false;
         });
 
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Optional: Add logic for when the page is being scrolled.
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                // Sync the BottomNavigationView with the ViewPager.
+                if (position == 0) {
+                    navView.setSelectedItemId(R.id.navigation_home);
+                } else if (position == 1) {
+                    navView.setSelectedItemId(R.id.navigation_search);
+                } else if (position == 2) {
+                    navView.setSelectedItemId(R.id.navigation_lists);
+                } else if (position == 3) {
+                    navView.setSelectedItemId(R.id.navigation_favorite);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // Optional: Add logic for when the scroll state changes.
+            }
+        });
     }
 
 

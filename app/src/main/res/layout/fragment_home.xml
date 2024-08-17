@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_fragment"
+    android:saveEnabled="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.HomeFragment">
+    tools:context=".view.mainfragments.HomeFragment">
 
     <TextView
         android:id="@+id/top_text"

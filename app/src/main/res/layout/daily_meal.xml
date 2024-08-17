@@ -27,7 +27,7 @@
             <ImageView
                 android:id="@+id/cardImage"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="180dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/new_logo"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -37,8 +37,8 @@
 
             <TextView
                 android:id="@+id/cardTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="140dp"
+                android:layout_height="60dp"
                 android:layout_marginTop="8dp"
                 android:text="Card Title"
                 android:textSize="18sp"

@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view;
+package com.malakezzat.foodplanner.view.mainfragments;
 
 import android.os.Bundle;
 
@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 
 import com.malakezzat.foodplanner.R;
 
-public class ListsFragment extends Fragment {
 
-    public ListsFragment() {
+public class SearchFragment extends Fragment {
+
+    public SearchFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class ListsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lists, container, false);
+        return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
     @Override

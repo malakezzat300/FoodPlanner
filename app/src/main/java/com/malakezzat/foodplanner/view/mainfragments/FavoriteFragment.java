@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view;
+package com.malakezzat.foodplanner.view.mainfragments;
 
 import android.os.Bundle;
 

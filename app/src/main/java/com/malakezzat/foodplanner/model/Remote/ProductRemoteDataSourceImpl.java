@@ -14,7 +14,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.malakezzat.foodplanner.model.Remote.Network.*;
 import com.malakezzat.foodplanner.model.data.CategoryList;
+import com.malakezzat.foodplanner.model.data.Data;
+import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.data.MealList;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
@@ -22,17 +28,18 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     Retrofit retrofit;
     Request service;
 
-    public ProductRemoteDataSourceImpl(NetworkCallBack networkCallBack){
+    public ProductRemoteDataSourceImpl(){
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASR_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         service = retrofit.create(Request.class);
-        Network.networkCallBack = networkCallBack;
+
     }
 
     @Override
-    public void getRandomMeal() {
+    public void getRandomMeal(NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Call<MealList> call = service.getRandomMeal();
         call.enqueue(new Callback<MealList>() {
             @Override
@@ -52,7 +59,53 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void getCategories() {
+    public void getRandomMeals(NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
+        Call<MealList> call = service.getRandomMeal();
+            call.enqueue(new Callback<MealList>() {
+                @Override
+                public void onResponse(@NonNull Call<MealList> call, @NonNull Response<MealList> response) {
+                    Log.i(TAG, "onResponse: " + response.code());
+                    if (response.isSuccessful()) {
+                        networkCallBack.onSuccessResult(response.body().meals);
+                        Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
+                        //TODO correct the implementation
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<MealList> call, @NonNull Throwable t) {
+                    networkCallBack.onFailureResult(t.toString());
+                }
+            });
+    }
+
+    public void getMultipleRandomMeals(int numberOfCalls, NetworkCallBack networkCallBack) {
+        List<Meal> allMeals = new ArrayList<>();
+
+        for (int i = 0; i < numberOfCalls; i++) {
+            getRandomMeals(new NetworkCallBack() {
+                @Override
+                public void onSuccessResult(List<? extends Data> meals) {
+                    allMeals.addAll((Collection<? extends Meal>) meals);
+                    // Check if we have called the required number of times
+                    if (allMeals.size() >= numberOfCalls) {
+                        networkCallBack.onSuccessResult(allMeals);
+                    }
+                }
+
+                @Override
+                public void onFailureResult(String error) {
+                    // Handle failure case here (optional)
+                    networkCallBack.onFailureResult(error);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void getCategories(NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Call<CategoryList> call = service.getCategories();
         call.enqueue(new Callback<CategoryList>() {
             @Override
