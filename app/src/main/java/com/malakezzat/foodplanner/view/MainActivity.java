@@ -1,9 +1,11 @@
 package com.malakezzat.foodplanner.view;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,17 +19,28 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
+
+import java.net.URI;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
     private BottomNavigationView navView;
     boolean doubleBackToExitPressedOnce = false;
+    TextView helloUserText;
     ImageView userImage;
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
+    private FirebaseAuth auth;
+    String username;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +57,21 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
 
         getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+        helloUserText = findViewById(R.id.hello_user);
         userImage = findViewById(R.id.userImage);
         userImage.setImageResource(R.drawable.account_circle);
+        auth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null) {
+            String username = user.getDisplayName();
+            helloUserText.setText("Hello " + getFirstWordCapitalized(username));
+            Uri profileImage = user.getPhotoUrl();
+            Glide.with(getApplicationContext()).load(profileImage)
+                    .apply(new RequestOptions().override(200,200))
+                    .placeholder(R.drawable.account_circle)
+                    .into(userImage);
+        }
 
         // Initialize the adapter with FragmentManager and behavior
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -121,5 +147,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    public String getFirstWordCapitalized(String input) {
+        String[] words = input.split(" ");
+        if (words.length > 0) {
+            String firstWord = words[0];
+            String capitalizedWord = firstWord.substring(0, 1).toUpperCase() + firstWord.substring(1).toLowerCase();
+            return capitalizedWord;
+        }
+        return "";
     }
 }

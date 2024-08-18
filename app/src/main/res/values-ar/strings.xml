@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_web_client_id">511013017939-dj904jdbfngtn59f78vp48lst92d6j4j.apps.googleusercontent.com</string>
+    <string name="default_web_client_id">511013017939-7usg0tnq8f9gikvmhp8fngu7k11uu5p5.apps.googleusercontent.com</string>
     <string name="app_name">Food Planner</string>
     <string name="sign_up_with_email">تسجيل الدخول بالبريد الالكتروني</string>
     <string name="login_with_email">الدخول بالبريد الالكتروني</string>
@@ -10,4 +10,17 @@
     <string name="username">اسم المستخدم</string>
     <string name="sign_up">تسجيل الدخول</string>
     <string name="login_as_guest">دخول كضيف</string>
+    <string name="hello_blank_fragment">"مرحبا "</string>
+    <string name="home">المنزل</string>
+    <string name="search">البحث</string>
+    <string name="lists">القوائم</string>
+    <string name="favorite">المفضل</string>
+    <string name="daily_inspiration">مقترحات اليوم</string>
+    <string name="country">البلد</string>
+    <string name="ingredient">المكون</string>
+    <string name="category">الفئة</string>
+    <string name="categories">الفئات</string>
+    <string name="countries">البلاد</string>
+    <string name="enter_meal_name">ادخل اسم الطبق</string>
+    <string name="hello_user">"مرحبا "</string>
 </resources>

@@ -12,8 +12,8 @@ android {
         applicationId = "com.malakezzat.foodplanner"
         minSdk = 28
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -64,4 +64,5 @@ dependencies {
     implementation ("androidx.work:work-runtime:2.7.1")
     implementation ("androidx.work:work-runtime-ktx:2.7.1")
     implementation ("com.google.guava:guava:31.1-android")
+
 }
