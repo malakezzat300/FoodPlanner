@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface IHomePresenter {
     void getMeals();
+    void getMeal();
+    void getMealById(String id);
     void addToFav(Meal meal);
     void removeFromFav(Meal meal);
 }

@@ -164,7 +164,8 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void searchById(int id) {
+    public void searchById(int id,NetworkCallBack networkCallBack) {
+        Network.networkCallBack = networkCallBack;
         Call<MealList> call = service.searchById(id);
         call.enqueue(new Callback<MealList>() {
             @Override

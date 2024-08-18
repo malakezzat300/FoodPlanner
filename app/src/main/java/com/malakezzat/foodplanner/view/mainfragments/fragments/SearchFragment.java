@@ -101,6 +101,8 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         meals = new ArrayList<>();
         mealsByName = new ArrayList<>();
 
+
+
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -186,6 +188,8 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         });
 
     }
+
+
 
     private void updateSpinnerItems(int checkedId) {
         items = new ArrayList<>();

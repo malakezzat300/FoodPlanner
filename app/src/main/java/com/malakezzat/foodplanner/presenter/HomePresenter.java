@@ -35,6 +35,16 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
     }
 
     @Override
+    public void getMeal() {
+        productRemoteDataSource.getRandomMeal(this);
+    }
+
+    @Override
+    public void getMealById(String id) {
+        productRemoteDataSource.searchById(Integer.parseInt(id),this);
+    }
+
+    @Override
     public void addToFav(Meal meal) {
         productLocalDataSource.insertMeal(meal.toMealDB());
     }
@@ -48,7 +58,11 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
     public void onSuccessResult(List<? extends Data> listOfItems) {
         Log.i(TAG, "onSuccessResult: " + listOfItems.get(0));
         if(listOfItems.get(0) instanceof Meal){
-            iHomeView.getMeals((List<Meal>) listOfItems);
+            if(listOfItems.size() > 1){
+                iHomeView.getMeals((List<Meal>) listOfItems);
+            } else {
+                iHomeView.getMeal((List<Meal>) listOfItems);
+            }
         }
     }
 

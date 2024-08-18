@@ -24,4 +24,5 @@
     <string name="enter_meal_country_or_ingredient">Enter Meal, Country or Ingredient</string>
     <string name="enter_meal_name">Enter Meal Name</string>
     <string name="hello_user">Hello </string>
+    <string name="meal_of_the_day">Meal of The Day</string>
 </resources>

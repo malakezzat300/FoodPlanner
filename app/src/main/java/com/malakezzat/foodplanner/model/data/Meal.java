@@ -197,8 +197,10 @@ public class Meal implements Data, Parcelable {
         dest.writeString(strDescription);
         dest.writeValue(strType);
     }
+    public Meal() {
+    }
 
-    protected Meal(Parcel in) {
+    public Meal(Parcel in) {
         idMeal = in.readString();
         strMeal = in.readString();
         strDrinkAlternate = in.readString();
