@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.malakezzat.foodplanner.view.mainfragments.FavoriteFragment;
-import com.malakezzat.foodplanner.view.mainfragments.HomeFragment;
-import com.malakezzat.foodplanner.view.mainfragments.ListsFragment;
-import com.malakezzat.foodplanner.view.mainfragments.SearchFragment;
+import com.malakezzat.foodplanner.view.mainfragments.fragments.FavoriteFragment;
+import com.malakezzat.foodplanner.view.mainfragments.fragments.HomeFragment;
+import com.malakezzat.foodplanner.view.mainfragments.fragments.ListsFragment;
+import com.malakezzat.foodplanner.view.mainfragments.fragments.SearchFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

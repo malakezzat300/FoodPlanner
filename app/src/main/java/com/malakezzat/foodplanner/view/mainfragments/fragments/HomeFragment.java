@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view.mainfragments;
+package com.malakezzat.foodplanner.view.mainfragments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,13 +23,14 @@ import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.ProductLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.HomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
+import com.malakezzat.foodplanner.view.mainfragments.adapters.CarouselAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
-import com.malakezzat.foodplanner.view.mainfragments.listeners.OnHomeListener;
+import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements IHomeView, OnHomeListener {
+public class HomeFragment extends Fragment implements IHomeView, OnMealClickListener {
 
     RecyclerView recyclerView;
     List<String> dataList;

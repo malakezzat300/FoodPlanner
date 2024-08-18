@@ -6,7 +6,7 @@
     android:saveEnabled="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.mainfragments.HomeFragment">
+    tools:context=".view.mainfragments.fragments.HomeFragment">
 
     <TextView
         android:id="@+id/top_text"

@@ -11,5 +11,6 @@ public interface ISearchPresenter {
     void searchByCountry(String country);
     void searchByIngredient(String ingredient);
     void searchByCategory(String category);
-
+    void addToFav(Meal meal);
+    void removeFromFav(Meal meal);
 }

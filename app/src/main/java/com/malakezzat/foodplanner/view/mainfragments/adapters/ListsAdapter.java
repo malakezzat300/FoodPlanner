@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view.mainfragments;
+package com.malakezzat.foodplanner.view.mainfragments.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,7 +21,7 @@ import com.malakezzat.foodplanner.view.mainfragments.listeners.OnListsListener;
 import java.util.ArrayList;
 import java.util.List;
 
-class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListsViewHolder> {
+public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListsViewHolder> {
 
     private List<Meal> countries;
     private List<Category> categories;

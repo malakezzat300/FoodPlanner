@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view.mainfragments;
+package com.malakezzat.foodplanner.view.mainfragments.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,14 +14,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.view.mainfragments.listeners.OnHomeListener;
+import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.util.List;
 
 public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder> {
 
     private List<Meal> mealList;
-    private OnHomeListener onHomeListener;
+    private OnMealClickListener onMealClickListener;
     private Context context;
     private int source;
     public static final int HOME_FRAGMENT = 0;
@@ -33,10 +33,10 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
         this.source = source;
     }
 
-    public CarouselAdapter(Context context, List<Meal> mealList, OnHomeListener onHomeListener,int source) {
+    public CarouselAdapter(Context context, List<Meal> mealList, OnMealClickListener onMealClickListener, int source) {
         this.context = context;
         this.mealList = mealList;
-        this.onHomeListener = onHomeListener;
+        this.onMealClickListener = onMealClickListener;
         this.source = source;
     }
 
@@ -62,11 +62,11 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
         holder.favButton.setOnClickListener(v -> {
             if(holder.isFav){
                 holder.favButton.setImageResource(R.drawable.favorite_border);
-                onHomeListener.removeFromFav(mealList.get(position));
+                onMealClickListener.removeFromFav(mealList.get(position));
                 holder.isFav = true;
             } else {
                 holder.favButton.setImageResource(R.drawable.favorite_red);
-                onHomeListener.addToFav(mealList.get(position));
+                onMealClickListener.addToFav(mealList.get(position));
                 holder.isFav = false;
             }
         });

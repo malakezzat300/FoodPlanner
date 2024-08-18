@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view.mainfragments;
+package com.malakezzat.foodplanner.view.mainfragments.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,16 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.model.data.Category;
-import com.malakezzat.foodplanner.model.data.Data;
-import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnFavListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
-class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
+public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
 
     private List<MealDB> meals;
     private OnFavListener onFavListener;

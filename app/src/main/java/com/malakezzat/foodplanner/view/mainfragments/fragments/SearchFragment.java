@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view.mainfragments;
+package com.malakezzat.foodplanner.view.mainfragments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,31 +20,29 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.carousel.CarouselLayoutManager;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.ProductLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.SearchPresenter;
-import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.ISearchPresenter;
+import com.malakezzat.foodplanner.view.mainfragments.adapters.CarouselAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.ISearchView;
+import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnSearchListener;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 
-public class SearchFragment extends Fragment implements ISearchView, OnSearchListener {
+public class SearchFragment extends Fragment implements ISearchView, OnMealClickListener {
 
     private static final String TAG = "SearchFragment";
     RadioGroup radioGroup;
@@ -94,7 +92,9 @@ public class SearchFragment extends Fragment implements ISearchView, OnSearchLis
         textInputLayout = view.findViewById(R.id.textInputLayoutSearch);
         autoCompleteTextView= view.findViewById(R.id.auto_complete_edit_text);
         context = view.getContext();
-        iSearchPresenter = new SearchPresenter(this,new ProductRemoteDataSourceImpl());
+        iSearchPresenter = new SearchPresenter(this
+                ,new ProductRemoteDataSourceImpl()
+                , new ProductLocalDataSourceImpl(AppDatabase.getInstance(context)));
         countryItemList = new ArrayList<>();
         ingredientItemList = new ArrayList<>();
         categoryItemList = new ArrayList<>();
@@ -104,7 +104,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnSearchLis
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerAdapter = new CarouselAdapter(context,meals,CarouselAdapter.SEARCH_FRAGMENT);
+        recyclerAdapter = new CarouselAdapter(context,meals,SearchFragment.this,CarouselAdapter.SEARCH_FRAGMENT);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
@@ -124,7 +124,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnSearchLis
                                mealsByName.add(meal);
                         }
                     }
-                    recyclerAdapter = new CarouselAdapter(context,mealsByName,CarouselAdapter.SEARCH_FRAGMENT);
+                    recyclerAdapter = new CarouselAdapter(context,mealsByName,SearchFragment.this,CarouselAdapter.SEARCH_FRAGMENT);
                     recyclerView.setAdapter(recyclerAdapter);
 
                 }
@@ -157,7 +157,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnSearchLis
                     }
 
                     // Update the adapter with new filtered meals
-                    recyclerAdapter = new CarouselAdapter(context, mealsByName, CarouselAdapter.SEARCH_FRAGMENT);
+                    recyclerAdapter = new CarouselAdapter(context, mealsByName, SearchFragment.this,CarouselAdapter.SEARCH_FRAGMENT);
                     recyclerView.setAdapter(recyclerAdapter);
                 }
             }
@@ -241,12 +241,22 @@ public class SearchFragment extends Fragment implements ISearchView, OnSearchLis
     @Override
     public void getMealList(List<Meal> mealList) {
         meals = mealList;
-        recyclerAdapter = new CarouselAdapter(context,meals,CarouselAdapter.SEARCH_FRAGMENT);
+        recyclerAdapter = new CarouselAdapter(context,meals,SearchFragment.this,CarouselAdapter.SEARCH_FRAGMENT);
         recyclerView.setAdapter(recyclerAdapter);
     }
 
     @Override
     public void getError(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void addToFav(Meal meal) {
+        iSearchPresenter.addToFav(meal);
+    }
+
+    @Override
+    public void removeFromFav(Meal meal) {
+        iSearchPresenter.removeFromFav(meal);
     }
 }

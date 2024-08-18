@@ -7,6 +7,7 @@ import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSource;
 import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
+import com.malakezzat.foodplanner.model.local.ProductLocalDataSource;
 import com.malakezzat.foodplanner.presenter.interview.ISearchPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.ISearchView;
 
@@ -18,11 +19,13 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
     private static final String TAG = "SearchPresenter";
     ISearchView iSearchView;
     ProductRemoteDataSource productRemoteDataSource;
+    ProductLocalDataSource productLocalDataSource;
     List<Meal> mealList;
-    public SearchPresenter(ISearchView iSearchView, ProductRemoteDataSource productRemoteDataSource) {
+    public SearchPresenter(ISearchView iSearchView, ProductRemoteDataSource productRemoteDataSource, ProductLocalDataSource productLocalDataSource) {
         mealList = new ArrayList<>();
         this.iSearchView = iSearchView;
         this.productRemoteDataSource = productRemoteDataSource;
+        this.productLocalDataSource = productLocalDataSource;
 
     }
 
@@ -54,6 +57,16 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
     @Override
     public void searchByCategory(String category) {
         productRemoteDataSource.filterByCategory(category,this);
+    }
+
+    @Override
+    public void addToFav(Meal meal) {
+        productLocalDataSource.insertMeal(meal.toMealDB());
+    }
+
+    @Override
+    public void removeFromFav(Meal meal) {
+        productLocalDataSource.deleteMeal(meal.toMealDB());
     }
 
     @Override

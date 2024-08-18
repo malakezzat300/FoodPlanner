@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view.mainfragments;
+package com.malakezzat.foodplanner.view.mainfragments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.presenter.ListsPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IListsPresenter;
+import com.malakezzat.foodplanner.view.mainfragments.adapters.ListsAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IListsView;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnListsListener;
 
