@@ -18,5 +18,9 @@
         android:id="@+id/navigation_favorite"
         android:icon="@drawable/favorite"
         android:title="@string/favorite" />
+    <item
+        android:id="@+id/navigation_week_plan"
+        android:icon="@drawable/week_plan"
+        android:title="@string/week_plan" />
     </group>
 </menu>

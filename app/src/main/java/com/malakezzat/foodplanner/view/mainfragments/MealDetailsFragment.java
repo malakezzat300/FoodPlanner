@@ -1,10 +1,10 @@
-package com.malakezzat.foodplanner.view.mainfragments.fragments;
+package com.malakezzat.foodplanner.view.mainfragments;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -21,29 +22,29 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.carousel.CarouselLayoutManager;
-import com.google.android.material.carousel.CarouselSnapHelper;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Ingredient;
 import com.malakezzat.foodplanner.model.data.IngredientList;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.MealDB;
-import com.malakezzat.foodplanner.view.mainfragments.adapters.CarouselAdapter;
+import com.malakezzat.foodplanner.model.local.fav.MealDB;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.IngredientsAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MealDetailsFragment extends BottomSheetDialogFragment {
 
     private static final String TAG = "MealDetailsFragment";
     Meal meal;
     IngredientList ingredientList;
-    ImageView mealImage,favButton;
+    ImageView mealImage,favButton,weekPlanButton;
     TextView mealTitle,mealCountry, stepsText;
     RecyclerView ingredientsRecyclerView ;
     YouTubePlayerView youTubePlayer;
@@ -81,6 +82,7 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         mealImage = view.findViewById(R.id.meal_image);
         favButton = view.findViewById(R.id.fav_button_details);
+        weekPlanButton = view.findViewById(R.id.week_plan_button);
         mealTitle = view.findViewById(R.id.meal_title);
         mealCountry = view.findViewById(R.id.meal_country);
         stepsText = view.findViewById(R.id.steps_text);
@@ -107,6 +109,28 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
                 .apply(new RequestOptions().override(200,200))
                 .placeholder(R.drawable.new_logo3)
                 .into(mealImage);
+
+        weekPlanButton.setOnClickListener(v->{
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar selectedDate = Calendar.getInstance();
+                            selectedDate.set(year, monthOfYear, dayOfMonth);
+                            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
+                            String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                            meal.dateAndTime = formattedDate;
+                            onMealClickListener.addToWeekPlan(meal);
+                        }
+                    }, year, month, day);
+            datePickerDialog.show();
+
+        });
 
         favButton.setOnClickListener(v -> {
             if(isFav){

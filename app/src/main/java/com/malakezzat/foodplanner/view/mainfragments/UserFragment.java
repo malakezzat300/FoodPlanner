@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.view.mainfragments.fragments;
+package com.malakezzat.foodplanner.view.mainfragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,7 +9,6 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,10 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.view.SignupActivity;
 import com.malakezzat.foodplanner.view.WelcomeActivity;
-
-import org.w3c.dom.Text;
 
 public class UserFragment extends BottomSheetDialogFragment {
     ImageView userImage;

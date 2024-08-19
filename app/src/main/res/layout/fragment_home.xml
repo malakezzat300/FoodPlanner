@@ -88,13 +88,24 @@
 
             <ImageView
                 android:id="@+id/fav_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_margin="16dp"
                 android:elevation="24dp"
                 app:layout_constraintBottom_toBottomOf="@id/cardCountry"
                 app:layout_constraintEnd_toEndOf="@id/cardCountry"
                 app:srcCompat="@drawable/favorite_border" />
+
+            <ImageView
+                android:id="@+id/week_plan_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:elevation="24dp"
+                android:src="@drawable/week_plan"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/fav_button" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -25,4 +25,9 @@
         android:name="com.malakezzat.foodplanner.view.mainfragments.fragments.FavoriteFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/weekPlanFragment"
+        android:name="com.malakezzat.foodplanner.view.mainfragments.fragments.WeekPlanFragment"
+        android:label="fragment_week_plan"
+        tools:layout="@layout/fragment_week_plan" />
 </navigation>

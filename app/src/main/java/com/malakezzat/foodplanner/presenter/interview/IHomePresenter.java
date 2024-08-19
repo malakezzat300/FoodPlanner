@@ -11,4 +11,5 @@ public interface IHomePresenter {
     void getMealById(String id);
     void addToFav(Meal meal);
     void removeFromFav(Meal meal);
+    void addToWeekPlan(Meal meal);
 }

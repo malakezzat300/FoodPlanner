@@ -15,31 +15,30 @@ import android.view.ViewGroup;
 
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.fav.AppDatabase;
 import com.malakezzat.foodplanner.model.local.fav.MealDB;
 import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSourceImpl;
 import com.malakezzat.foodplanner.model.local.week.AppDatabaseWeek;
+import com.malakezzat.foodplanner.model.local.week.MealDBWeek;
 import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeekImpl;
-import com.malakezzat.foodplanner.presenter.FavPresenter;
-import com.malakezzat.foodplanner.presenter.interview.IFavPresenter;
+import com.malakezzat.foodplanner.presenter.WeekPlanPresenter;
+import com.malakezzat.foodplanner.presenter.interview.IWeekPlanPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
-import com.malakezzat.foodplanner.view.mainfragments.adapters.FavAdapter;
-import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IFavView;
+import com.malakezzat.foodplanner.view.mainfragments.adapters.WeekPlanAdapter;
+import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IWeekPlanView;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+public class WeekPlanFragment extends Fragment implements IWeekPlanView , OnMealClickListener {
 
-public class FavoriteFragment extends Fragment implements IFavView, OnMealClickListener {
-
-    List<MealDB> mealDBS;
+    List<MealDBWeek> mealDBS;
     Context context;
     RecyclerView recyclerView;
-    FavAdapter recyclerAdapter;
+    WeekPlanAdapter recyclerAdapter;
     LinearLayoutManager layoutManager;
-    IFavPresenter iFavPresenter, iFavPresenterWeek;
-    public FavoriteFragment() {
+    IWeekPlanPresenter iWeekPlanPresenter,iWeekPlanPresenterWeek;
+    public WeekPlanFragment() {
         // Required empty public constructor
     }
 
@@ -53,7 +52,7 @@ public class FavoriteFragment extends Fragment implements IFavView, OnMealClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false);
+        return inflater.inflate(R.layout.fragment_week_plan, container, false);
     }
 
     @Override
@@ -61,28 +60,19 @@ public class FavoriteFragment extends Fragment implements IFavView, OnMealClickL
         super.onViewCreated(view, savedInstanceState);
         context = view.getContext();
         mealDBS = new ArrayList<>();
-        recyclerView = view.findViewById(R.id.fav_recycler_view);
+        recyclerView = view.findViewById(R.id.week_plan_recycler);
         layoutManager = new LinearLayoutManager(context);
-        iFavPresenter = new FavPresenter(this,new ProductLocalDataSourceImpl(AppDatabase.getInstance(context)));
-        iFavPresenterWeek = new FavPresenter(this,new ProductLocalDataSourceWeekImpl(AppDatabaseWeek.getInstance(context)));
+        iWeekPlanPresenter = new WeekPlanPresenter(this,new ProductLocalDataSourceWeekImpl(AppDatabaseWeek.getInstance(context)));
         recyclerView.setLayoutManager(layoutManager);
-        recyclerAdapter = new FavAdapter(context,mealDBS,this);
+        recyclerAdapter = new WeekPlanAdapter(context,mealDBS,this);
         recyclerView.setAdapter(recyclerAdapter);
 
-        iFavPresenter.getStoredMeals().observe(getViewLifecycleOwner(), MealDB -> {
-            recyclerAdapter = new FavAdapter(context, MealDB, this);
+        iWeekPlanPresenter.getWeekPlanMeals().observe(getViewLifecycleOwner(), MealDB -> {
+            recyclerAdapter = new WeekPlanAdapter(context, MealDB, this);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(recyclerAdapter);
         });
-
-
     }
-
-    @Override
-    public void getStoredMeals(List<MealDB> meals) {
-        recyclerAdapter.setMeals(meals);
-    }
-
 
     @Override
     public void showMealDetails(Meal meal) {
@@ -97,7 +87,7 @@ public class FavoriteFragment extends Fragment implements IFavView, OnMealClickL
 
     @Override
     public void removeFromFav(Meal meal) {
-        iFavPresenter.removeFromFav(meal.toMealDB());
+        iWeekPlanPresenter.removeFromWeekPlan(meal.toMealDB());
     }
 
     @Override
@@ -112,7 +102,7 @@ public class FavoriteFragment extends Fragment implements IFavView, OnMealClickL
 
     @Override
     public void addToWeekPlan(Meal meal) {
-        iFavPresenterWeek.addToWeekPlan(meal.toMealDB());
+
     }
 
     @Override

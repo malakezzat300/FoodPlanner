@@ -1,9 +1,11 @@
 package com.malakezzat.foodplanner.view.mainfragments.adapters;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,11 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.model.local.MealDB;
-import com.malakezzat.foodplanner.view.mainfragments.listeners.OnFavListener;
+import com.malakezzat.foodplanner.model.local.fav.MealDB;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
 
@@ -49,7 +53,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
                 .apply(new RequestOptions().override(200,200))
                 .placeholder(R.drawable.new_logo3)
                 .into(holder.cardImage);
-        holder.favButton.setImageResource(R.drawable.favorite_red);
+        holder.favButton.setImageResource(R.drawable.close);
         holder.favButton.setOnClickListener(v->{
             Toast.makeText(context, meals.get(position).strMeal + " is removed", Toast.LENGTH_SHORT).show();
             onMealClickListener.removeFromFav(meals.get(position).toMeal());
@@ -57,6 +61,29 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
         holder.meal.setOnClickListener(v->{
             onMealClickListener.showMealDetails(meals.get(position).toMeal());
         });
+
+        holder.weekPlanButton.setOnClickListener(v -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar selectedDate = Calendar.getInstance();
+                            selectedDate.set(year, monthOfYear, dayOfMonth);
+                            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
+                            String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                            meals.get(position).dateAndTime = formattedDate;
+                            onMealClickListener.addToWeekPlan(meals.get(position).toMeal());
+                        }
+                    }, year, month, day);
+            datePickerDialog.show();
+
+        });
+
     }
 
     public void setMeals(List<MealDB> meals){
@@ -69,7 +96,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
     }
 
     public static class FavViewHolder extends RecyclerView.ViewHolder {
-        ImageView cardImage,favButton;
+        ImageView cardImage,favButton,weekPlanButton;
         TextView cardTitle;
         CardView meal;
         public FavViewHolder(@NonNull View itemView) {
@@ -78,6 +105,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
             cardTitle = itemView.findViewById(R.id.cardTitle);
             favButton = itemView.findViewById(R.id.fav_button);
             meal = itemView.findViewById(R.id.meal_material);
+            weekPlanButton = itemView.findViewById(R.id.week_plan_button);
         }
     }
 

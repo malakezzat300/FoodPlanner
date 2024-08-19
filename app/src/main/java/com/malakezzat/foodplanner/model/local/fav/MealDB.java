@@ -1,7 +1,6 @@
-package com.malakezzat.foodplanner.model.local;
+package com.malakezzat.foodplanner.model.local.fav;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -65,6 +64,7 @@ public class MealDB {
     public String strImageSource;
     public String strCreativeCommonsConfirmed;
     public String dateModified;
+    public String dateAndTime;
 
     public Meal toMeal() {
         Meal meal = new Meal();
@@ -122,6 +122,7 @@ public class MealDB {
         meal.strImageSource = this.strImageSource;
         meal.strCreativeCommonsConfirmed = this.strCreativeCommonsConfirmed;
         meal.dateModified = this.dateModified;
+        meal.dateAndTime = this.dateAndTime;
 
         return meal;
     }

@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.model.local;
+package com.malakezzat.foodplanner.model.local.fav;
 
 import androidx.lifecycle.LiveData;
 

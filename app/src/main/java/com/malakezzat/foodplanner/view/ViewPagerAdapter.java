@@ -9,6 +9,7 @@ import com.malakezzat.foodplanner.view.mainfragments.fragments.FavoriteFragment;
 import com.malakezzat.foodplanner.view.mainfragments.fragments.HomeFragment;
 import com.malakezzat.foodplanner.view.mainfragments.fragments.ListsFragment;
 import com.malakezzat.foodplanner.view.mainfragments.fragments.SearchFragment;
+import com.malakezzat.foodplanner.view.mainfragments.fragments.WeekPlanFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -28,6 +29,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 return new ListsFragment();
             case 3:
                 return new FavoriteFragment();
+            case 4:
+                return new WeekPlanFragment();
             default:
                 return new HomeFragment();
         }
@@ -35,6 +38,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 4; // Number of fragments
+        return 5; // Number of fragments
     }
 }

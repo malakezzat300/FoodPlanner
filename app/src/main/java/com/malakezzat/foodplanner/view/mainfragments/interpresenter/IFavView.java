@@ -1,8 +1,6 @@
 package com.malakezzat.foodplanner.view.mainfragments.interpresenter;
 
-import androidx.lifecycle.LiveData;
-
-import com.malakezzat.foodplanner.model.local.MealDB;
+import com.malakezzat.foodplanner.model.local.fav.MealDB;
 
 import java.util.List;
 

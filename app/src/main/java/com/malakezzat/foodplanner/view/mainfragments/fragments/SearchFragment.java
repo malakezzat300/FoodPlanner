@@ -30,14 +30,16 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.AppDatabase;
-import com.malakezzat.foodplanner.model.local.ProductLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.local.fav.AppDatabase;
+import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.local.week.AppDatabaseWeek;
+import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeekImpl;
 import com.malakezzat.foodplanner.presenter.SearchPresenter;
 import com.malakezzat.foodplanner.presenter.interview.ISearchPresenter;
-import com.malakezzat.foodplanner.view.mainfragments.adapters.CarouselAdapter;
+import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
+import com.malakezzat.foodplanner.view.mainfragments.adapters.SearchAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.ISearchView;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
-import com.malakezzat.foodplanner.view.mainfragments.listeners.OnSearchListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,13 +65,13 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
     List<String> ingredientItemList;
     List<String> categoryItemList;
     Context context;
-    ISearchPresenter iSearchPresenter;
+    ISearchPresenter iSearchPresenter,iSearchPresenterWeek;
     ArrayAdapter<String> adapter;
     int selectedRadioButton;
     LinearLayoutManager layoutManager;
-    CarouselAdapter recyclerAdapter;
+    SearchAdapter recyclerAdapter;
     RecyclerView recyclerView;
-
+    String dateTime;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -101,18 +103,20 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         iSearchPresenter = new SearchPresenter(this
                 ,new ProductRemoteDataSourceImpl()
                 , new ProductLocalDataSourceImpl(AppDatabase.getInstance(context)));
+        iSearchPresenterWeek = new SearchPresenter(this
+                , new ProductLocalDataSourceWeekImpl(AppDatabaseWeek.getInstance(context)));
         countryItemList = new ArrayList<>();
         ingredientItemList = new ArrayList<>();
         categoryItemList = new ArrayList<>();
         meals = new ArrayList<>();
         mealsByName = new ArrayList<>();
-
+        dateTime = "Today 00-0-2100";
 
 
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerAdapter = new CarouselAdapter(context,meals,SearchFragment.this,CarouselAdapter.SEARCH_FRAGMENT);
+        recyclerAdapter = new SearchAdapter(context,meals,SearchFragment.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
@@ -166,17 +170,17 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
                                mealsByName.add(meal);
                         }
                     }
-                    recyclerAdapter = new CarouselAdapter(context,mealsByName,SearchFragment.this,CarouselAdapter.SEARCH_FRAGMENT);
+                    recyclerAdapter = new SearchAdapter(context,mealsByName,SearchFragment.this);
                     recyclerView.setAdapter(recyclerAdapter);
 
                 }
                 autoCompleteTextView.clearFocus();
-                InputMethodManager in = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager in = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 in.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
                 return true; // Indicate that you've handled the action
             }
             autoCompleteTextView.clearFocus();
-            InputMethodManager in = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager in = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             in.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
             return false; // Let other listeners handle it
         });
@@ -199,7 +203,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
                     }
 
                     // Update the adapter with new filtered meals
-                    recyclerAdapter = new CarouselAdapter(context, mealsByName, SearchFragment.this,CarouselAdapter.SEARCH_FRAGMENT);
+                    recyclerAdapter = new SearchAdapter(context, mealsByName, SearchFragment.this);
                     recyclerView.setAdapter(recyclerAdapter);
                 }
             }
@@ -304,7 +308,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
     @Override
     public void getMealList(List<Meal> mealList) {
         meals = mealList;
-        recyclerAdapter = new CarouselAdapter(context,meals,SearchFragment.this,CarouselAdapter.SEARCH_FRAGMENT);
+        recyclerAdapter = new SearchAdapter(context,meals,SearchFragment.this);
         recyclerView.setAdapter(recyclerAdapter);
     }
 
@@ -314,9 +318,19 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
     }
 
     @Override
-    public void getMealById(Meal meal) {
-        MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(meal,this);
-        mealDetailsFragment.show(getParentFragmentManager(),mealDetailsFragment.getTag());
+    public void getMealById(Meal meal, int modeSave) {
+        if(modeSave == 1){
+            iSearchPresenter.addToFav(meal);
+        } else if (modeSave == 2){
+            iSearchPresenter.removeFromFav(meal);
+        } else if (modeSave == 3){
+            meal.dateAndTime = dateTime;
+            iSearchPresenterWeek.addToWeekPlan(meal);
+        } else {
+            MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(meal,this);
+            mealDetailsFragment.show(getParentFragmentManager(),mealDetailsFragment.getTag());
+        }
+
     }
 
     @Override
@@ -327,12 +341,32 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
 
     @Override
     public void addToFav(Meal meal) {
-        iSearchPresenter.addToFav(meal);
+
     }
 
     @Override
     public void removeFromFav(Meal meal) {
-        iSearchPresenter.removeFromFav(meal);
+
+    }
+
+    @Override
+    public void addToFav(String Id, int saveMode) {
+        iSearchPresenter.getMealById(Id,saveMode);
+    }
+
+    @Override
+    public void removeFromFav(String Id, int saveMode) {
+        iSearchPresenter.getMealById(Id,saveMode);
+    }
+
+    @Override
+    public void addToWeekPlan(Meal meal) {
+        dateTime = meal.dateAndTime;
+    }
+
+    @Override
+    public void addToWeekPlan(String id, int saveMode) {
+        iSearchPresenter.getMealById(id,saveMode);
     }
 
     @Override

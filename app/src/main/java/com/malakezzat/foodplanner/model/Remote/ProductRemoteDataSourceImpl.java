@@ -95,6 +95,11 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
                 }
 
                 @Override
+                public void onSuccessResult(List<? extends Data> listOfItems, int saveMode) {
+
+                }
+
+                @Override
                 public void onFailureResult(String error) {
                     // Handle failure case here (optional)
                     networkCallBack.onFailureResult(error);
@@ -164,16 +169,15 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     }
 
     @Override
-    public void searchById(int id,NetworkCallBack networkCallBack) {
+    public void searchById(int id, NetworkCallBack networkCallBack, int saveMode) {
         Network.networkCallBack = networkCallBack;
         Call<MealList> call = service.searchById(id);
         call.enqueue(new Callback<MealList>() {
             @Override
             public void onResponse(Call<MealList> call, Response<MealList> response) {
                 if (response.isSuccessful()) {
-                    networkCallBack.onSuccessResult(response.body().meals);
+                    networkCallBack.onSuccessResult(response.body().meals,saveMode);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 
@@ -183,6 +187,7 @@ public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
             }
         });
     }
+
 
     @Override
     public void getCategoriesList(NetworkCallBack networkCallBack) {

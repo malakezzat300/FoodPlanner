@@ -4,10 +4,10 @@ import android.util.Log;
 
 import com.malakezzat.foodplanner.model.Remote.NetworkCallBack;
 import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSource;
-import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.ProductLocalDataSource;
+import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSource;
+import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeek;
 import com.malakezzat.foodplanner.presenter.interview.ISearchPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.ISearchView;
 
@@ -20,12 +20,20 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
     ISearchView iSearchView;
     ProductRemoteDataSource productRemoteDataSource;
     ProductLocalDataSource productLocalDataSource;
+    ProductLocalDataSourceWeek productLocalDataSourceWeek;
     List<Meal> mealList;
     public SearchPresenter(ISearchView iSearchView, ProductRemoteDataSource productRemoteDataSource, ProductLocalDataSource productLocalDataSource) {
         mealList = new ArrayList<>();
         this.iSearchView = iSearchView;
         this.productRemoteDataSource = productRemoteDataSource;
         this.productLocalDataSource = productLocalDataSource;
+
+    }
+
+    public SearchPresenter(ISearchView iSearchView, ProductLocalDataSourceWeek productLocalDataSourceWeek) {
+        mealList = new ArrayList<>();
+        this.iSearchView = iSearchView;
+        this.productLocalDataSourceWeek = productLocalDataSourceWeek;
 
     }
 
@@ -70,8 +78,18 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
     }
 
     @Override
+    public void addToWeekPlan(Meal meal) {
+        productLocalDataSourceWeek.insertWeekMeal(meal.toMealDBWeek());
+    }
+
+    @Override
     public void getMealById(String id) {
-        productRemoteDataSource.searchById(Integer.parseInt(id),this);
+        productRemoteDataSource.searchById(Integer.parseInt(id),this,0);
+    }
+
+    @Override
+    public void getMealById(String id, int saveMode) {
+        productRemoteDataSource.searchById(Integer.parseInt(id),this,saveMode);
     }
 
     @Override
@@ -89,9 +107,15 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
                     iSearchView.getCategoryList((List<Meal>) listOfItems);
                 }
             } else {
-                iSearchView.getMealById((Meal) listOfItems.get(0));
+                iSearchView.getMealById((Meal) listOfItems.get(0),0);
             }
         }
+    }
+
+    @Override
+    public void onSuccessResult(List<? extends Data> listOfItems, int saveMode) {
+        iSearchView.getMealById((Meal) listOfItems.get(0),saveMode);
+
     }
 
     @Override

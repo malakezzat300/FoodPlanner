@@ -48,6 +48,11 @@ public class ListsPresenter implements NetworkCallBack,IListsPresenter {
     }
 
     @Override
+    public void onSuccessResult(List<? extends Data> listOfItems, int saveMode) {
+
+    }
+
+    @Override
     public void onFailureResult(String msg) {
         iListsView.getError(msg);
     }

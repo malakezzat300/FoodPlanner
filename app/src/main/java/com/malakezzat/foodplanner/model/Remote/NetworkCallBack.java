@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface NetworkCallBack {
     void onSuccessResult(List<? extends Data> listOfItems);
+    void onSuccessResult(List<? extends Data> listOfItems,int saveMode);
     void onFailureResult(String msg);
 }

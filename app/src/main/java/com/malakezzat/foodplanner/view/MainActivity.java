@@ -1,6 +1,5 @@
 package com.malakezzat.foodplanner.view;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,24 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.view.mainfragments.fragments.UserFragment;
-
-import java.net.URI;
-import java.net.URL;
+import com.malakezzat.foodplanner.view.mainfragments.UserFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
                     .into(userImage);
         }
 
-        // Initialize the adapter with FragmentManager and behavior
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPagerAdapter);
 
@@ -96,10 +85,14 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.navigation_favorite) {
                 viewPager.setCurrentItem(3);
                 return true;
+            } else if (itemId == R.id.navigation_week_plan) {
+                viewPager.setCurrentItem(4);
+                return true;
             }
 
             return false;
         });
+
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -119,8 +112,11 @@ public class MainActivity extends AppCompatActivity {
                     navView.setSelectedItemId(R.id.navigation_lists);
                 } else if (position == 3) {
                     navView.setSelectedItemId(R.id.navigation_favorite);
+                } else if (position == 4) {
+                    navView.setSelectedItemId(R.id.navigation_week_plan);
                 }
             }
+
 
             @Override
             public void onPageScrollStateChanged(int state) {

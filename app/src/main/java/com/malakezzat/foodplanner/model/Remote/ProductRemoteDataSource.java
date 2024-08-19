@@ -7,7 +7,7 @@ public interface ProductRemoteDataSource {
  void getCategories(NetworkCallBack networkCallBack);
  void searchByName(String name);
  void searchByFirstChar(String character);
- void searchById(int id,NetworkCallBack networkCallBack);
+ void searchById(int id,NetworkCallBack networkCallBack,int saveMode);
  void getCategoriesList(NetworkCallBack networkCallBack);
  void getCountriesList(NetworkCallBack networkCallBack);
  void getIngredientsList(NetworkCallBack networkCallBack);

@@ -4,10 +4,11 @@ import android.util.Log;
 
 import com.malakezzat.foodplanner.model.Remote.NetworkCallBack;
 import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSource;
-import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.ProductLocalDataSource;
+import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSource;
+import com.malakezzat.foodplanner.model.local.week.MealDBWeek;
+import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeek;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
 
@@ -21,12 +22,19 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
     ProductRemoteDataSource productRemoteDataSource;
     List<Meal> mealList;
     ProductLocalDataSource productLocalDataSource;
+    ProductLocalDataSourceWeek productLocalDataSourceWeek;
     public HomePresenter(IHomeView iHomeView, ProductRemoteDataSource productRemoteDataSource, ProductLocalDataSource productLocalDataSource) {
         mealList = new ArrayList<>();
         this.iHomeView = iHomeView;
         this.productRemoteDataSource = productRemoteDataSource;
         this.productLocalDataSource = productLocalDataSource;
 
+    }
+
+    public HomePresenter(IHomeView iHomeView, ProductLocalDataSourceWeek productLocalDataSourceWeek) {
+        mealList = new ArrayList<>();
+        this.iHomeView = iHomeView;
+        this.productLocalDataSourceWeek = productLocalDataSourceWeek;
     }
 
     @Override
@@ -41,7 +49,7 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
 
     @Override
     public void getMealById(String id) {
-        productRemoteDataSource.searchById(Integer.parseInt(id),this);
+        productRemoteDataSource.searchById(Integer.parseInt(id),this,0);
     }
 
     @Override
@@ -55,6 +63,11 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
     }
 
     @Override
+    public void addToWeekPlan(Meal meal) {
+        productLocalDataSourceWeek.insertWeekMeal(meal.toMealDBWeek());
+    }
+
+    @Override
     public void onSuccessResult(List<? extends Data> listOfItems) {
         Log.i(TAG, "onSuccessResult: " + listOfItems.get(0));
         if(listOfItems.get(0) instanceof Meal){
@@ -64,6 +77,11 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
                 iHomeView.getMeal((List<Meal>) listOfItems);
             }
         }
+    }
+
+    @Override
+    public void onSuccessResult(List<? extends Data> listOfItems, int saveMode) {
+
     }
 
     @Override
