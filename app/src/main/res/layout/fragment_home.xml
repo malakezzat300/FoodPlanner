@@ -24,7 +24,7 @@
 
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
+        android:id="@+id/meal_material2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -40,7 +40,7 @@
         app:shapeAppearance="?attr/shapeAppearanceCornerExtraLarge">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/relativeLayout"
+            android:id="@+id/meal2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/primary">
@@ -111,7 +111,7 @@
         android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+        app:layout_constraintTop_toBottomOf="@+id/meal_material2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/maskableFrameLayout"

@@ -1,5 +1,6 @@
 package com.malakezzat.foodplanner.view;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +25,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.view.mainfragments.fragments.UserFragment;
 
 import java.net.URI;
 import java.net.URL;
@@ -124,6 +127,11 @@ public class MainActivity extends AppCompatActivity {
                 // Optional: Add logic for when the scroll state changes.
             }
         });
+
+        userImage.setOnClickListener(v->{
+            UserFragment userFragment = new UserFragment();
+            userFragment.show(getSupportFragmentManager(), userFragment.getTag());
+        });
     }
 
 
@@ -157,5 +165,19 @@ public class MainActivity extends AppCompatActivity {
             return capitalizedWord;
         }
         return "";
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus) {
+            FirebaseUser user = auth.getCurrentUser();
+            if (user != null) {
+                Glide.with(getApplicationContext()).load(user.getPhotoUrl())
+                        .apply(new RequestOptions().override(200, 200))
+                        .placeholder(R.drawable.account_circle)
+                        .into(userImage);
+            }
+        }
     }
 }

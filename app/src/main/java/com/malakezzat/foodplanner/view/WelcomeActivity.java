@@ -116,12 +116,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Toast.makeText(this, "Signed in as: " + user.getDisplayName(), Toast.LENGTH_LONG).show(); //TODO remove this
             Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
             intent.putExtra(USER,user.getDisplayName());
             startActivity(intent);
-        } else {
-            Toast.makeText(this, "Not signed in", Toast.LENGTH_LONG).show(); //TODO remove this
         }
     }
 

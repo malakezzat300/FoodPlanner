@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_web_client_id">511013017939-7usg0tnq8f9gikvmhp8fngu7k11uu5p5.apps.googleusercontent.com</string>
-    <string name="app_name">Food Planner</string>
-    <string name="sign_up_with_email">Sign up with Email</string>
-    <string name="login_with_email">Login With Email</string>
-    <string name="login_button">Login</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="username">Username</string>
-    <string name="sign_up">Sign up</string>
-    <string name="login_as_guest">Login As Guest</string>
-    <string name="home">Home</string>
-    <string name="search">Search</string>
-    <string name="lists">Lists</string>
-    <string name="favorite">Favorite</string>
-    <string name="daily_inspiration">Daily Inspiration</string>
-    <string name="country">Country</string>
-    <string name="ingredient">Ingredient</string>
-    <string name="category">Category</string>
-    <string name="categories">Categories</string>
-    <string name="countries">Countries</string>
-    <string name="enter_meal_country_or_ingredient">Enter Meal, Country or Ingredient</string>
-    <string name="enter_meal_name">Enter Meal Name</string>
-    <string name="meal_of_the_day">Meal of The Day</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="steps">Steps :</string>
 </resources>

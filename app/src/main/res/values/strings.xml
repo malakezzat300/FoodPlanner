@@ -25,4 +25,12 @@
     <string name="enter_meal_name">Enter Meal Name</string>
     <string name="hello_user">Hello </string>
     <string name="meal_of_the_day">Meal of The Day</string>
+    <string name="backup_data">Backup Data</string>
+    <string name="sign_out">Sign out</string>
+    <string name="update_picture">Update Picture</string>
+    <string name="remove_picture">Remove Picture</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="steps">Steps :</string>
+    <string name="meal_name">Meal Name : </string>
+    <string name="meal_country">Meal Country : </string>
 </resources>

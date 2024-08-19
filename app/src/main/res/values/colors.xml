@@ -11,7 +11,7 @@
     <color name="primary">#A3B2F2</color> <!-- Calm Blue -->
     <color name="primary_variant">#6A7FDB</color> <!-- Slightly Darker Calm Blue -->
     <color name="transparent">#996A7FDB</color>
-    <color name="fav_icon">#000000</color>
+    <color name="icon">#000000</color>
     <color name="secondary">#5165BA</color> <!-- Slightly Lighter Calm Blue -->
     <color name="secondary_transparent">#995165BA</color> <!-- Slightly Lighter Calm Blue -->
     <color name="background">#F1F1F1</color> <!-- White Background -->

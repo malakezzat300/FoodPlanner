@@ -64,5 +64,6 @@ dependencies {
     implementation ("androidx.work:work-runtime:2.7.1")
     implementation ("androidx.work:work-runtime-ktx:2.7.1")
     implementation ("com.google.guava:guava:31.1-android")
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
 
 }

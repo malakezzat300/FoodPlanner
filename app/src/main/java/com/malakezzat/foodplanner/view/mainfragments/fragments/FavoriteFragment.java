@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.model.local.ProductLocalDataSourceImpl;
@@ -22,12 +23,13 @@ import com.malakezzat.foodplanner.presenter.interview.IFavPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.FavAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IFavView;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnFavListener;
+import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class FavoriteFragment extends Fragment implements IFavView, OnFavListener {
+public class FavoriteFragment extends Fragment implements IFavView, OnMealClickListener {
 
     List<MealDB> mealDBS;
     Context context;
@@ -78,8 +80,25 @@ public class FavoriteFragment extends Fragment implements IFavView, OnFavListene
         recyclerAdapter.setMeals(meals);
     }
 
+
     @Override
-    public void onClickRemoveMeal(MealDB mealDB) {
-        iFavPresenter.removeFromFav(mealDB);
+    public void showMealDetails(Meal meal) {
+        MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(meal,this);
+        mealDetailsFragment.show(getParentFragmentManager(),mealDetailsFragment.getTag());
+    }
+
+    @Override
+    public void addToFav(Meal meal) {
+
+    }
+
+    @Override
+    public void removeFromFav(Meal meal) {
+        iFavPresenter.removeFromFav(meal.toMealDB());
+    }
+
+    @Override
+    public void getMealById(String Id) {
+
     }
 }

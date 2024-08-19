@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -45,6 +46,11 @@ import java.util.List;
 public class SearchFragment extends Fragment implements ISearchView, OnMealClickListener {
 
     private static final String TAG = "SearchFragment";
+    private static final String SELECTED_RADIO_BUTTON = "radioButton";
+    private static final String SELECTED_SPINNER_ITEM = "spinnerItem";
+    private static final String SELECTED_SPINNER_ITEM_ID = "spinnerItemId";
+    int spinnerItemId;
+    String spinnerItemString;
     RadioGroup radioGroup;
     RadioButton countryRadioButton, ingredientRadioButton,categoryRadioButton;
     Spinner itemSpinner;
@@ -110,13 +116,47 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
+        if(savedInstanceState != null){
+            selectedRadioButton = savedInstanceState.getInt(SELECTED_RADIO_BUTTON);
+            spinnerItemId = savedInstanceState.getInt(SELECTED_SPINNER_ITEM_ID);
+            if (selectedRadioButton == R.id.country_radio_button) {
+                countryRadioButton.setChecked(true);
+            } else if (selectedRadioButton == R.id.ingredient_radio_button) {
+                ingredientRadioButton.setChecked(true);
+            } else if (selectedRadioButton == R.id.category_radio_button) {
+                categoryRadioButton.setChecked(true);
+            }
+            updateSpinnerItems(selectedRadioButton);
+            spinnerItemString = savedInstanceState.getString(SELECTED_SPINNER_ITEM);
+            if (selectedRadioButton == R.id.country_radio_button) {
+                iSearchPresenter.searchByCountry(spinnerItemString);
+            } else if (selectedRadioButton == R.id.ingredient_radio_button) {
+                iSearchPresenter.searchByIngredient(spinnerItemString);
+            } else if (selectedRadioButton == R.id.category_radio_button) {
+                iSearchPresenter.searchByCategory(spinnerItemString);
+            }
+        } else {
+            selectedRadioButton = R.id.country_radio_button;
+            countryRadioButton.setChecked(true);
+            updateSpinnerItems(selectedRadioButton);
+            spinnerItemString = "American";
+            iSearchPresenter.searchByCountry(spinnerItemString);
+        }
+
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             selectedRadioButton = checkedId;
+            spinnerItemId = 0;
             updateSpinnerItems(selectedRadioButton);
+            if (selectedRadioButton == R.id.country_radio_button) {
+                iSearchPresenter.searchByCountry("American");
+            } else if (selectedRadioButton == R.id.ingredient_radio_button) {
+                iSearchPresenter.searchByIngredient("Chicken");
+            } else if (selectedRadioButton == R.id.category_radio_button) {
+                iSearchPresenter.searchByCategory("Beef");
+            }
         });
 
         autoCompleteTextView.setOnEditorActionListener((v, actionId, event) -> {
-
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String query = autoCompleteTextView.getText().toString().toLowerCase();
                 mealsByName.clear();
@@ -170,26 +210,46 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
             }
         });
 
-        itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        itemSpinner.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (selectedRadioButton == R.id.country_radio_button) {
-                    iSearchPresenter.searchByCountry(itemSpinner.getItemAtPosition(position).toString());
-                } else if (selectedRadioButton == R.id.ingredient_radio_button) {
-                    iSearchPresenter.searchByIngredient(itemSpinner.getItemAtPosition(position).toString());
-                } else if (selectedRadioButton == R.id.category_radio_button) {
-                    iSearchPresenter.searchByCategory(itemSpinner.getItemAtPosition(position).toString());
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    itemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            spinnerItemString = itemSpinner.getItemAtPosition(position).toString();
+                            spinnerItemId = position;
+                            if (selectedRadioButton == R.id.country_radio_button) {
+                                iSearchPresenter.searchByCountry(spinnerItemString);
+                            } else if (selectedRadioButton == R.id.ingredient_radio_button) {
+                                iSearchPresenter.searchByIngredient(spinnerItemString);
+                            } else if (selectedRadioButton == R.id.category_radio_button) {
+                                iSearchPresenter.searchByCategory(spinnerItemString);
+                            }
+                            Log.i("Spinner", "Item clicked: " + spinnerItemString);
+                        }
 
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                            // Handle the case where nothing is selected
+                        }
+                    });
+                }
+                return false;
             }
         });
 
+
+
     }
 
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SELECTED_RADIO_BUTTON,selectedRadioButton);
+        outState.putString(SELECTED_SPINNER_ITEM,spinnerItemString);
+        outState.putInt(SELECTED_SPINNER_ITEM_ID,spinnerItemId);
+    }
 
     private void updateSpinnerItems(int checkedId) {
         items = new ArrayList<>();
@@ -201,7 +261,6 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         } else if (checkedId == R.id.category_radio_button) {
             iSearchPresenter.getCategoryList();
         }
-
 
     }
 
@@ -215,7 +274,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, countryItemList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         itemSpinner.setAdapter(adapter);
-        iSearchPresenter.searchByCountry(itemSpinner.getItemAtPosition(0).toString());
+        itemSpinner.setSelection(spinnerItemId);
     }
 
     @Override
@@ -227,7 +286,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, ingredientItemList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         itemSpinner.setAdapter(adapter);
-        iSearchPresenter.searchByIngredient(itemSpinner.getItemAtPosition(0).toString());
+        itemSpinner.setSelection(spinnerItemId);
     }
 
     @Override
@@ -239,7 +298,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, categoryItemList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         itemSpinner.setAdapter(adapter);
-        iSearchPresenter.searchByCategory(itemSpinner.getItemAtPosition(0).toString());
+        itemSpinner.setSelection(spinnerItemId);
     }
 
     @Override
@@ -255,6 +314,18 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
     }
 
     @Override
+    public void getMealById(Meal meal) {
+        MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(meal,this);
+        mealDetailsFragment.show(getParentFragmentManager(),mealDetailsFragment.getTag());
+    }
+
+    @Override
+    public void showMealDetails(Meal meal) {
+        MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(meal,this);
+        mealDetailsFragment.show(getParentFragmentManager(),mealDetailsFragment.getTag());
+    }
+
+    @Override
     public void addToFav(Meal meal) {
         iSearchPresenter.addToFav(meal);
     }
@@ -263,4 +334,11 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
     public void removeFromFav(Meal meal) {
         iSearchPresenter.removeFromFav(meal);
     }
+
+    @Override
+    public void getMealById(String Id) {
+        iSearchPresenter.getMealById(Id);
+    }
+
+
 }

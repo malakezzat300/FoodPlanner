@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,19 +17,20 @@ import com.bumptech.glide.request.RequestOptions;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnFavListener;
+import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.util.List;
 
 public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
 
     private List<MealDB> meals;
-    private OnFavListener onFavListener;
+    private OnMealClickListener onMealClickListener;
     private Context context;
 
-    public FavAdapter(Context context , List<MealDB> meals , OnFavListener onFavListener) {
+    public FavAdapter(Context context , List<MealDB> meals , OnMealClickListener onMealClickListener) {
         this.context = context;
         this.meals = meals;
-        this.onFavListener = onFavListener;
+        this.onMealClickListener = onMealClickListener;
     }
 
 
@@ -50,7 +52,10 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
         holder.favButton.setImageResource(R.drawable.favorite_red);
         holder.favButton.setOnClickListener(v->{
             Toast.makeText(context, meals.get(position).strMeal + " is removed", Toast.LENGTH_SHORT).show();
-            onFavListener.onClickRemoveMeal(meals.get(position));
+            onMealClickListener.removeFromFav(meals.get(position).toMeal());
+        });
+        holder.meal.setOnClickListener(v->{
+            onMealClickListener.showMealDetails(meals.get(position).toMeal());
         });
     }
 
@@ -66,12 +71,13 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
     public static class FavViewHolder extends RecyclerView.ViewHolder {
         ImageView cardImage,favButton;
         TextView cardTitle;
-
+        CardView meal;
         public FavViewHolder(@NonNull View itemView) {
             super(itemView);
             cardImage = itemView.findViewById(R.id.cardImage);
             cardTitle = itemView.findViewById(R.id.cardTitle);
             favButton = itemView.findViewById(R.id.fav_button);
+            meal = itemView.findViewById(R.id.meal_material);
         }
     }
 

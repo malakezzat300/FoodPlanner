@@ -10,4 +10,5 @@ public interface ISearchView {
     void getCategoryList(List<Meal> categoryList);
     void getMealList(List<Meal> mealList);
     void getError(String msg);
+    void getMealById(Meal meal);
 }

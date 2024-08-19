@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +30,7 @@ import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.ProductLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.HomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
+import com.malakezzat.foodplanner.view.MainActivity;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.CarouselAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
@@ -56,6 +58,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     String MealOfDayId;
+    CardView mealOfDayButton;
     private static final String PREFS_NAME = "MyPrefs";
     private static final String KEY_SAVED_TIME = "saved_time";
     public final static String MEALLIST = "mealList";
@@ -85,6 +88,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         super.onViewCreated(view, savedInstanceState);
 
         mealOfDay = new Meal();
+        mealOfDayButton = view.findViewById(R.id.meal_material2);
         mealImage = view.findViewById(R.id.cardImage);
         mealCountry = view.findViewById(R.id.cardCountry);
         mealTitle = view.findViewById(R.id.cardTitle);
@@ -118,17 +122,20 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         snapHelper = new CarouselSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-
+        mealOfDayButton.setOnClickListener(v->{
+            MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(mealOfDay,this);
+            mealDetailsFragment.show(getParentFragmentManager(),mealDetailsFragment.getTag());
+        });
 
         favButton.setOnClickListener(v -> {
             if(isFav){
                 favButton.setImageResource(R.drawable.favorite_border);
                 this.removeFromFav(mealOfDay);
-                isFav = true;
+                isFav = false;
             } else {
                 favButton.setImageResource(R.drawable.favorite_red);
                 this.addToFav(mealOfDay);
-                isFav = false;
+                isFav = true;
             }
         });
     }
@@ -168,6 +175,12 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     }
 
     @Override
+    public void showMealDetails(Meal meal) {
+        MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(meal,this);
+        mealDetailsFragment.show(getParentFragmentManager(),mealDetailsFragment.getTag());
+    }
+
+    @Override
     public void addToFav(Meal meal) {
         iHomePresenter.addToFav(meal);
     }
@@ -176,6 +189,12 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     public void removeFromFav(Meal meal) {
         iHomePresenter.removeFromFav(meal);
     }
+
+    @Override
+    public void getMealById(String Id) {
+    }
+
+
 
     private void saveCurrentTimeToPreferences() {
         long currentTime = System.currentTimeMillis();
@@ -187,10 +206,8 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     private void getMealOfDay(long savedTime,String id) {
         boolean isOld = System.currentTimeMillis() - savedTime < TimeUnit.DAYS.toMillis(1);
         if (isOld && (!id.isEmpty())) {
-            Toast.makeText(getContext(), "Old", Toast.LENGTH_SHORT).show();
             iHomePresenter.getMealById(id);
         } else {
-            Toast.makeText(getContext(), "New", Toast.LENGTH_SHORT).show();
             iHomePresenter.getMeal();
             saveCurrentTimeToPreferences();
         }

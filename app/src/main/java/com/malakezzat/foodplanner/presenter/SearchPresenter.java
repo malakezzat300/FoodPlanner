@@ -70,17 +70,26 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
     }
 
     @Override
+    public void getMealById(String id) {
+        productRemoteDataSource.searchById(Integer.parseInt(id),this);
+    }
+
+    @Override
     public void onSuccessResult(List<? extends Data> listOfItems) {
         Log.i(TAG, "onSuccessResult: " + listOfItems.get(0));
         if(listOfItems.get(0) instanceof Meal){
-            if(((Meal) listOfItems.get(0)).strMeal != null){
-                iSearchView.getMealList((List<Meal>) listOfItems);
-            } else if(((Meal) listOfItems.get(0)).strArea != null){
-                iSearchView.getCountryList((List<Meal>) listOfItems);
-            } else if(((Meal) listOfItems.get(0)).strIngredient != null){
-                iSearchView.getIngredientList((List<Meal>) listOfItems);
-            } else if(((Meal) listOfItems.get(0)).strCategory != null){
-                iSearchView.getCategoryList((List<Meal>) listOfItems);
+            if(listOfItems.size() > 1) {
+                if (((Meal) listOfItems.get(0)).strMeal != null) {
+                    iSearchView.getMealList((List<Meal>) listOfItems);
+                } else if (((Meal) listOfItems.get(0)).strArea != null) {
+                    iSearchView.getCountryList((List<Meal>) listOfItems);
+                } else if (((Meal) listOfItems.get(0)).strIngredient != null) {
+                    iSearchView.getIngredientList((List<Meal>) listOfItems);
+                } else if (((Meal) listOfItems.get(0)).strCategory != null) {
+                    iSearchView.getCategoryList((List<Meal>) listOfItems);
+                }
+            } else {
+                iSearchView.getMealById((Meal) listOfItems.get(0));
             }
         }
     }

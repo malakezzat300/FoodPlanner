@@ -13,4 +13,5 @@ public interface ISearchPresenter {
     void searchByCategory(String category);
     void addToFav(Meal meal);
     void removeFromFav(Meal meal);
+    void getMealById(String id);
 }
