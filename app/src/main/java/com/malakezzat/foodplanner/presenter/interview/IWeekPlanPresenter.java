@@ -2,8 +2,8 @@ package com.malakezzat.foodplanner.presenter.interview;
 
 import androidx.lifecycle.LiveData;
 
-import com.malakezzat.foodplanner.model.local.fav.MealDB;
-import com.malakezzat.foodplanner.model.local.week.MealDBWeek;
+import com.malakezzat.foodplanner.model.local.MealDB;
+import com.malakezzat.foodplanner.model.local.MealDBWeek;
 
 import java.util.List;
 

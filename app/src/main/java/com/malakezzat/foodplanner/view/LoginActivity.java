@@ -3,8 +3,6 @@ package com.malakezzat.foodplanner.view;
 import static com.malakezzat.foodplanner.view.SignupActivity.EMAIL_MODE;
 import static com.malakezzat.foodplanner.view.SignupActivity.PASSWORD_MODE;
 import static com.malakezzat.foodplanner.view.SignupActivity.checkValidation;
-import static com.malakezzat.foodplanner.view.SignupActivity.isValidEmail;
-import static com.malakezzat.foodplanner.view.SignupActivity.isValidPassword;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +23,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.presenter.UserPresenter;
+import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnLogin;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-
+    IUserPresenter iUserPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                                 FirebaseUser currentUser = auth.getCurrentUser();
                                 intent.putExtra(USER,currentUser.getDisplayName());
                                 startActivity(intent);
+                                iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
+                                iUserPresenter.restoreUserData();
                             } else {
                                 progressBar.setVisibility(View.GONE);
                                 // Sign in failed, display a message to the user

@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
+public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
 
     private static final String TAG = "ProductRemoteDataSourceImpl";
     Retrofit retrofit;
     Request service;
 
-    public ProductRemoteDataSourceImpl(){
+    public MealRemoteDataSourceImpl(){
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASR_URL)
                 .addConverterFactory(GsonConverterFactory.create())

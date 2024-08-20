@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSourceImpl;
+import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.presenter.ListsPresenter;
@@ -67,7 +67,7 @@ public class ListsFragment extends Fragment implements IListsView , OnListsListe
         categoriesChip = view.findViewById(R.id.categories_list);
         recyclerView = view.findViewById(R.id.lists_recycler_view);
         context = view.getContext();
-        iListsPresenter = new ListsPresenter(this,new ProductRemoteDataSourceImpl());
+        iListsPresenter = new ListsPresenter(this,new MealRemoteDataSourceImpl());
         countries = new ArrayList<>();
         categories = new ArrayList<>();
 

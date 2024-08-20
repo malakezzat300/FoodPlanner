@@ -1,6 +1,6 @@
 package com.malakezzat.foodplanner.view.mainfragments.interpresenter;
 
-import com.malakezzat.foodplanner.model.local.fav.MealDB;
+import com.malakezzat.foodplanner.model.local.MealDB;
 
 import java.util.List;
 

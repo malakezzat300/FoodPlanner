@@ -28,12 +28,10 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSourceImpl;
+import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.fav.AppDatabase;
-import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSourceImpl;
-import com.malakezzat.foodplanner.model.local.week.AppDatabaseWeek;
-import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeekImpl;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.SearchPresenter;
 import com.malakezzat.foodplanner.presenter.interview.ISearchPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
@@ -65,7 +63,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
     List<String> ingredientItemList;
     List<String> categoryItemList;
     Context context;
-    ISearchPresenter iSearchPresenter,iSearchPresenterWeek;
+    ISearchPresenter iSearchPresenter;
     ArrayAdapter<String> adapter;
     int selectedRadioButton;
     LinearLayoutManager layoutManager;
@@ -101,16 +99,14 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         autoCompleteTextView= view.findViewById(R.id.auto_complete_edit_text);
         context = view.getContext();
         iSearchPresenter = new SearchPresenter(this
-                ,new ProductRemoteDataSourceImpl()
-                , new ProductLocalDataSourceImpl(AppDatabase.getInstance(context)));
-        iSearchPresenterWeek = new SearchPresenter(this
-                , new ProductLocalDataSourceWeekImpl(AppDatabaseWeek.getInstance(context)));
+                ,new MealRemoteDataSourceImpl()
+                , new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
         countryItemList = new ArrayList<>();
         ingredientItemList = new ArrayList<>();
         categoryItemList = new ArrayList<>();
         meals = new ArrayList<>();
         mealsByName = new ArrayList<>();
-        dateTime = "Today 00-0-2100";
+        dateTime = "Today 1-1-2000";
 
 
         recyclerView = view.findViewById(R.id.search_recycler_view);
@@ -325,7 +321,7 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
             iSearchPresenter.removeFromFav(meal);
         } else if (modeSave == 3){
             meal.dateAndTime = dateTime;
-            iSearchPresenterWeek.addToWeekPlan(meal);
+            iSearchPresenter.addToWeekPlan(meal);
         } else {
             MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(meal,this);
             mealDetailsFragment.show(getParentFragmentManager(),mealDetailsFragment.getTag());

@@ -5,10 +5,9 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.fav.MealDB;
-import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSource;
-import com.malakezzat.foodplanner.model.local.week.MealDBWeek;
-import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeek;
+import com.malakezzat.foodplanner.model.local.MealDB;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSource;
+import com.malakezzat.foodplanner.model.local.MealDBWeek;
 import com.malakezzat.foodplanner.presenter.interview.IWeekPlanPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IWeekPlanView;
 
@@ -18,25 +17,23 @@ import java.util.List;
 public class WeekPlanPresenter implements IWeekPlanPresenter{
     private static final String TAG = "WeekPlanPresenter";
     IWeekPlanView iWeekPlanView;
-    ProductLocalDataSourceWeek productLocalDataSourceWeek;
+    MealLocalDataSource mealLocalDataSource;
     List<Meal> mealList;
-    public WeekPlanPresenter(IWeekPlanView iWeekPlanView, ProductLocalDataSourceWeek productLocalDataSourceWeek) {
+    public WeekPlanPresenter(IWeekPlanView iWeekPlanView, MealLocalDataSource mealLocalDataSource) {
         mealList = new ArrayList<>();
         this.iWeekPlanView = iWeekPlanView;
-        this.productLocalDataSourceWeek = productLocalDataSourceWeek;
+        this.mealLocalDataSource = mealLocalDataSource;
     }
 
 
     public LiveData<List<MealDBWeek>> getWeekPlanMeals() {
         Log.i(TAG, "getStoredMeals: ");
-        return productLocalDataSourceWeek.getWeekPlanMeals();
+        return mealLocalDataSource.getWeekPlanMeals();
     }
-
-    @Override
 
 
     public void removeFromWeekPlan(MealDB mealDB) {
-        productLocalDataSourceWeek.deleteWeekMeal(mealDB.toMeal().toMealDBWeek());
+        mealLocalDataSource.deleteWeekMeal(mealDB.toMeal().toMealDBWeek());
     }
 
 }

@@ -26,7 +26,7 @@ import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Ingredient;
 import com.malakezzat.foodplanner.model.data.IngredientList;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.fav.MealDB;
+import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.IngredientsAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
@@ -111,10 +111,9 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
                 .into(mealImage);
 
         weekPlanButton.setOnClickListener(v->{
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+            Calendar today = Calendar.getInstance();
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.DAY_OF_YEAR, 7);
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
                     new DatePickerDialog.OnDateSetListener() {
@@ -122,14 +121,24 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             Calendar selectedDate = Calendar.getInstance();
                             selectedDate.set(year, monthOfYear, dayOfMonth);
+
+                            // Format the selected date
                             String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
                             String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+
+                            // Set the selected date
                             meal.dateAndTime = formattedDate;
                             onMealClickListener.addToWeekPlan(meal);
+                            onMealClickListener.addToWeekPlan(meal.idMeal, 3);
                         }
-                    }, year, month, day);
-            datePickerDialog.show();
+                    },
+                    today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)
+            );
 
+            datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
+            datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+
+            datePickerDialog.show();
         });
 
         favButton.setOnClickListener(v -> {

@@ -31,7 +31,6 @@ public class ClickableSpinner extends androidx.appcompat.widget.AppCompatSpinner
         boolean sameSelected = position == getSelectedItemPosition();
         super.setSelection(position);
         if (sameSelected && isTouched) {
-            // Trigger the click event when the same item is selected again
             getOnItemSelectedListener().onItemSelected(this, getSelectedView(), position, getSelectedItemId());
         }
         isTouched = false;

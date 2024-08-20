@@ -20,6 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.presenter.UserPresenter;
+import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 
 public class WelcomeActivity extends AppCompatActivity {
     private Button signupWithEmail, loginWithEmail,guest;
@@ -29,7 +33,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static final String TAG = "MainActivity";
     private static final String USER = "user";
-
+    IUserPresenter iUserPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +89,6 @@ public class WelcomeActivity extends AppCompatActivity {
             try {
                 GoogleSignInAccount account = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class);
                 if (account != null && account.getIdToken() != null) {
-                    // Google Sign In was successful, authenticate with Firebase
                     firebaseAuthWithGoogle(account.getIdToken());
                 } else {
                     Log.w(TAG, "Google sign in failed: null token");
@@ -105,7 +108,9 @@ public class WelcomeActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = mAuth.getCurrentUser();
+                        iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
                         updateUI(user);
+                        iUserPresenter.restoreUserData();
                     } else {
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Toast.makeText(WelcomeActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
@@ -126,6 +131,10 @@ public class WelcomeActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
+        }
         updateUI(currentUser);
     }
+
 }

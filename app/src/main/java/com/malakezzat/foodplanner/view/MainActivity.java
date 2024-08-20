@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,10 +21,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.UserFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private NavController navController;
     private BottomNavigationView navView;
     boolean doubleBackToExitPressedOnce = false;
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPagerAdapter viewPagerAdapter;
     private FirebaseAuth auth;
     String username;
-
+    IUserPresenter iUserPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,10 @@ public class MainActivity extends AppCompatActivity {
                     .apply(new RequestOptions().override(200,200))
                     .placeholder(R.drawable.account_circle)
                     .into(userImage);
+
+            Log.i(TAG, "onCreate: " + user.getUid());
         }
+
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPagerAdapter);

@@ -1,6 +1,6 @@
 package com.malakezzat.foodplanner.model.Remote;
 
-public interface ProductRemoteDataSource {
+public interface MealRemoteDataSource {
  void getRandomMeal(NetworkCallBack networkCallBack);
  void getRandomMeals(NetworkCallBack networkCallBack);
  void getMultipleRandomMeals(int numberOfCalls, NetworkCallBack networkCallBack);

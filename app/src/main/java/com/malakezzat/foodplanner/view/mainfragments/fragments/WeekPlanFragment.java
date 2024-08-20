@@ -15,11 +15,9 @@ import android.view.ViewGroup;
 
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.fav.MealDB;
-import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSourceImpl;
-import com.malakezzat.foodplanner.model.local.week.AppDatabaseWeek;
-import com.malakezzat.foodplanner.model.local.week.MealDBWeek;
-import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeekImpl;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.local.MealDBWeek;
 import com.malakezzat.foodplanner.presenter.WeekPlanPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IWeekPlanPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
@@ -37,7 +35,7 @@ public class WeekPlanFragment extends Fragment implements IWeekPlanView , OnMeal
     RecyclerView recyclerView;
     WeekPlanAdapter recyclerAdapter;
     LinearLayoutManager layoutManager;
-    IWeekPlanPresenter iWeekPlanPresenter,iWeekPlanPresenterWeek;
+    IWeekPlanPresenter iWeekPlanPresenter;
     public WeekPlanFragment() {
         // Required empty public constructor
     }
@@ -62,7 +60,7 @@ public class WeekPlanFragment extends Fragment implements IWeekPlanView , OnMeal
         mealDBS = new ArrayList<>();
         recyclerView = view.findViewById(R.id.week_plan_recycler);
         layoutManager = new LinearLayoutManager(context);
-        iWeekPlanPresenter = new WeekPlanPresenter(this,new ProductLocalDataSourceWeekImpl(AppDatabaseWeek.getInstance(context)));
+        iWeekPlanPresenter = new WeekPlanPresenter(this,new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
         recyclerView.setLayoutManager(layoutManager);
         recyclerAdapter = new WeekPlanAdapter(context,mealDBS,this);
         recyclerView.setAdapter(recyclerAdapter);

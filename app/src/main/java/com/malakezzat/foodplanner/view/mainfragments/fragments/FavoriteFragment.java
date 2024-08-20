@@ -15,11 +15,9 @@ import android.view.ViewGroup;
 
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.fav.AppDatabase;
-import com.malakezzat.foodplanner.model.local.fav.MealDB;
-import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSourceImpl;
-import com.malakezzat.foodplanner.model.local.week.AppDatabaseWeek;
-import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeekImpl;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealDB;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.FavPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IFavPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
@@ -38,7 +36,7 @@ public class FavoriteFragment extends Fragment implements IFavView, OnMealClickL
     RecyclerView recyclerView;
     FavAdapter recyclerAdapter;
     LinearLayoutManager layoutManager;
-    IFavPresenter iFavPresenter, iFavPresenterWeek;
+    IFavPresenter iFavPresenter;
     public FavoriteFragment() {
         // Required empty public constructor
     }
@@ -63,8 +61,7 @@ public class FavoriteFragment extends Fragment implements IFavView, OnMealClickL
         mealDBS = new ArrayList<>();
         recyclerView = view.findViewById(R.id.fav_recycler_view);
         layoutManager = new LinearLayoutManager(context);
-        iFavPresenter = new FavPresenter(this,new ProductLocalDataSourceImpl(AppDatabase.getInstance(context)));
-        iFavPresenterWeek = new FavPresenter(this,new ProductLocalDataSourceWeekImpl(AppDatabaseWeek.getInstance(context)));
+        iFavPresenter = new FavPresenter(this,new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
         recyclerView.setLayoutManager(layoutManager);
         recyclerAdapter = new FavAdapter(context,mealDBS,this);
         recyclerView.setAdapter(recyclerAdapter);
@@ -112,7 +109,7 @@ public class FavoriteFragment extends Fragment implements IFavView, OnMealClickL
 
     @Override
     public void addToWeekPlan(Meal meal) {
-        iFavPresenterWeek.addToWeekPlan(meal.toMealDB());
+        iFavPresenter.addToWeekPlan(meal.toMealDB());
     }
 
     @Override

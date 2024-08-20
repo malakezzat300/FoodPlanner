@@ -10,6 +10,5 @@ public interface OnMealClickListener {
     void removeFromFav(String Id,int saveMode);
     void addToWeekPlan(Meal meal);
     void addToWeekPlan(String id,int saveMode);
-
     void getMealById(String Id);
 }

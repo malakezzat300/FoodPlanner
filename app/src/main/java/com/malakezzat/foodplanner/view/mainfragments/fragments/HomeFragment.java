@@ -1,7 +1,6 @@
 package com.malakezzat.foodplanner.view.mainfragments.fragments;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,14 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -28,13 +25,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSourceImpl;
+import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.fav.AppDatabase;
-import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSourceImpl;
-import com.malakezzat.foodplanner.model.local.week.AppDatabaseWeek;
-import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeek;
-import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeekImpl;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.HomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
@@ -58,7 +52,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     CarouselSnapHelper snapHelper;
     List<Meal> mealList;
     Context context;
-    IHomePresenter iHomePresenter,iHomePresenterWeek;
+    IHomePresenter iHomePresenter;
     boolean isFav;
     TextView mealTitle,mealCountry;
     ImageView favButton,weekPlanButton,mealImage;
@@ -104,8 +98,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         weekPlanButton = view.findViewById(R.id.week_plan_button);
         context = view.getContext();
         mealList = new ArrayList<>();
-        iHomePresenter = new HomePresenter(this, new ProductRemoteDataSourceImpl(), new ProductLocalDataSourceImpl(AppDatabase.getInstance(context)));
-        iHomePresenterWeek = new HomePresenter(this, new ProductLocalDataSourceWeekImpl(AppDatabaseWeek.getInstance(context)));
+        iHomePresenter = new HomePresenter(this, new MealRemoteDataSourceImpl(), new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0);
         long savedTime = sharedPreferences.getLong(KEY_SAVED_TIME, 0);
         MealOfDayId = sharedPreferences.getString(MEAL_OF_DAY_ID, "");
@@ -150,11 +143,9 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         });
 
         weekPlanButton.setOnClickListener(v -> {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
+            Calendar today = Calendar.getInstance();
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.DAY_OF_YEAR, 7);
             DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
@@ -164,9 +155,11 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
                             String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
                             String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
                             mealOfDay.dateAndTime = formattedDate;
-                            iHomePresenterWeek.addToWeekPlan(mealOfDay);
+                            iHomePresenter.addToWeekPlan(mealOfDay);
                         }
-                    }, year, month, day);
+                    }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
+            datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
             datePickerDialog.show();
 
         });
@@ -237,7 +230,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
 
     @Override
     public void addToWeekPlan(Meal meal) {
-        iHomePresenterWeek.addToWeekPlan(meal);
+        iHomePresenter.addToWeekPlan(meal);
     }
 
     @Override

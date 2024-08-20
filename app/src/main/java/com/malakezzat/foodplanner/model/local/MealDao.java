@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.model.local.fav;
+package com.malakezzat.foodplanner.model.local;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -14,6 +14,9 @@ public interface MealDao {
     @Query("SELECT * FROM MealDB")
     LiveData<List<MealDB>> getAll();
 
+    @Query("SELECT * FROM MealDB")
+    List<MealDB> getAllMealsList();
+
     @Query("SELECT * FROM MealDB WHERE idMeal IN (:mealIds)")
     LiveData<List<MealDB>> loadAllByIds(int[] mealIds);
 
@@ -23,7 +26,7 @@ public interface MealDao {
     @Query("SELECT * FROM MealDB WHERE strMeal LIKE :title LIMIT 1")
     MealDB findByName(String title);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(MealDB... meals);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

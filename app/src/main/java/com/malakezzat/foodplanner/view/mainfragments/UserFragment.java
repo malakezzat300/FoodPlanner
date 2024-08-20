@@ -1,5 +1,6 @@
 package com.malakezzat.foodplanner.view.mainfragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,13 +29,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.presenter.UserPresenter;
+import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 import com.malakezzat.foodplanner.view.WelcomeActivity;
 
-public class UserFragment extends BottomSheetDialogFragment {
+public class UserFragment extends BottomSheetDialogFragment  {
     ImageView userImage;
     TextView username,email;
     Button backupButton,signOutButton,updatePictureButton,removePictureButton,deleteAccountButton;
     FirebaseAuth auth;
+    IUserPresenter iUserPresenter;
+    Context context;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher;
 
 
@@ -67,6 +74,9 @@ public class UserFragment extends BottomSheetDialogFragment {
         removePictureButton = view.findViewById(R.id.remove_image_button);
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
+        context = view.getContext();
+
+        iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
 
         if(user != null) {
             username.setText(user.getDisplayName());
@@ -79,7 +89,7 @@ public class UserFragment extends BottomSheetDialogFragment {
         }
 
         backupButton.setOnClickListener(v->{
-
+            iUserPresenter.backupUserData();
         });
 
         signOutButton.setOnClickListener(v->{
@@ -146,4 +156,5 @@ public class UserFragment extends BottomSheetDialogFragment {
 
 
     }
+
 }

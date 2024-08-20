@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.malakezzat.foodplanner.R;
-import com.malakezzat.foodplanner.model.local.fav.MealDB;
+import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.text.SimpleDateFormat;
@@ -63,11 +63,9 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
         });
 
         holder.weekPlanButton.setOnClickListener(v -> {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
+            Calendar today = Calendar.getInstance();
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.DAY_OF_YEAR, 7);
             DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
@@ -79,7 +77,9 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
                             meals.get(position).dateAndTime = formattedDate;
                             onMealClickListener.addToWeekPlan(meals.get(position).toMeal());
                         }
-                    }, year, month, day);
+                    }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
+            datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
             datePickerDialog.show();
 
         });

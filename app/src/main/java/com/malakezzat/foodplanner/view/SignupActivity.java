@@ -20,6 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.model.local.AppDatabase;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.presenter.UserPresenter;
+import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -31,6 +35,7 @@ public class SignupActivity extends AppCompatActivity {
     public static final int EMAIL_MODE = 1;
     public static final int PASSWORD_MODE = 2;
     public static final int USER_MODE = 3;
+    IUserPresenter iUserPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,7 @@ public class SignupActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.emailEditText);
         inputPassword = findViewById(R.id.passwordEditText);
         progressBar = findViewById(R.id.progressBar);
+        iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
 
         btnSignUp.setOnClickListener(v -> {
             String username = inputUser.getText().toString().trim();
@@ -81,6 +87,7 @@ public class SignupActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(SignupActivity.this, "Signup successful!", Toast.LENGTH_SHORT).show();
+                                                iUserPresenter.restoreUserData();
                                             }
                                         }
                                     });

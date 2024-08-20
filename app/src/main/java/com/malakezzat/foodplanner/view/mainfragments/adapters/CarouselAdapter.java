@@ -84,10 +84,9 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
         }
 
         holder.weekPlanButton.setOnClickListener(v -> {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+            Calendar today = Calendar.getInstance();
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.DAY_OF_YEAR, 7);
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                     new DatePickerDialog.OnDateSetListener() {
@@ -100,7 +99,9 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
                             mealList.get(position).dateAndTime = formattedDate;
                             onMealClickListener.addToWeekPlan(mealList.get(position));
                         }
-                    }, year, month, day);
+                    },  today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
+            datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
             datePickerDialog.show();
 
         });

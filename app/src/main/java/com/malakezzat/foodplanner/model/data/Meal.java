@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.malakezzat.foodplanner.model.local.fav.MealDB;
-import com.malakezzat.foodplanner.model.local.week.MealDBWeek;
+import com.malakezzat.foodplanner.model.local.MealDB;
+import com.malakezzat.foodplanner.model.local.MealDBWeek;
 
 public class Meal implements Data, Parcelable {
     public String idMeal;

@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.model.local.week;
+package com.malakezzat.foodplanner.model.local;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -14,6 +14,9 @@ public interface MealWeekDao {
     @Query("SELECT * FROM MealDBWeek")
     LiveData<List<MealDBWeek>> getAll();
 
+    @Query("SELECT * FROM MealDBWeek")
+    List<MealDBWeek> getAllMealsList();
+
     @Query("SELECT * FROM MealDBWeek WHERE idMeal IN (:mealIds)")
     LiveData<List<MealDBWeek>> loadAllByIds(int[] mealIds);
 
@@ -23,12 +26,14 @@ public interface MealWeekDao {
     @Query("SELECT * FROM MealDBWeek WHERE strMeal LIKE :title LIMIT 1")
     MealDBWeek findByName(String title);
 
-    @Insert
-    void insertAll(com.malakezzat.foodplanner.model.local.week.MealDBWeek... meals);
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertAll(MealDBWeek... meals);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(com.malakezzat.foodplanner.model.local.week.MealDBWeek meal);
+    void insert(MealDBWeek meal);
+
+
 
     @Delete
-    void delete(com.malakezzat.foodplanner.model.local.week.MealDBWeek meal);
+    void delete(MealDBWeek meal);
 }

@@ -3,12 +3,10 @@ package com.malakezzat.foodplanner.presenter;
 import android.util.Log;
 
 import com.malakezzat.foodplanner.model.Remote.NetworkCallBack;
-import com.malakezzat.foodplanner.model.Remote.ProductRemoteDataSource;
+import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSource;
 import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
-import com.malakezzat.foodplanner.model.local.fav.ProductLocalDataSource;
-import com.malakezzat.foodplanner.model.local.week.MealDBWeek;
-import com.malakezzat.foodplanner.model.local.week.ProductLocalDataSourceWeek;
+import com.malakezzat.foodplanner.model.local.MealLocalDataSource;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
 
@@ -19,52 +17,51 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
 
     private static final String TAG = "HomePresenter";
     IHomeView iHomeView;
-    ProductRemoteDataSource productRemoteDataSource;
+    MealRemoteDataSource mealRemoteDataSource;
     List<Meal> mealList;
-    ProductLocalDataSource productLocalDataSource;
-    ProductLocalDataSourceWeek productLocalDataSourceWeek;
-    public HomePresenter(IHomeView iHomeView, ProductRemoteDataSource productRemoteDataSource, ProductLocalDataSource productLocalDataSource) {
+    MealLocalDataSource mealLocalDataSource;
+    public HomePresenter(IHomeView iHomeView, MealRemoteDataSource mealRemoteDataSource, MealLocalDataSource mealLocalDataSource) {
         mealList = new ArrayList<>();
         this.iHomeView = iHomeView;
-        this.productRemoteDataSource = productRemoteDataSource;
-        this.productLocalDataSource = productLocalDataSource;
+        this.mealRemoteDataSource = mealRemoteDataSource;
+        this.mealLocalDataSource = mealLocalDataSource;
 
     }
 
-    public HomePresenter(IHomeView iHomeView, ProductLocalDataSourceWeek productLocalDataSourceWeek) {
+    public HomePresenter(IHomeView iHomeView, MealLocalDataSource mealLocalDataSource) {
         mealList = new ArrayList<>();
         this.iHomeView = iHomeView;
-        this.productLocalDataSourceWeek = productLocalDataSourceWeek;
+        this.mealLocalDataSource = mealLocalDataSource;
     }
 
     @Override
     public void getMeals() {
-        productRemoteDataSource.getMultipleRandomMeals(10,this);
+        mealRemoteDataSource.getMultipleRandomMeals(10,this);
     }
 
     @Override
     public void getMeal() {
-        productRemoteDataSource.getRandomMeal(this);
+        mealRemoteDataSource.getRandomMeal(this);
     }
 
     @Override
     public void getMealById(String id) {
-        productRemoteDataSource.searchById(Integer.parseInt(id),this,0);
+        mealRemoteDataSource.searchById(Integer.parseInt(id),this,0);
     }
 
     @Override
     public void addToFav(Meal meal) {
-        productLocalDataSource.insertMeal(meal.toMealDB());
+        mealLocalDataSource.insertMeal(meal.toMealDB());
     }
 
     @Override
     public void removeFromFav(Meal meal) {
-        productLocalDataSource.deleteMeal(meal.toMealDB());
+        mealLocalDataSource.deleteMeal(meal.toMealDB());
     }
 
     @Override
     public void addToWeekPlan(Meal meal) {
-        productLocalDataSourceWeek.insertWeekMeal(meal.toMealDBWeek());
+        mealLocalDataSource.insertWeekMeal(meal.toMealDBWeek());
     }
 
     @Override
@@ -81,7 +78,7 @@ public class HomePresenter implements NetworkCallBack,IHomePresenter {
 
     @Override
     public void onSuccessResult(List<? extends Data> listOfItems, int saveMode) {
-
+        iHomeView.getMeal((List<Meal>) listOfItems);
     }
 
     @Override

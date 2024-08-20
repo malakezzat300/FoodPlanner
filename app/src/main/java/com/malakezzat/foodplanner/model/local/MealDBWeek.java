@@ -1,4 +1,4 @@
-package com.malakezzat.foodplanner.model.local.fav;
+package com.malakezzat.foodplanner.model.local;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 import com.malakezzat.foodplanner.model.data.Meal;
 
 @Entity
-public class MealDB {
+public class MealDBWeek {
 
     @PrimaryKey
     @NonNull
