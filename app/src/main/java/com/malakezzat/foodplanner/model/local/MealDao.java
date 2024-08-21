@@ -32,6 +32,9 @@ public interface MealDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(MealDB meal);
 
+    @Query("DELETE FROM MealDB") // Replace with your table name
+    void clearTable();
+
     @Delete
     void delete(MealDB meal);
 }

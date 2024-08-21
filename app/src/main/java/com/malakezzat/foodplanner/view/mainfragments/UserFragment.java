@@ -39,6 +39,7 @@ import com.malakezzat.foodplanner.presenter.UserPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 import com.malakezzat.foodplanner.view.ConnectionListener;
 import com.malakezzat.foodplanner.view.ConnectionReceiver;
+import com.malakezzat.foodplanner.view.SignupActivity;
 import com.malakezzat.foodplanner.view.WelcomeActivity;
 
 public class UserFragment extends BottomSheetDialogFragment  implements ConnectionListener {
@@ -117,6 +118,7 @@ public class UserFragment extends BottomSheetDialogFragment  implements Connecti
         backupButton.setOnClickListener(v->{
             if(isConnected) {
                 iUserPresenter.backupUserData();
+                Toast.makeText(context, "Backup Successful!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Backup Failed Please Connect To Internet First!", Toast.LENGTH_SHORT).show();
             }

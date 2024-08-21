@@ -7,13 +7,22 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     tools:context=".view.mainfragments.fragments.FavoriteFragment">
-
+    <TextView
+        android:id="@+id/fav_meals_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/favorite_meals"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="32sp"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fav_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/fav_meals_text"  />
 </androidx.constraintlayout.widget.ConstraintLayout>

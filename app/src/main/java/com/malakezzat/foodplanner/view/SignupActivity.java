@@ -1,6 +1,7 @@
 package com.malakezzat.foodplanner.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -108,7 +109,8 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
                                                 }
                                             }
                                         });
-                                // Navigate to another activity if needed
+                                Intent intent = new Intent(this, MainActivity.class);
+                                startActivity(intent);
                             } else {
                                 // If sign up fails, display a message to the user.
                                 Toast.makeText(SignupActivity.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();

@@ -23,6 +23,7 @@ public class BackupMeals {
         this.myDao = myDao;
         this.myWeekDao = myWeekDao;
         auth = FirebaseAuth.getInstance();
+
     }
 
     public void backupDataToFirestore() {
@@ -91,13 +92,13 @@ public class BackupMeals {
             });
         }
     }
-
     public void restoreDataFromFirestore() {
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
 
-            // Restore FavMeals
+            Executors.newSingleThreadExecutor().execute(myDao::clearTable);
+
             CollectionReference collectionRef = firestore.collection("users")
                     .document(userId)
                     .collection("FavMeals");
@@ -115,7 +116,8 @@ public class BackupMeals {
                 }
             });
 
-            // Restore WeekPlan
+            Executors.newSingleThreadExecutor().execute(myWeekDao::clearTable);
+
             CollectionReference collectionRefWeek = firestore.collection("users")
                     .document(userId)
                     .collection("WeekPlan");

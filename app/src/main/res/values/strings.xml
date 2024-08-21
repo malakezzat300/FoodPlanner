@@ -39,5 +39,6 @@
     <string name="fav_guest">Guest cannot add Meal to Favorite</string>
     <string name="week_guest">Guest cannot make Week Plan</string>
     <string name="guest_text">We regret to inform you that there is nothing to display at the moment. Please provide internet or log in with an account to view the application content.</string>
+    <string name="favorite_meals">Favorite Meals</string>
 
 </resources>
