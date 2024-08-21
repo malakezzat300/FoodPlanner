@@ -115,7 +115,7 @@ public class ListsFragment extends Fragment implements IListsView , OnListsListe
 
     @Override
     public void getError(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

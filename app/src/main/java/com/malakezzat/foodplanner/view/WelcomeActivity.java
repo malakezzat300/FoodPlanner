@@ -43,6 +43,7 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
     ConstraintLayout constraintLayout;
     ConnectionReceiver connectionReceiver;
     boolean wasDisconnected = false;
+    boolean isConnected;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -148,10 +149,12 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
                 Log.d(TAG, "signInAnonymously:success");
                 FirebaseUser user = mAuth.getCurrentUser();
                 updateUI(user);
-            } else {
+            } else if(!isConnected){
+                Toast.makeText(WelcomeActivity.this, "Check your internet Connection.", Toast.LENGTH_SHORT).show();
+            }
+            else {
                 Log.w(TAG, "signInAnonymously:failure", task.getException());
                 Toast.makeText(WelcomeActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
-                updateUI(null);
             }
         });
     }
@@ -169,7 +172,7 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
 
     @Override
     public void onChangeConnection(Boolean isConnected) {
-
+        this.isConnected = isConnected;
         if(isConnected && !wasDisconnected) {
 
         } else if(isConnected) {

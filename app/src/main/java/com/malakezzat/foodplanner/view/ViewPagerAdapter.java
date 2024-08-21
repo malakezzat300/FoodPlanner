@@ -3,6 +3,7 @@ package com.malakezzat.foodplanner.view;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,40 +22,60 @@ import com.malakezzat.foodplanner.view.mainfragments.fragments.WeekPlanFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
+    boolean isConnected;
     FirebaseUser user;
-    public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+    public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior,boolean isConnected) {
         super(fm, behavior);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        this.isConnected = isConnected;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
         if(user != null && user.isAnonymous()){
-            switch (position) {
-                case 0:
-                    return new HomeFragment();
-                case 1:
-                    return new SearchFragment();
-                case 2:
-                    return new ListsFragment();
-                default:
-                    return new HomeFragment();
+            if(isConnected) {
+                switch (position) {
+                    case 0:
+                        return new HomeFragment();
+                    case 1:
+                        return new SearchFragment();
+                    case 2:
+                        return new ListsFragment();
+                    default:
+                        return new HomeFragment();
+                }
+            } else {
+                switch (position) {
+                    default:
+                        return new HomeFragment();
+                }
             }
         } else {
-            switch (position) {
-                case 0:
-                    return new HomeFragment();
-                case 1:
-                    return new SearchFragment();
-                case 2:
-                    return new ListsFragment();
-                case 3:
-                    return new FavoriteFragment();
-                case 4:
-                    return new WeekPlanFragment();
-                default:
-                    return new HomeFragment();
+            if(isConnected) {
+                switch (position) {
+                    case 0:
+                        return new HomeFragment();
+                    case 1:
+                        return new SearchFragment();
+                    case 2:
+                        return new ListsFragment();
+                    case 3:
+                        return new FavoriteFragment();
+                    case 4:
+                        return new WeekPlanFragment();
+                    default:
+                        return new HomeFragment();
+                }
+            } else {
+                switch (position) {
+                    case 0:
+                        return new FavoriteFragment();
+                    case 1:
+                        return new WeekPlanFragment();
+                    default:
+                        return new FavoriteFragment();
+                }
             }
         }
     }
@@ -62,9 +83,17 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         if(user != null && user.isAnonymous()){
-            return 3;
+            if(isConnected) {
+                return 3;
+            } else {
+                return 1;
+            }
         } else {
-            return 5;
+            if(isConnected) {
+                return 5;
+            } else {
+                return 2;
+            }
         }
     }
 }

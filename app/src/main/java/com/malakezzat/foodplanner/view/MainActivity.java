@@ -1,6 +1,10 @@
 package com.malakezzat.foodplanner.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.navigation.NavController;
 import androidx.viewpager.widget.ViewPager;
@@ -21,6 +26,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
@@ -29,11 +35,13 @@ import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.UserFragment;
 
-public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements OnItemSelectedListener, ConnectionListener {
 
     private static final String TAG = "MainActivity";
     public static final String MEALS_TITLE = "title";
     public static final String DATA_TYPE = "dataType";
+    public static final String CONNECTION = "connection";
+    public static final String SECOND = "second";
     public static final int COUNTRIES = 1;
     public static final int CATEGORIES = 2;
     private NavController navController;
@@ -46,22 +54,65 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private FirebaseAuth auth;
     String username;
     IUserPresenter iUserPresenter;
+    boolean isConnected , wasDisconnected = false,isRefreshed = false;
+    ConnectionReceiver connectionReceiver;
+    ConstraintLayout constraintLayout;
+    TextView guestText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-
+        connectionReceiver  = new ConnectionReceiver(this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(connectionReceiver,filter, Context.RECEIVER_NOT_EXPORTED);
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if(activeNetwork == null) {
+            isConnected = false;
+        } else if (activeNetwork.isConnected()){
+            isConnected = true;
+        }
 
         if(user != null && user.isAnonymous()){
             setContentView(R.layout.activity_main_ano);
             viewPager = findViewById(R.id.viewPager);
             navView = findViewById(R.id.nav_view);
+            guestText = findViewById(R.id.guest_text);
+            if(!isConnected) {
+                viewPager.setVisibility(View.GONE);
+                navView.setVisibility(View.GONE);
+                guestText.setVisibility(View.VISIBLE);
+            } else {
+                viewPager.setVisibility(View.VISIBLE);
+                navView.setVisibility(View.VISIBLE);
+                guestText.setVisibility(View.GONE);
+            }
         } else {
-            setContentView(R.layout.activity_main);
-            viewPager = findViewById(R.id.viewPager);
-            navView = findViewById(R.id.nav_view);
+            if(isConnected) {
+                setContentView(R.layout.activity_main);
+                viewPager = findViewById(R.id.viewPager);
+                navView = findViewById(R.id.nav_view);
+            } else {
+                setContentView(R.layout.activity_main_no_network);
+                viewPager = findViewById(R.id.viewPager);
+                navView = findViewById(R.id.nav_view);
+            }
+        }
+        constraintLayout = findViewById(R.id.main);
+
+        Intent intent = getIntent();
+        boolean c = intent.getBooleanExtra(CONNECTION,false);
+        boolean s = intent.getBooleanExtra(SECOND,false);
+        if(s) {
+            if (c) {
+                Snackbar.make(constraintLayout, "The Connection has been Restored", Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(constraintLayout, "There is No Internet Connection", Snackbar.LENGTH_LONG).show();
+            }
         }
 
         Toolbar toolbar = findViewById(R.id.tool_bar);
@@ -78,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         if(user != null) {
             String username = user.getDisplayName();
             String hello;
-            if(!username.isEmpty() && username != null){
+            if(username != null && !username.isEmpty()){
                 hello = getString(R.string.hello) + getFirstWordCapitalized(username);
             } else {
                 hello = getString(R.string.hello_guest);
@@ -95,39 +146,53 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
 
 
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager()
+                , FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+                ,isConnected);
         viewPager.setAdapter(viewPagerAdapter);
 
         // Set up the Bottom Navigation View
         navView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if(user != null && user.isAnonymous()){
-                if (itemId == R.id.navigation_home) {
-                    viewPager.setCurrentItem(0);
-                    return true;
-                } else if (itemId == R.id.navigation_search) {
-                    viewPager.setCurrentItem(1);
-                    return true;
-                } else if (itemId == R.id.navigation_lists) {
-                    viewPager.setCurrentItem(2);
-                    return true;
+                if(isConnected) {
+                    if (itemId == R.id.navigation_home) {
+                        viewPager.setCurrentItem(0);
+                        return true;
+                    } else if (itemId == R.id.navigation_search) {
+                        viewPager.setCurrentItem(1);
+                        return true;
+                    } else if (itemId == R.id.navigation_lists) {
+                        viewPager.setCurrentItem(2);
+                        return true;
+                    }
                 }
             } else {
-                if (itemId == R.id.navigation_home) {
-                    viewPager.setCurrentItem(0);
-                    return true;
-                } else if (itemId == R.id.navigation_search) {
-                    viewPager.setCurrentItem(1);
-                    return true;
-                } else if (itemId == R.id.navigation_lists) {
-                    viewPager.setCurrentItem(2);
-                    return true;
-                } else if (itemId == R.id.navigation_favorite) {
-                    viewPager.setCurrentItem(3);
-                    return true;
-                } else if (itemId == R.id.navigation_week_plan) {
-                    viewPager.setCurrentItem(4);
-                    return true;
+                if(isConnected) {
+                    if (itemId == R.id.navigation_home) {
+                        viewPager.setCurrentItem(0);
+                        return true;
+                    } else if (itemId == R.id.navigation_search) {
+                        viewPager.setCurrentItem(1);
+                        return true;
+                    } else if (itemId == R.id.navigation_lists) {
+                        viewPager.setCurrentItem(2);
+                        return true;
+                    } else if (itemId == R.id.navigation_favorite) {
+                        viewPager.setCurrentItem(3);
+                        return true;
+                    } else if (itemId == R.id.navigation_week_plan) {
+                        viewPager.setCurrentItem(4);
+                        return true;
+                    }
+                } else {
+                    if (itemId == R.id.navigation_favorite) {
+                        viewPager.setCurrentItem(0);
+                        return true;
+                    } else if (itemId == R.id.navigation_week_plan) {
+                        viewPager.setCurrentItem(1);
+                        return true;
+                    }
                 }
             }
             return false;
@@ -144,24 +209,34 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             @Override
             public void onPageSelected(int position) {
                 if(user != null && user.isAnonymous()){
-                    if (position == 0) {
-                        navView.setSelectedItemId(R.id.navigation_home);
-                    } else if (position == 1) {
-                        navView.setSelectedItemId(R.id.navigation_search);
-                    } else if (position == 2) {
-                        navView.setSelectedItemId(R.id.navigation_lists);
+                    if(isConnected) {
+                        if (position == 0) {
+                            navView.setSelectedItemId(R.id.navigation_home);
+                        } else if (position == 1) {
+                            navView.setSelectedItemId(R.id.navigation_search);
+                        } else if (position == 2) {
+                            navView.setSelectedItemId(R.id.navigation_lists);
+                        }
                     }
                 } else {
-                    if (position == 0) {
-                        navView.setSelectedItemId(R.id.navigation_home);
-                    } else if (position == 1) {
-                        navView.setSelectedItemId(R.id.navigation_search);
-                    } else if (position == 2) {
-                        navView.setSelectedItemId(R.id.navigation_lists);
-                    } else if (position == 3) {
-                        navView.setSelectedItemId(R.id.navigation_favorite);
-                    } else if (position == 4) {
-                        navView.setSelectedItemId(R.id.navigation_week_plan);
+                    if(isConnected) {
+                        if (position == 0) {
+                            navView.setSelectedItemId(R.id.navigation_home);
+                        } else if (position == 1) {
+                            navView.setSelectedItemId(R.id.navigation_search);
+                        } else if (position == 2) {
+                            navView.setSelectedItemId(R.id.navigation_lists);
+                        } else if (position == 3) {
+                            navView.setSelectedItemId(R.id.navigation_favorite);
+                        } else if (position == 4) {
+                            navView.setSelectedItemId(R.id.navigation_week_plan);
+                        }
+                    } else {
+                        if (position == 0) {
+                            navView.setSelectedItemId(R.id.navigation_favorite);
+                        } else if (position == 1) {
+                            navView.setSelectedItemId(R.id.navigation_week_plan);
+                        }
                     }
                 }
 
@@ -242,5 +317,48 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         intent.putExtra(MEALS_TITLE,meal.strArea);
         intent.putExtra(DATA_TYPE,COUNTRIES);
         startActivity(intent);
+    }
+
+    @Override
+    public void onChangeConnection(Boolean isConnected) {
+        // Only refresh UI if there's a change in connection state
+        if (this.isConnected != isConnected) {
+            this.isConnected = isConnected;
+            Log.i(TAG, "onChangeConnection: is connected : " + isConnected);
+            refresheUI();
+            if (isConnected) {
+                if (wasDisconnected) {
+                    // Show a message when the connection is restored
+                    Snackbar.make(constraintLayout, "The Connection has been Restored", Snackbar.LENGTH_LONG).show();
+                }
+            } else {
+                // Show a message when the connection is lost
+                Snackbar.make(constraintLayout, "There is No Internet Connection", Snackbar.LENGTH_LONG).show();
+                wasDisconnected = true;
+
+            }
+        }
+    }
+
+    public void refresheUI(){
+        if(!isRefreshed){
+            Intent intent = getIntent();
+            finish();
+            intent.putExtra(CONNECTION,isConnected);
+            intent.putExtra(SECOND,true);
+            startActivity(intent);
+            isRefreshed = true;
+            new Handler(Looper.getMainLooper()).postDelayed(() -> isRefreshed = false, 2000); // Reset the refresh flag after a delay
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (connectionReceiver != null) {
+            unregisterReceiver(connectionReceiver);
+            connectionReceiver = null;
+        }
+        super.onDestroy();
     }
 }

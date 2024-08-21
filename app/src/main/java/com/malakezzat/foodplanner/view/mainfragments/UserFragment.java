@@ -2,6 +2,9 @@ package com.malakezzat.foodplanner.view.mainfragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -25,6 +28,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -33,9 +37,11 @@ import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.UserPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
+import com.malakezzat.foodplanner.view.ConnectionListener;
+import com.malakezzat.foodplanner.view.ConnectionReceiver;
 import com.malakezzat.foodplanner.view.WelcomeActivity;
 
-public class UserFragment extends BottomSheetDialogFragment  {
+public class UserFragment extends BottomSheetDialogFragment  implements ConnectionListener {
     ImageView userImage;
     TextView username,email;
     Button backupButton,signOutButton,updatePictureButton,removePictureButton,deleteAccountButton;
@@ -43,7 +49,8 @@ public class UserFragment extends BottomSheetDialogFragment  {
     IUserPresenter iUserPresenter;
     Context context;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher;
-
+    ConnectionReceiver connectionReceiver;
+    boolean isConnected,wasDisconnected = false;
 
     public UserFragment() {
         // Required empty public constructor
@@ -75,6 +82,17 @@ public class UserFragment extends BottomSheetDialogFragment  {
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         context = view.getContext();
+        connectionReceiver  = new ConnectionReceiver(this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        view.getContext().registerReceiver(connectionReceiver,filter, Context.RECEIVER_NOT_EXPORTED);
+        ConnectivityManager cm = (ConnectivityManager) view.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if(activeNetwork == null) {
+            isConnected = false;
+        } else if (activeNetwork.isConnected()){
+            isConnected = true;
+        }
 
         iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
 
@@ -92,10 +110,16 @@ public class UserFragment extends BottomSheetDialogFragment  {
                 backupButton.setVisibility(View.GONE);
             }
         }
-
+        if(!isConnected) {
+            backupButton.setVisibility(View.GONE);
+        }
 
         backupButton.setOnClickListener(v->{
-            iUserPresenter.backupUserData();
+            if(isConnected) {
+                iUserPresenter.backupUserData();
+            } else {
+                Toast.makeText(context, "Backup Failed Please Connect To Internet First!", Toast.LENGTH_SHORT).show();
+            }
         });
 
         signOutButton.setOnClickListener(v->{
@@ -122,6 +146,8 @@ public class UserFragment extends BottomSheetDialogFragment  {
                                                         .apply(new RequestOptions().override(200,200))
                                                         .placeholder(R.drawable.account_circle)
                                                         .into(userImage);
+                                            } else {
+                                                Toast.makeText(getContext(), "Failed to update profile picture.", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -163,4 +189,9 @@ public class UserFragment extends BottomSheetDialogFragment  {
 
     }
 
+    @Override
+    public void onChangeConnection(Boolean isConnected) {
+        this.isConnected = isConnected;
+
+    }
 }

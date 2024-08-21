@@ -160,7 +160,7 @@ public class MealsActivity extends AppCompatActivity implements ISearchView, OnM
 
     @Override
     public void getError(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

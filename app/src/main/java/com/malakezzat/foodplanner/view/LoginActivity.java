@@ -4,7 +4,12 @@ import static com.malakezzat.foodplanner.view.SignupActivity.EMAIL_MODE;
 import static com.malakezzat.foodplanner.view.SignupActivity.PASSWORD_MODE;
 import static com.malakezzat.foodplanner.view.SignupActivity.checkValidation;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,7 +34,7 @@ import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.UserPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ConnectionListener {
 
     private static final String USER = "user";
     private TextInputLayout emailInputLayout, passwordInputLayout;
@@ -37,14 +43,28 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     IUserPresenter iUserPresenter;
+    Boolean isConnected;
+    ConnectionReceiver connectionReceiver;
+    ConnectivityManager cm;
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
-
+        connectionReceiver  = new ConnectionReceiver(this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(connectionReceiver,filter, Context.RECEIVER_NOT_EXPORTED);
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if(activeNetwork == null) {
+            isConnected = false;
+        } else if (activeNetwork.isConnected()){
+            isConnected = true;
+        }
         emailInputLayout = findViewById(R.id.emailLoginInputLayout);
         passwordInputLayout = findViewById(R.id.passwordLoginInputLayout);
         btnLogin = findViewById(R.id.loginButton);
@@ -53,43 +73,47 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         btnLogin.setOnClickListener(v -> {
-            String email = inputEmail.getText().toString().trim();
-            String password = inputPassword.getText().toString().trim();
+            if(isConnected) {
+                String email = inputEmail.getText().toString().trim();
+                String password = inputPassword.getText().toString().trim();
 
-            boolean emailV = checkValidation(emailInputLayout,email,EMAIL_MODE);
-            boolean passwordV = checkValidation(passwordInputLayout,password,PASSWORD_MODE);
+                boolean emailV = checkValidation(emailInputLayout, email, EMAIL_MODE);
+                boolean passwordV = checkValidation(passwordInputLayout, password, PASSWORD_MODE);
 
-            if(emailV || passwordV){
-                return;
-            }
+                if (emailV || passwordV) {
+                    return;
+                }
 
-            progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
 
-            // Create user with email and password
-            auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            progressBar.setVisibility(View.GONE);
-                            if (task.isSuccessful()) {
-                                // Sign in success, proceed to main activity or other actions
-                                Log.d("LoginActivity", "signInWithEmailAndPassword:success");
-                                Toast.makeText(LoginActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                FirebaseUser currentUser = auth.getCurrentUser();
-                                intent.putExtra(USER,currentUser.getDisplayName());
-                                startActivity(intent);
-                                iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
-                                iUserPresenter.restoreUserData();
-                            } else {
+                // Create user with email and password
+                auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
-                                // Sign in failed, display a message to the user
-                                Log.w("LoginActivity", "signInWithEmailAndPassword:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, "Check the Email and Password.", Toast.LENGTH_SHORT).show();
+                                if (task.isSuccessful()) {
+                                    // Sign in success, proceed to main activity or other actions
+                                    Log.d("LoginActivity", "signInWithEmailAndPassword:success");
+                                    Toast.makeText(LoginActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
+
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    FirebaseUser currentUser = auth.getCurrentUser();
+                                    intent.putExtra(USER, currentUser.getDisplayName());
+                                    startActivity(intent);
+                                    iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
+                                    iUserPresenter.restoreUserData();
+                                } else {
+                                    progressBar.setVisibility(View.GONE);
+                                    // Sign in failed, display a message to the user
+                                    Log.w("LoginActivity", "signInWithEmailAndPassword:failure", task.getException());
+                                    Toast.makeText(LoginActivity.this, "Check the Email and Password.", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
+                        });
+            } else {
+                Toast.makeText(LoginActivity.this, "Check your internet Connection.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         inputEmail.setOnFocusChangeListener((v, hasFocus)->{
@@ -109,6 +133,17 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onChangeConnection(Boolean isConnected) {
+        this.isConnected = isConnected;
+    }
 
-
+    @Override
+    protected void onDestroy() {
+        if (connectionReceiver != null) {
+            unregisterReceiver(connectionReceiver);
+            connectionReceiver = null;
+        }
+        super.onDestroy();
+    }
 }

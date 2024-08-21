@@ -36,4 +36,7 @@
     <string name="hello">"مرحبا "</string>
     <string name="hello_guest">مرحبا بالضيف</string>
     <string name="guest">ضيف</string>
+    <string name="fav_guest">الضيف لا يمكنه اضافة وجبه لقائمة المفضل</string>
+    <string name="week_guest">الضيف لا يمكنه عمل خطه اسبوعيه</string>
+    <string name="guest_text">نود نبلغكم بكل اسف انه لا يوجد شي لعرضه حاليا نرجو منك توفير انترنت او تسجيل الدخول بحساب لعرض محتوي التطبيق</string>
 </resources>

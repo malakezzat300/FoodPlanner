@@ -210,7 +210,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
 
     @Override
     public void getError(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
