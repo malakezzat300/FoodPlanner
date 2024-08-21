@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,12 +17,15 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Ingredient;
 import com.malakezzat.foodplanner.model.data.IngredientList;
@@ -53,15 +57,13 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
     IngredientsAdapter ingredientsAdapter;
     GridLayoutManager gridLayoutManager;
     List<Ingredient> ingredients;
+    ConstraintLayout youtubePlayerConstraintlayout;
     Boolean isFav = false;
+    FirebaseUser user;
     public MealDetailsFragment(Meal meal,OnMealClickListener onMealClickListener) {
         this.meal = meal;
         this.onMealClickListener = onMealClickListener;
-    }
-
-    public MealDetailsFragment(MealDB mealDB,OnMealClickListener onMealClickListener) {
-        this.meal = mealDB.toMeal();
-        this.onMealClickListener = onMealClickListener;
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -91,6 +93,7 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
         ingredients = new ArrayList<>();
         ingredientList = new IngredientList(meal);
         ingredients = ingredientList.ingredients;
+        youtubePlayerConstraintlayout = view.findViewById(R.id.youtube_player_constraintlayout);
 
 
         ingredientsRecyclerView = view.findViewById(R.id.ingredients_recycler_view);
@@ -111,49 +114,47 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
                 .into(mealImage);
 
         weekPlanButton.setOnClickListener(v->{
-            Calendar today = Calendar.getInstance();
-            Calendar maxDate = Calendar.getInstance();
-            maxDate.add(Calendar.DAY_OF_YEAR, 7);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
-                    new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            Calendar selectedDate = Calendar.getInstance();
-                            selectedDate.set(year, monthOfYear, dayOfMonth);
-
-                            // Format the selected date
-                            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
-                            String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-
-                            // Set the selected date
-                            meal.dateAndTime = formattedDate;
-                            onMealClickListener.addToWeekPlan(meal);
-                            onMealClickListener.addToWeekPlan(meal.idMeal, 3);
-                        }
-                    },
-                    today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)
-            );
-
-            datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
-            datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
-
-            datePickerDialog.show();
+            if(user != null && user.isAnonymous()){
+                Toast.makeText(view.getContext(), getString(R.string.week_guest), Toast.LENGTH_SHORT).show();
+            } else {
+                Calendar today = Calendar.getInstance();
+                Calendar maxDate = Calendar.getInstance();
+                maxDate.add(Calendar.DAY_OF_YEAR, 7);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                Calendar selectedDate = Calendar.getInstance();
+                                selectedDate.set(year, monthOfYear, dayOfMonth);
+                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
+                                String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                                meal.dateAndTime = formattedDate;
+                                onMealClickListener.addToWeekPlan(meal);
+                            }
+                        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
+                datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+                datePickerDialog.show();
+            }
         });
 
         favButton.setOnClickListener(v -> {
-            if(isFav){
-                favButton.setImageResource(R.drawable.favorite_border);
-                onMealClickListener.removeFromFav(meal);
-                isFav = false;
+            if(user != null && user.isAnonymous()){
+                Toast.makeText(view.getContext(), getString(R.string.fav_guest), Toast.LENGTH_SHORT).show();
             } else {
-                favButton.setImageResource(R.drawable.favorite_red);
-                onMealClickListener.addToFav(meal);
-                isFav = true;
+                if (isFav) {
+                    favButton.setImageResource(R.drawable.favorite_border);
+                    onMealClickListener.removeFromFav(meal);
+                    isFav = false;
+                } else {
+                    favButton.setImageResource(R.drawable.favorite_red);
+                    onMealClickListener.addToFav(meal);
+                    isFav = true;
+                }
             }
         });
-        String mealN = getString(R.string.meal_name) + meal.strMeal;
-        String mealC = getString(R.string.meal_country) + meal.strArea;
+        String mealN = getString(R.string.meal_name) + " "+ meal.strMeal;
+        String mealC = getString(R.string.meal_country) +" "+ meal.strArea;
         mealTitle.setText(mealN);
         mealCountry.setText(mealC);
         stepsText.setText(meal.strInstructions);
@@ -163,8 +164,12 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
                 if(meal.strYoutube != null) {
-                    String video = meal.strYoutube;
-                    youTubePlayer.cueVideo(extractYouTubeVideoId(meal.strYoutube), 0);
+                    String video = extractYouTubeVideoId(meal.strYoutube);
+                    if(video.equals("XIMLoLxmTDw")){
+                        youtubePlayerConstraintlayout.setVisibility(View.GONE);
+                    } else {
+                        youTubePlayer.cueVideo(video, 0);
+                    }
                 }
             }
         });

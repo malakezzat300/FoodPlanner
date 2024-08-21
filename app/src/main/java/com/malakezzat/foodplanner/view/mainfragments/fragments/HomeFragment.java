@@ -24,6 +24,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
@@ -61,6 +63,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     SharedPreferences.Editor editor;
     String MealOfDayId;
     CardView mealOfDayButton;
+    FirebaseUser user;
     private static final String PREFS_NAME = "MyPrefs";
     private static final String KEY_SAVED_TIME = "saved_time";
     public final static String MEALLIST = "mealList";
@@ -98,6 +101,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         weekPlanButton = view.findViewById(R.id.week_plan_button);
         context = view.getContext();
         mealList = new ArrayList<>();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         iHomePresenter = new HomePresenter(this, new MealRemoteDataSourceImpl(), new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0);
         long savedTime = sharedPreferences.getLong(KEY_SAVED_TIME, 0);
@@ -131,37 +135,44 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         });
 
         favButton.setOnClickListener(v -> {
-            if (isFav) {
-                favButton.setImageResource(R.drawable.favorite_border);
-                this.removeFromFav(mealOfDay);
-                isFav = false;
-            } else {
-                favButton.setImageResource(R.drawable.favorite_red);
-                this.addToFav(mealOfDay);
-                isFav = true;
-            }
+                if(user != null && user.isAnonymous()){
+                    Toast.makeText(context, getString(R.string.fav_guest), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (isFav) {
+                        favButton.setImageResource(R.drawable.favorite_border);
+                        this.removeFromFav(mealOfDay);
+                        isFav = false;
+                    } else {
+                        favButton.setImageResource(R.drawable.favorite_red);
+                        this.addToFav(mealOfDay);
+                        isFav = true;
+                    }
+                }
         });
 
         weekPlanButton.setOnClickListener(v -> {
-            Calendar today = Calendar.getInstance();
-            Calendar maxDate = Calendar.getInstance();
-            maxDate.add(Calendar.DAY_OF_YEAR, 7);
-            DatePickerDialog datePickerDialog = new DatePickerDialog(context,
-                    new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            Calendar selectedDate = Calendar.getInstance();
-                            selectedDate.set(year, monthOfYear, dayOfMonth);
-                            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
-                            String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                            mealOfDay.dateAndTime = formattedDate;
-                            iHomePresenter.addToWeekPlan(mealOfDay);
-                        }
-                    }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
-            datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
-            datePickerDialog.show();
-
+            if(user != null && user.isAnonymous()){
+                Toast.makeText(context, getString(R.string.week_guest), Toast.LENGTH_SHORT).show();
+            } else {
+                Calendar today = Calendar.getInstance();
+                Calendar maxDate = Calendar.getInstance();
+                maxDate.add(Calendar.DAY_OF_YEAR, 7);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                Calendar selectedDate = Calendar.getInstance();
+                                selectedDate.set(year, monthOfYear, dayOfMonth);
+                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
+                                String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                                mealOfDay.dateAndTime = formattedDate;
+                                iHomePresenter.addToWeekPlan(mealOfDay);
+                            }
+                        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
+                datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+                datePickerDialog.show();
+            }
         });
 
 
@@ -199,7 +210,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
 
     @Override
     public void getError(String msg) {
-        Toast.makeText(context, "msg", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

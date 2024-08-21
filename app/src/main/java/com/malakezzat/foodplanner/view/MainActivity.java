@@ -1,10 +1,12 @@
 package com.malakezzat.foodplanner.view;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.navigation.NavController;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -21,12 +24,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
+import com.malakezzat.foodplanner.model.data.Category;
+import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.UserFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
     private static final String TAG = "MainActivity";
+    public static final String MEALS_TITLE = "title";
+    public static final String DATA_TYPE = "dataType";
+    public static final int COUNTRIES = 1;
+    public static final int CATEGORIES = 2;
     private NavController navController;
     private BottomNavigationView navView;
     boolean doubleBackToExitPressedOnce = false;
@@ -41,10 +50,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
 
-        viewPager = findViewById(R.id.viewPager);
-        navView = findViewById(R.id.nav_view);
+
+        if(user != null && user.isAnonymous()){
+            setContentView(R.layout.activity_main_ano);
+            viewPager = findViewById(R.id.viewPager);
+            navView = findViewById(R.id.nav_view);
+        } else {
+            setContentView(R.layout.activity_main);
+            viewPager = findViewById(R.id.viewPager);
+            navView = findViewById(R.id.nav_view);
+        }
 
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -56,12 +74,16 @@ public class MainActivity extends AppCompatActivity {
         helloUserText = findViewById(R.id.hello_user);
         userImage = findViewById(R.id.userImage);
         userImage.setImageResource(R.drawable.account_circle);
-        auth = FirebaseAuth.getInstance();
 
-        FirebaseUser user = auth.getCurrentUser();
         if(user != null) {
             String username = user.getDisplayName();
-            helloUserText.setText("Hello " + getFirstWordCapitalized(username));
+            String hello;
+            if(!username.isEmpty() && username != null){
+                hello = getString(R.string.hello) + getFirstWordCapitalized(username);
+            } else {
+                hello = getString(R.string.hello_guest);
+            }
+            helloUserText.setText(hello);
             Uri profileImage = user.getPhotoUrl();
             Glide.with(getApplicationContext()).load(profileImage)
                     .apply(new RequestOptions().override(200,200))
@@ -69,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     .into(userImage);
 
             Log.i(TAG, "onCreate: " + user.getUid());
+
         }
 
 
@@ -78,24 +101,35 @@ public class MainActivity extends AppCompatActivity {
         // Set up the Bottom Navigation View
         navView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
-
-            if (itemId == R.id.navigation_home) {
-                viewPager.setCurrentItem(0);
-                return true;
-            } else if (itemId == R.id.navigation_search) {
-                viewPager.setCurrentItem(1);
-                return true;
-            } else if (itemId == R.id.navigation_lists) {
-                viewPager.setCurrentItem(2);
-                return true;
-            } else if (itemId == R.id.navigation_favorite) {
-                viewPager.setCurrentItem(3);
-                return true;
-            } else if (itemId == R.id.navigation_week_plan) {
-                viewPager.setCurrentItem(4);
-                return true;
+            if(user != null && user.isAnonymous()){
+                if (itemId == R.id.navigation_home) {
+                    viewPager.setCurrentItem(0);
+                    return true;
+                } else if (itemId == R.id.navigation_search) {
+                    viewPager.setCurrentItem(1);
+                    return true;
+                } else if (itemId == R.id.navigation_lists) {
+                    viewPager.setCurrentItem(2);
+                    return true;
+                }
+            } else {
+                if (itemId == R.id.navigation_home) {
+                    viewPager.setCurrentItem(0);
+                    return true;
+                } else if (itemId == R.id.navigation_search) {
+                    viewPager.setCurrentItem(1);
+                    return true;
+                } else if (itemId == R.id.navigation_lists) {
+                    viewPager.setCurrentItem(2);
+                    return true;
+                } else if (itemId == R.id.navigation_favorite) {
+                    viewPager.setCurrentItem(3);
+                    return true;
+                } else if (itemId == R.id.navigation_week_plan) {
+                    viewPager.setCurrentItem(4);
+                    return true;
+                }
             }
-
             return false;
         });
 
@@ -109,18 +143,28 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                // Sync the BottomNavigationView with the ViewPager.
-                if (position == 0) {
-                    navView.setSelectedItemId(R.id.navigation_home);
-                } else if (position == 1) {
-                    navView.setSelectedItemId(R.id.navigation_search);
-                } else if (position == 2) {
-                    navView.setSelectedItemId(R.id.navigation_lists);
-                } else if (position == 3) {
-                    navView.setSelectedItemId(R.id.navigation_favorite);
-                } else if (position == 4) {
-                    navView.setSelectedItemId(R.id.navigation_week_plan);
+                if(user != null && user.isAnonymous()){
+                    if (position == 0) {
+                        navView.setSelectedItemId(R.id.navigation_home);
+                    } else if (position == 1) {
+                        navView.setSelectedItemId(R.id.navigation_search);
+                    } else if (position == 2) {
+                        navView.setSelectedItemId(R.id.navigation_lists);
+                    }
+                } else {
+                    if (position == 0) {
+                        navView.setSelectedItemId(R.id.navigation_home);
+                    } else if (position == 1) {
+                        navView.setSelectedItemId(R.id.navigation_search);
+                    } else if (position == 2) {
+                        navView.setSelectedItemId(R.id.navigation_lists);
+                    } else if (position == 3) {
+                        navView.setSelectedItemId(R.id.navigation_favorite);
+                    } else if (position == 4) {
+                        navView.setSelectedItemId(R.id.navigation_week_plan);
+                    }
                 }
+
             }
 
 
@@ -134,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
             UserFragment userFragment = new UserFragment();
             userFragment.show(getSupportFragmentManager(), userFragment.getTag());
         });
+
     }
 
 
@@ -159,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
 
-    public String getFirstWordCapitalized(String input) {
+    public static String getFirstWordCapitalized(String input) {
         String[] words = input.split(" ");
         if (words.length > 0) {
             String firstWord = words[0];
@@ -181,5 +226,21 @@ public class MainActivity extends AppCompatActivity {
                         .into(userImage);
             }
         }
+    }
+
+    @Override
+    public void onItemSelected(Category category) {
+        Intent intent = new Intent(this, MealsActivity.class);
+        intent.putExtra(MEALS_TITLE,category.strCategory);
+        intent.putExtra(DATA_TYPE,CATEGORIES);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemSelected(Meal meal) {
+        Intent intent = new Intent(this, MealsActivity.class);
+        intent.putExtra(MEALS_TITLE,meal.strArea);
+        intent.putExtra(DATA_TYPE,COUNTRIES);
+        startActivity(intent);
     }
 }

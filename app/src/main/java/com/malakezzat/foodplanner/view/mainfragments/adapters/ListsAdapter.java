@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -30,8 +32,11 @@ public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListsViewHol
     public static final int COUNTRIES = 1;
     public static final int CATEGORIES = 2;
     private int source;
+    private FragmentTransaction fragmentTransaction;
 
-    public ListsAdapter(Context context , List<? extends Data> items , OnListsListener onListsListener) {
+
+    public ListsAdapter(Context context , List<? extends Data> items
+            , OnListsListener onListsListener, FragmentTransaction fragmentTransaction) {
         this.context = context;
         countries = new ArrayList<>();
         categories = new ArrayList<>();
@@ -45,6 +50,7 @@ public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListsViewHol
             }
         }
         this.onListsListener = onListsListener;
+        this.fragmentTransaction = fragmentTransaction;
     }
 
 
@@ -64,13 +70,18 @@ public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListsViewHol
     public void onBindViewHolder(@NonNull ListsAdapter.ListsViewHolder holder, int position) {
         if(source == COUNTRIES) {
             holder.cardTitle.setText(countries.get(position).strArea);
+            holder.cardView.setOnClickListener(v->{
+                onListsListener.onListItemClicked(countries.get(position));
+            });
         } else if(source == CATEGORIES){
             holder.cardTitle.setText(categories.get(position).strCategory);
             Glide.with(context).load(categories.get(position).strCategoryThumb)
                     .apply(new RequestOptions().override(200,200))
                     .placeholder(R.drawable.new_logo3)
                     .into(holder.cardImage);
-
+            holder.cardView.setOnClickListener(v->{
+                onListsListener.onListItemClicked(categories.get(position));
+            });
         }
     }
 
@@ -89,11 +100,12 @@ public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListsViewHol
     public static class ListsViewHolder extends RecyclerView.ViewHolder {
         ImageView cardImage,favButton;
         TextView cardTitle;
-
+        CardView cardView;
         public ListsViewHolder(@NonNull View itemView) {
             super(itemView);
             cardImage = itemView.findViewById(R.id.cardImage);
             cardTitle = itemView.findViewById(R.id.cardTitle);
+            cardView = itemView.findViewById(R.id.item_list);
         }
     }
 

@@ -115,6 +115,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/ingredients_recycler_view" />
 
                 <TextView
+                    android:paddingVertical="6dp"
                     android:id="@+id/steps_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -125,16 +126,24 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/s_text" />
 
-                <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-                    android:id="@+id/youtube_player_view"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/youtube_player_constraintlayout"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:autoPlay="true"
+                    android:layout_height="280dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/steps_text"
-                    app:videoId="XIMLoLxmTDw" />
+                    app:layout_constraintTop_toBottomOf="@+id/steps_text">
 
+                    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                        android:id="@+id/youtube_player_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:autoPlay="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent"
+                        app:videoId="XIMLoLxmTDw" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </ScrollView>

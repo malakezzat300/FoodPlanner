@@ -86,7 +86,13 @@ public class UserFragment extends BottomSheetDialogFragment  {
                     .apply(new RequestOptions().override(200,200))
                     .placeholder(R.drawable.account_circle)
                     .into(userImage);
+            if(user.isAnonymous()){
+                username.setText(getString(R.string.guest));
+                email.setText(user.getEmail());
+                backupButton.setVisibility(View.GONE);
+            }
         }
+
 
         backupButton.setOnClickListener(v->{
             iUserPresenter.backupUserData();

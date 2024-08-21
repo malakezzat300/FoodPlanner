@@ -21,7 +21,6 @@
     <string name="category">Category</string>
     <string name="categories">Categories</string>
     <string name="countries">Countries</string>
-    <string name="enter_meal_country_or_ingredient">Enter Meal, Country or Ingredient</string>
     <string name="enter_meal_name">Enter Meal Name</string>
     <string name="hello_user">Hello </string>
     <string name="meal_of_the_day">Meal of The Day</string>
@@ -29,9 +28,15 @@
     <string name="sign_out">Sign out</string>
     <string name="update_picture">Update Picture</string>
     <string name="remove_picture">Remove Picture</string>
-    <string name="ingredients">Ingredients</string>
-    <string name="steps">Steps :</string>
+    <string name="ingredients">Ingredients : </string>
+    <string name="steps">Steps : </string>
     <string name="meal_name">Meal Name : </string>
     <string name="meal_country">Meal Country : </string>
     <string name="week_plan">Week Plan</string>
+    <string name="hello">"Hello "</string>
+    <string name="hello_guest">Hello Guest</string>
+    <string name="guest">Guest</string>
+    <string name="fav_guest">Guest cannot add Meal to Favorite</string>
+    <string name="week_guest">Guest cannot make Week Plan</string>
+
 </resources>

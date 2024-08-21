@@ -12,6 +12,7 @@ firebaseAuth = "23.0.0"
 firebaseDatabase = "21.0.0"
 firebaseFirestore = "25.0.0"
 facebookAndroidSdk = "17.0.1"
+blurview = "version-2.0.5"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -25,6 +26,7 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 facebook-android-sdk = { group = "com.facebook.android", name = "facebook-android-sdk", version.ref = "facebookAndroidSdk" }
+blurview = { group = "com.github.Dimezis", name = "BlurView", version.ref = "blurview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

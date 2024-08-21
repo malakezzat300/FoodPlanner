@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Meal;
+import com.malakezzat.foodplanner.view.MealsActivity;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.text.SimpleDateFormat;
@@ -28,11 +32,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     private List<Meal> mealList;
     private OnMealClickListener onMealClickListener;
     private Context context;
-
+    FirebaseUser user;
     public SearchAdapter(Context context, List<Meal> mealList, OnMealClickListener onMealClickListener) {
         this.context = context;
         this.mealList = mealList;
         this.onMealClickListener = onMealClickListener;
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @NonNull
@@ -52,14 +57,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                 .placeholder(R.drawable.new_logo3)
                 .into(holder.cardImage);
         holder.favButton.setOnClickListener(v -> {
-            if(holder.isFav){
-                holder.favButton.setImageResource(R.drawable.favorite_border);
-                onMealClickListener.removeFromFav(mealList.get(position).idMeal,2);
-                holder.isFav = false;
+            if(user != null && user.isAnonymous()){
+                Toast.makeText(context, holder.itemView.getContext().getString(R.string.fav_guest), Toast.LENGTH_SHORT).show();
             } else {
-                holder.favButton.setImageResource(R.drawable.favorite_red);
-                onMealClickListener.addToFav(mealList.get(position).idMeal,1);
-                holder.isFav = true;
+                if (holder.isFav) {
+                    holder.favButton.setImageResource(R.drawable.favorite_border);
+                    onMealClickListener.removeFromFav(mealList.get(position));
+                    holder.isFav = false;
+                } else {
+                    holder.favButton.setImageResource(R.drawable.favorite_red);
+                    onMealClickListener.addToFav(mealList.get(position));
+                    holder.isFav = true;
+                }
             }
         });
 
@@ -70,26 +79,28 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
 
         holder.weekPlanButton.setOnClickListener(v -> {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(context,
-                    new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            Calendar selectedDate = Calendar.getInstance();
-                            selectedDate.set(year, monthOfYear, dayOfMonth);
-                            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
-                            String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                            mealList.get(position).dateAndTime = formattedDate;
-                            onMealClickListener.addToWeekPlan(mealList.get(position));
-                            onMealClickListener.addToWeekPlan(mealList.get(position).idMeal,3);
-                        }
-                    }, year, month, day);
-            datePickerDialog.show();
-
+            if(user != null && user.isAnonymous()){
+                Toast.makeText(context, holder.itemView.getContext().getString(R.string.week_guest), Toast.LENGTH_SHORT).show();
+            } else {
+                Calendar today = Calendar.getInstance();
+                Calendar maxDate = Calendar.getInstance();
+                maxDate.add(Calendar.DAY_OF_YEAR, 7);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                Calendar selectedDate = Calendar.getInstance();
+                                selectedDate.set(year, monthOfYear, dayOfMonth);
+                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
+                                String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                                mealList.get(position).dateAndTime = formattedDate;
+                                onMealClickListener.addToWeekPlan(mealList.get(position));
+                            }
+                        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
+                datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+                datePickerDialog.show();
+            }
         });
 
     }

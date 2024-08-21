@@ -19,7 +19,8 @@
         android:id="@+id/listsFragment"
         android:name="com.malakezzat.foodplanner.view.mainfragments.fragments.ListsFragment"
         android:label="fragment_lists"
-        tools:layout="@layout/fragment_lists" />
+        tools:layout="@layout/fragment_lists" >
+    </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.malakezzat.foodplanner.view.mainfragments.fragments.FavoriteFragment"
@@ -30,9 +31,5 @@
         android:name="com.malakezzat.foodplanner.view.mainfragments.fragments.WeekPlanFragment"
         android:label="fragment_week_plan"
         tools:layout="@layout/fragment_week_plan" />
-    <fragment
-        android:id="@+id/mealsFragment"
-        android:name="com.malakezzat.foodplanner.MealsFragment"
-        android:label="fragment_meals"
-        tools:layout="@layout/fragment_meals" />
+
 </navigation>

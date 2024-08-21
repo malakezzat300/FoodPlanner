@@ -23,4 +23,17 @@
     <string name="countries">البلاد</string>
     <string name="enter_meal_name">ادخل اسم الطبق</string>
     <string name="hello_user">"مرحبا "</string>
+    <string name="meal_of_the_day">طبق اليوم</string>
+    <string name="backup_data">نسخ البيانات احتياطيًا</string>
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="update_picture">تحديث الصورة</string>
+    <string name="remove_picture">إزالة الصورة</string>
+    <string name="ingredients">المكونات</string>
+    <string name="steps">الخطوات :</string>
+    <string name="meal_name">اسم الوجبة :</string>
+    <string name="meal_country">بلد الوجبة :</string>
+    <string name="week_plan">خطة الاسبوع</string>
+    <string name="hello">"مرحبا "</string>
+    <string name="hello_guest">مرحبا بالضيف</string>
+    <string name="guest">ضيف</string>
 </resources>

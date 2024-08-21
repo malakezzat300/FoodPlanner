@@ -6,8 +6,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +27,14 @@ import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.presenter.ListsPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IListsPresenter;
+import com.malakezzat.foodplanner.view.OnItemSelectedListener;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.ListsAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IListsView;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnListsListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListsFragment extends Fragment implements IListsView , OnListsListener {
 
@@ -40,6 +47,9 @@ public class ListsFragment extends Fragment implements IListsView , OnListsListe
     List<Category> categories;
     LinearLayoutManager layoutManager;
     ListsAdapter recyclerAdapter;
+    ViewPager viewPager;
+    FragmentTransaction fragmentTransaction;
+    private OnItemSelectedListener listener;
 
     public ListsFragment() {
         // Required empty public constructor
@@ -70,10 +80,12 @@ public class ListsFragment extends Fragment implements IListsView , OnListsListe
         iListsPresenter = new ListsPresenter(this,new MealRemoteDataSourceImpl());
         countries = new ArrayList<>();
         categories = new ArrayList<>();
+        viewPager = requireActivity().findViewById(R.id.viewPager);
+        fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
 
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerAdapter = new ListsAdapter(context,categories,this);
+        recyclerAdapter = new ListsAdapter(context,categories,this,fragmentTransaction);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
@@ -90,19 +102,50 @@ public class ListsFragment extends Fragment implements IListsView , OnListsListe
     @Override
     public void getCategoriesList(List<Category> categories) {
         this.categories = categories;
-        recyclerAdapter = new ListsAdapter(context,categories,this);
+        recyclerAdapter = new ListsAdapter(context,categories,this,fragmentTransaction);
         recyclerView.setAdapter(recyclerAdapter);
     }
 
     @Override
     public void getCountriesList(List<Meal> countries) {
         this.countries = countries;
-        recyclerAdapter = new ListsAdapter(context,countries,this);
+        recyclerAdapter = new ListsAdapter(context,countries,this,fragmentTransaction);
         recyclerView.setAdapter(recyclerAdapter);
     }
 
     @Override
     public void getError(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onListItemClicked(Category category) {
+        if (listener != null) {
+            listener.onItemSelected(category);
+        }
+    }
+
+    @Override
+    public void onListItemClicked(Meal meal) {
+        if (listener != null) {
+            listener.onItemSelected(meal);
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnItemSelectedListener) {
+            listener = (OnItemSelectedListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnItemSelectedListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 }
