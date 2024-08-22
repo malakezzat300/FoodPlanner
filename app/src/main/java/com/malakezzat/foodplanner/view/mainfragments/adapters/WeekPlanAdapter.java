@@ -113,7 +113,7 @@ public class WeekPlanAdapter extends RecyclerView.Adapter<WeekPlanAdapter.WeekPl
                 .into(holder.cardImage);
         holder.favButton.setImageResource(R.drawable.close);
         holder.favButton.setOnClickListener(v -> {
-            Toast.makeText(context, currentMeal.strMeal + " is removed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, currentMeal.strMeal + " " + context.getString(R.string.is_removed), Toast.LENGTH_SHORT).show();
             onMealClickListener.removeFromFav(currentMeal.toMeal());
         });
         holder.meal.setOnClickListener(v -> {

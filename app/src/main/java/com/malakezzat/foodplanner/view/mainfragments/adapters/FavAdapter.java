@@ -55,7 +55,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
                 .into(holder.cardImage);
         holder.favButton.setImageResource(R.drawable.close);
         holder.favButton.setOnClickListener(v->{
-            Toast.makeText(context, meals.get(position).strMeal + " is removed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, meals.get(position).strMeal + " " + context.getString(R.string.is_removed), Toast.LENGTH_SHORT).show();
             onMealClickListener.removeFromFav(meals.get(position).toMeal());
         });
         holder.meal.setOnClickListener(v->{

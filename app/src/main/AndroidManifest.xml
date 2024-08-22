@@ -30,6 +30,7 @@
         <activity
             android:name=".view.MainActivity"
             android:exported="false"
+
             android:theme="@style/Base.Theme.FoodPlanner.Main" />
         <activity
             android:name=".view.TestActivity"

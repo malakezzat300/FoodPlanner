@@ -40,5 +40,28 @@
     <string name="week_guest">Guest cannot make Week Plan</string>
     <string name="guest_text">We regret to inform you that there is nothing to display at the moment. Please provide internet or log in with an account to view the application content.</string>
     <string name="favorite_meals">Favorite Meals</string>
+    <string name="is_removed">" is removed"</string>
+    <string name="backup_successful">Backup Successful!</string>
+    <string name="backup_failed">Backup Failed Please Connect To Internet First!</string>
+    <string name="user_profile_updated">User profile picture updated.</string>
+    <string name="failed_update_picture">Failed to update profile picture.</string>
+    <string name="user_picture_removed">User profile picture removed.</string>
+    <string name="failed_remove_picture">Failed to remove profile picture.</string>
+    <string name="login_success">Login Success.</string>
+    <string name="check_email_password">Check the Email and Password.</string>
+    <string name="check_internet_connection">Check your internet Connection.</string>
+    <string name="connection_restored">The Connection has been Restored</string>
+    <string name="no_connection">There is No Internet Connection</string>
+    <string name="back_again">Click BACK again to exit</string>
+    <string name="error_category_country">Error the item is not category or country.</string>
+    <string name="signup_successful">Signup successful!</string>
+    <string name="email_empty">Email Shouldn\'t be Empty</string>
+    <string name="invalid_email">Invalid email format</string>
+    <string name="password_empty">Password Shouldn\'t be Empty</string>
+    <string name="password_format">Password must be at least 8 characters and contain letters and numbers and symbol</string>
+    <string name="username_empty">Username Shouldn\'t be Empty</string>
+    <string name="username_start_number">Username Shouldn\'t start with Number</string>
+    <string name="google_failed">Google sign in failed. Please try again.</string>
+    <string name="auth_failed">Authentication Failed.</string>
 
 </resources>

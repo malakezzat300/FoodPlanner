@@ -118,9 +118,9 @@ public class UserFragment extends BottomSheetDialogFragment  implements Connecti
         backupButton.setOnClickListener(v->{
             if(isConnected) {
                 iUserPresenter.backupUserData();
-                Toast.makeText(context, "Backup Successful!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getString(R.string.backup_successful), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(context, "Backup Failed Please Connect To Internet First!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -143,13 +143,13 @@ public class UserFragment extends BottomSheetDialogFragment  implements Connecti
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(getContext(), "User profile updated.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, context.getString(R.string.user_profile_updated), Toast.LENGTH_SHORT).show();
                                                 Glide.with(view.getContext()).load(user.getPhotoUrl())
                                                         .apply(new RequestOptions().override(200,200))
                                                         .placeholder(R.drawable.account_circle)
                                                         .into(userImage);
                                             } else {
-                                                Toast.makeText(getContext(), "Failed to update profile picture.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), context.getString(R.string.failed_update_picture), Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -176,13 +176,13 @@ public class UserFragment extends BottomSheetDialogFragment  implements Connecti
                 user.updateProfile(profileUpdates)
                         .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(getContext(), "User profile picture removed.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), context.getString(R.string.user_picture_removed), Toast.LENGTH_SHORT).show();
                                     Glide.with(view.getContext()).load(user.getPhotoUrl())
                                             .apply(new RequestOptions().override(200,200))
                                             .placeholder(R.drawable.account_circle)
                                             .into(userImage);
                                 } else {
-                                    Toast.makeText(getContext(), "Failed to remove profile picture.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), context.getString(R.string.failed_remove_picture), Toast.LENGTH_SHORT).show();
                                 }
                         });
             }

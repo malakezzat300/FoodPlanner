@@ -121,7 +121,7 @@ public class MealsActivity extends AppCompatActivity implements ISearchView, OnM
 
 
         if(dataType == 0){
-            Toast.makeText(this, "Error the item is not category or country", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_category_country), Toast.LENGTH_SHORT).show();
         } else if(dataType == COUNTRIES){
             country = intent.getStringExtra(MEALS_TITLE);
             mealsTitle.setText(getString(R.string.country) + " : " +country);

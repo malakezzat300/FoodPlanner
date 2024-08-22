@@ -21,7 +21,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.navigation.NavController;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -34,6 +33,10 @@ import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.UserFragment;
+import com.malakezzat.foodplanner.view.mainfragments.fragments.HomeFragment;
+import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
+
+
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener, ConnectionListener {
 
@@ -58,13 +61,14 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     ConnectionReceiver connectionReceiver;
     ConstraintLayout constraintLayout;
     TextView guestText;
-
+    IHomeView iHomeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
+        iHomeView = new HomeFragment();
         connectionReceiver  = new ConnectionReceiver(this);
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         } else if (activeNetwork.isConnected()){
             isConnected = true;
         }
-
+        iHomeView.isConnected(isConnected);
         if(user != null && user.isAnonymous()){
             setContentView(R.layout.activity_main_ano);
             viewPager = findViewById(R.id.viewPager);
@@ -109,9 +113,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         boolean s = intent.getBooleanExtra(SECOND,false);
         if(s) {
             if (c) {
-                Snackbar.make(constraintLayout, "The Connection has been Restored", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(constraintLayout, getString(R.string.connection_restored), Snackbar.LENGTH_LONG).show();
             } else {
-                Snackbar.make(constraintLayout, "There is No Internet Connection", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(constraintLayout, getString(R.string.no_connection), Snackbar.LENGTH_LONG).show();
             }
         }
 
@@ -208,40 +212,51 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
             @Override
             public void onPageSelected(int position) {
-                if(user != null && user.isAnonymous()){
-                    if(isConnected) {
-                        if (position == 0) {
-                            navView.setSelectedItemId(R.id.navigation_home);
-                        } else if (position == 1) {
-                            navView.setSelectedItemId(R.id.navigation_search);
-                        } else if (position == 2) {
-                            navView.setSelectedItemId(R.id.navigation_lists);
+                if (user != null && user.isAnonymous()) {
+                    if (isConnected) {
+                        switch (position) {
+                            case 0:
+                                navView.setSelectedItemId(R.id.navigation_home);
+                                break;
+                            case 1:
+                                navView.setSelectedItemId(R.id.navigation_search);
+                                break;
+                            case 2:
+                                navView.setSelectedItemId(R.id.navigation_lists);
+                                break;
                         }
                     }
                 } else {
-                    if(isConnected) {
-                        if (position == 0) {
-                            navView.setSelectedItemId(R.id.navigation_home);
-                        } else if (position == 1) {
-                            navView.setSelectedItemId(R.id.navigation_search);
-                        } else if (position == 2) {
-                            navView.setSelectedItemId(R.id.navigation_lists);
-                        } else if (position == 3) {
-                            navView.setSelectedItemId(R.id.navigation_favorite);
-                        } else if (position == 4) {
-                            navView.setSelectedItemId(R.id.navigation_week_plan);
+                    if (isConnected) {
+                        switch (position) {
+                            case 0:
+                                navView.setSelectedItemId(R.id.navigation_home);
+                                break;
+                            case 1:
+                                navView.setSelectedItemId(R.id.navigation_search);
+                                break;
+                            case 2:
+                                navView.setSelectedItemId(R.id.navigation_lists);
+                                break;
+                            case 3:
+                                navView.setSelectedItemId(R.id.navigation_favorite);
+                                break;
+                            case 4:
+                                navView.setSelectedItemId(R.id.navigation_week_plan);
+                                break;
                         }
                     } else {
-                        if (position == 0) {
-                            navView.setSelectedItemId(R.id.navigation_favorite);
-                        } else if (position == 1) {
-                            navView.setSelectedItemId(R.id.navigation_week_plan);
+                        switch (position) {
+                            case 0:
+                                navView.setSelectedItemId(R.id.navigation_favorite);
+                                break;
+                            case 1:
+                                navView.setSelectedItemId(R.id.navigation_week_plan);
+                                break;
                         }
                     }
                 }
-
             }
-
 
             @Override
             public void onPageScrollStateChanged(int state) {
@@ -322,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     @Override
     public void onChangeConnection(Boolean isConnected) {
         // Only refresh UI if there's a change in connection state
+        iHomeView.isConnected(isConnected);
         if (this.isConnected != isConnected) {
             this.isConnected = isConnected;
             Log.i(TAG, "onChangeConnection: is connected : " + isConnected);
@@ -329,11 +345,11 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             if (isConnected) {
                 if (wasDisconnected) {
                     // Show a message when the connection is restored
-                    Snackbar.make(constraintLayout, "The Connection has been Restored", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(constraintLayout,getString(R.string.connection_restored), Snackbar.LENGTH_LONG).show();
                 }
             } else {
                 // Show a message when the connection is lost
-                Snackbar.make(constraintLayout, "There is No Internet Connection", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(constraintLayout, getString(R.string.no_connection), Snackbar.LENGTH_LONG).show();
                 wasDisconnected = true;
 
             }
@@ -351,6 +367,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             new Handler(Looper.getMainLooper()).postDelayed(() -> isRefreshed = false, 2000); // Reset the refresh flag after a delay
         }
     }
+
+
 
 
     @Override

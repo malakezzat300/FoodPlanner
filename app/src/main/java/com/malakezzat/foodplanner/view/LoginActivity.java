@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionListen
                                 if (task.isSuccessful()) {
                                     // Sign in success, proceed to main activity or other actions
                                     Log.d("LoginActivity", "signInWithEmailAndPassword:success");
-                                    Toast.makeText(LoginActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
 
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     FirebaseUser currentUser = auth.getCurrentUser();
@@ -107,12 +107,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionListen
                                     progressBar.setVisibility(View.GONE);
                                     // Sign in failed, display a message to the user
                                     Log.w("LoginActivity", "signInWithEmailAndPassword:failure", task.getException());
-                                    Toast.makeText(LoginActivity.this, "Check the Email and Password.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, getString(R.string.check_email_password), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
             } else {
-                Toast.makeText(LoginActivity.this, "Check your internet Connection.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.check_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
 

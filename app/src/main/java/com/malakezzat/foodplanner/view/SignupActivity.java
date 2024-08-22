@@ -1,9 +1,12 @@
 package com.malakezzat.foodplanner.view;
 
+import static android.content.res.Resources.getSystem;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -103,7 +106,7 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(SignupActivity.this, "Signup successful!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(SignupActivity.this, getString(R.string.signup_successful), Toast.LENGTH_SHORT).show();
                                                     iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
                                                     iUserPresenter.restoreUserData();
                                                 }
@@ -117,7 +120,7 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
                             }
                         });
             } else {
-                Toast.makeText(SignupActivity.this, "Check your internet Connection.", Toast.LENGTH_LONG).show();
+                Toast.makeText(SignupActivity.this, getString(R.string.check_internet_connection), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -176,11 +179,11 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
     public static boolean checkValidation(TextInputLayout InputLayout,String text,int mode){
         if(mode == 1) {
             if (text.isEmpty()) {
-                InputLayout.setHelperText("Email Shouldn't be Empty");
+                InputLayout.setHelperText(getSystem().getString(R.string.email_empty));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else if (!isValidEmail(text)) {
-                InputLayout.setHelperText("Invalid email format");
+                InputLayout.setHelperText(getSystem().getString(R.string.invalid_email));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else {
@@ -189,11 +192,11 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
             }
         } else if (mode == 2) {
             if (text.isEmpty()) {
-                InputLayout.setHelperText("Password Shouldn't be Empty");
+                InputLayout.setHelperText(getSystem().getString(R.string.password_empty));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else if (!isValidPassword(text)) {
-                InputLayout.setHelperText("Password must be at least 8 characters and contain letters and numbers and symbol");
+                InputLayout.setHelperText(getSystem().getString(R.string.password_format));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else {
@@ -202,11 +205,11 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
             }
         } else if(mode == 3) {
             if (text.isEmpty()) {
-                InputLayout.setHelperText("Username Shouldn't be Empty");
+                InputLayout.setHelperText(getSystem().getString(R.string.username_empty));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else if (text.substring(0,1).matches("^[0-9].*")) {
-                InputLayout.setHelperText("Username Shouldn't start with Number");
+                InputLayout.setHelperText(getSystem().getString(R.string.username_start_number));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else {

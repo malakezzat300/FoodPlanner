@@ -8,11 +8,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -43,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment implements IHomeView, OnMealClickListener {
@@ -55,7 +61,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     List<Meal> mealList;
     Context context;
     IHomePresenter iHomePresenter;
-    boolean isFav;
+    boolean isFav,isConnected = true;
     TextView mealTitle,mealCountry;
     ImageView favButton,weekPlanButton,mealImage;
     Meal mealOfDay;
@@ -64,6 +70,8 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     String MealOfDayId;
     CardView mealOfDayButton;
     FirebaseUser user;
+    ViewPager viewPager;
+    ConstraintLayout constraintLayout;
     private static final String PREFS_NAME = "MyPrefs";
     private static final String KEY_SAVED_TIME = "saved_time";
     public final static String MEALLIST = "mealList";
@@ -101,11 +109,14 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         weekPlanButton = view.findViewById(R.id.week_plan_button);
         context = view.getContext();
         mealList = new ArrayList<>();
+        viewPager = requireActivity().findViewById(R.id.viewPager);
+        constraintLayout = view.findViewById(R.id.home_fragment);
         user = FirebaseAuth.getInstance().getCurrentUser();
         iHomePresenter = new HomePresenter(this, new MealRemoteDataSourceImpl(), new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0);
         long savedTime = sharedPreferences.getLong(KEY_SAVED_TIME, 0);
         MealOfDayId = sharedPreferences.getString(MEAL_OF_DAY_ID, "");
+        
         if (savedTime == 0) {
             saveCurrentTimeToPreferences();
         }
@@ -176,6 +187,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         });
 
 
+
     }
 
     @Override
@@ -211,6 +223,11 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     @Override
     public void getError(String msg) {
         //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void isConnected(boolean isConnected) {
+        this.isConnected = isConnected;
     }
 
     @Override

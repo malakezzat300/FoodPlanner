@@ -3,6 +3,7 @@ package com.malakezzat.foodplanner.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,8 @@ import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.UserPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
+
+import java.util.Locale;
 
 public class WelcomeActivity extends AppCompatActivity implements ConnectionListener {
     private Button signupWithEmail, loginWithEmail,guest;
@@ -108,11 +111,11 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
                     firebaseAuthWithGoogle(account.getIdToken());
                 } else {
                     Log.w(TAG, "Google sign in failed: null token");
-                    Toast.makeText(WelcomeActivity.this, "Google sign in failed. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WelcomeActivity.this, getString(R.string.google_failed), Toast.LENGTH_SHORT).show();
                 }
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
-                Toast.makeText(WelcomeActivity.this, "Google sign in failed. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WelcomeActivity.this, getString(R.string.google_failed), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -129,7 +132,7 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
                         iUserPresenter.restoreUserData();
                     } else {
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        Toast.makeText(WelcomeActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WelcomeActivity.this, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show();
                         updateUI(null);
                     }
                 });
@@ -150,11 +153,11 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
                 FirebaseUser user = mAuth.getCurrentUser();
                 updateUI(user);
             } else if(!isConnected){
-                Toast.makeText(WelcomeActivity.this, "Check your internet Connection.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WelcomeActivity.this, getString(R.string.check_internet_connection), Toast.LENGTH_SHORT).show();
             }
             else {
                 Log.w(TAG, "signInAnonymously:failure", task.getException());
-                Toast.makeText(WelcomeActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WelcomeActivity.this, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -176,12 +179,12 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
         if(isConnected && !wasDisconnected) {
 
         } else if(isConnected) {
-            Snackbar.make(constraintLayout, "The Connection has been Restored", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(constraintLayout, getString(R.string.connection_restored), Snackbar.LENGTH_LONG).show();
 //            Intent intent = getIntent();
 //            finish();
 //            startActivity(intent);
         } else {
-            Snackbar.make(constraintLayout, "There is No Internet Connection", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(constraintLayout, getString(R.string.no_connection), Snackbar.LENGTH_LONG).show();
             wasDisconnected = true;
         }
     }

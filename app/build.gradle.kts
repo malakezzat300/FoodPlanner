@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
     id ("androidx.navigation.safeargs")
+
 }
 
 android {
@@ -66,5 +67,6 @@ dependencies {
     implementation ("com.google.guava:guava:31.1-android")
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
     implementation ("androidx.viewpager2:viewpager2:1.1.0")
+    //implementation ("com.duolingo.open:rtl-viewpager:1.0.0")
 
 }

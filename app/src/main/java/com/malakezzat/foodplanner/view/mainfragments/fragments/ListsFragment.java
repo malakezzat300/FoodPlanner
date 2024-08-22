@@ -137,9 +137,6 @@ public class ListsFragment extends Fragment implements IListsView , OnListsListe
         super.onAttach(context);
         if (context instanceof OnItemSelectedListener) {
             listener = (OnItemSelectedListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnItemSelectedListener");
         }
     }
 

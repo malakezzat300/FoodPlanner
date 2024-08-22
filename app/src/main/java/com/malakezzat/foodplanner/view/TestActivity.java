@@ -33,19 +33,5 @@ public class TestActivity extends AppCompatActivity {
 
         });
 
-
-        // Working for Logout
-        /*
-        Intent intent = getIntent();
-        String userName = intent.getStringExtra(USER);
-        textview.setText(userName);
-        button.setOnClickListener(v->{
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "you have logged out", Toast.LENGTH_SHORT).show();
-            Intent intent1 = new Intent(TestActivity.this, WelcomeActivity.class);
-            startActivity(intent1);
-        });
-        */
-
     }
 }
