@@ -11,6 +11,7 @@ public class MealDBWeek {
 
     @PrimaryKey
     @NonNull
+    public String mealKey;
     public String idMeal;
     public String strMeal;
     public String strDrinkAlternate;
@@ -65,6 +66,9 @@ public class MealDBWeek {
     public String strCreativeCommonsConfirmed;
     public String dateModified;
     public String dateAndTime;
+    public boolean isFav;
+    public String day;
+    public String date;
 
     public Meal toMeal() {
         Meal meal = new Meal();
@@ -123,6 +127,9 @@ public class MealDBWeek {
         meal.strCreativeCommonsConfirmed = this.strCreativeCommonsConfirmed;
         meal.dateModified = this.dateModified;
         meal.dateAndTime = this.dateAndTime;
+        meal.isFav = this.isFav;
+        meal.date = this.date;
+        meal.day = this.day;
 
         return meal;
     }

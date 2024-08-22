@@ -32,7 +32,7 @@ public interface MealWeekDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(MealDBWeek meal);
 
-    @Query("DELETE FROM MealDBWeek") // Replace with your table name
+    @Query("DELETE FROM MealDBWeek")
     void clearTable();
 
     @Delete

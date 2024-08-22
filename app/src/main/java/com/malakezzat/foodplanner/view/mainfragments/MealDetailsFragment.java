@@ -1,6 +1,7 @@
 package com.malakezzat.foodplanner.view.mainfragments;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -60,6 +61,7 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
     ConstraintLayout youtubePlayerConstraintlayout;
     Boolean isFav = false;
     FirebaseUser user;
+    Context context;
     public MealDetailsFragment(Meal meal,OnMealClickListener onMealClickListener) {
         this.meal = meal;
         this.onMealClickListener = onMealClickListener;
@@ -82,6 +84,7 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        context = view.getContext();
         mealImage = view.findViewById(R.id.meal_image);
         favButton = view.findViewById(R.id.fav_button_details);
         weekPlanButton = view.findViewById(R.id.week_plan_button);
@@ -126,9 +129,10 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 Calendar selectedDate = Calendar.getInstance();
                                 selectedDate.set(year, monthOfYear, dayOfMonth);
-                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
-                                String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                                meal.dateAndTime = formattedDate;
+                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(selectedDate.getTime());
+                                String formattedDate = String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                                meal.date = formattedDate;
+                                meal.day = dayOfWeek;
                                 onMealClickListener.addToWeekPlan(meal);
                             }
                         }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
@@ -138,21 +142,33 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
             }
         });
 
+        if(meal.isFav){
+            //holder.isFav = true;
+            favButton.setImageResource(R.drawable.favorite_red);
+        } else {
+            //holder.isFav = false;
+            favButton.setImageResource(R.drawable.favorite_border);
+        }
+
         favButton.setOnClickListener(v -> {
             if(user != null && user.isAnonymous()){
-                Toast.makeText(view.getContext(), getString(R.string.fav_guest), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.fav_guest), Toast.LENGTH_SHORT).show();
             } else {
-                if (isFav) {
+                if (meal.isFav) {
                     favButton.setImageResource(R.drawable.favorite_border);
                     onMealClickListener.removeFromFav(meal);
-                    isFav = false;
+                    onMealClickListener.removeFromFav(meal.idMeal,2);
+                    meal.isFav = false;
                 } else {
                     favButton.setImageResource(R.drawable.favorite_red);
                     onMealClickListener.addToFav(meal);
-                    isFav = true;
+                    onMealClickListener.addToFav(meal.idMeal,1);
+                    meal.isFav = true;
                 }
             }
         });
+
+
         String mealN = getString(R.string.meal_name) + " "+ meal.strMeal;
         String mealC = getString(R.string.meal_country) +" "+ meal.strArea;
         mealTitle.setText(mealN);

@@ -9,6 +9,7 @@ public interface IHomePresenter {
     void getMeals();
     void getMeal();
     void getMealById(String id);
+    void getMealById(String id,int saveMode);
     void addToFav(Meal meal);
     void removeFromFav(Meal meal);
     void addToWeekPlan(Meal meal);

@@ -183,7 +183,7 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else if (!isValidEmail(text)) {
-                InputLayout.setHelperText(getSystem().getString(R.string.invalid_email));
+                InputLayout.setHelperText(getResources().getString(R.string.invalid_email));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else {

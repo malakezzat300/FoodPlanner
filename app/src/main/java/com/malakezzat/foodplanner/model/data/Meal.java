@@ -1,5 +1,6 @@
 package com.malakezzat.foodplanner.model.data;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -67,6 +68,9 @@ public class Meal implements Data, Parcelable {
     public String strDescription;
     public String strType;
     public String dateAndTime;
+    public boolean isFav;
+    public String date;
+    public String day;
 
     @NonNull
     @Override
@@ -125,11 +129,14 @@ public class Meal implements Data, Parcelable {
                 ", strImageSource=" + strImageSource +
                 ", strCreativeCommonsConfirmed=" + strCreativeCommonsConfirmed +
                 ", dateModified=" + dateModified +
-                ", idIngredient='" + idIngredient + '\'' + // Add new fields
+                ", idIngredient='" + idIngredient + '\'' +
                 ", strIngredient='" + strIngredient + '\'' +
                 ", strDescription='" + strDescription + '\'' +
                 ", strType=" + strType + '\'' +
+                ", isFav=" + isFav + '\'' +
                 ", dateAndTime=" + dateAndTime +
+                ", date=" + date +
+                ", day=" + day +
                 '}';
     }
 
@@ -194,13 +201,13 @@ public class Meal implements Data, Parcelable {
         dest.writeValue(strCreativeCommonsConfirmed);
         dest.writeValue(dateModified);
         dest.writeString(dateAndTime);
-
-        // Write new fields to the parcel
         dest.writeString(idIngredient);
         dest.writeString(strIngredient);
         dest.writeString(strDescription);
         dest.writeValue(strType);
-
+        dest.writeByte((byte) (isFav ? 1 : 0));
+        dest.writeString(date);
+        dest.writeString(day);
     }
     public Meal() {
     }
@@ -260,12 +267,13 @@ public class Meal implements Data, Parcelable {
         strCreativeCommonsConfirmed = in.readString();
         dateModified = in.readString();
         dateAndTime = in.readString();
-
-        // Read new fields from the parcel
         idIngredient = in.readString();
         strIngredient = in.readString();
         strDescription = in.readString();
         strType = in.readString();
+        isFav = in.readInt() == 1;
+        date = in.readString();
+        day = in.readString();
     }
 
     public static final Creator<Meal> CREATOR = new Creator<Meal>() {
@@ -337,6 +345,9 @@ public class Meal implements Data, Parcelable {
         mealDB.strCreativeCommonsConfirmed = this.strCreativeCommonsConfirmed;
         mealDB.dateModified = this.dateModified;
         mealDB.dateAndTime = this.dateAndTime;
+        mealDB.isFav = this.isFav;
+        mealDB.date = this.date;
+        mealDB.day = this.day;
 
         return mealDB;
     }
@@ -398,6 +409,9 @@ public class Meal implements Data, Parcelable {
         mealDB.strCreativeCommonsConfirmed = this.strCreativeCommonsConfirmed;
         mealDB.dateModified = this.dateModified;
         mealDB.dateAndTime = this.dateAndTime;
+        mealDB.isFav = this.isFav;
+        mealDB.date = this.date;
+        mealDB.day = this.day;
 
         return mealDB;
     }

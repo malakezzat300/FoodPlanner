@@ -65,18 +65,27 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
                 .apply(new RequestOptions().override(200,200))
                 .placeholder(R.drawable.new_logo3)
                 .into(holder.cardImage);
+
+        if(mealList.get(position).isFav){
+            //holder.isFav = true;
+            holder.favButton.setImageResource(R.drawable.favorite_red);
+        } else {
+            //holder.isFav = false;
+            holder.favButton.setImageResource(R.drawable.favorite_border);
+        }
+
         holder.favButton.setOnClickListener(v -> {
             if(user != null && user.isAnonymous()){
                 Toast.makeText(context, holder.itemView.getContext().getString(R.string.fav_guest), Toast.LENGTH_SHORT).show();
             } else {
-                if (holder.isFav) {
+                if (mealList.get(position).isFav) {
                     holder.favButton.setImageResource(R.drawable.favorite_border);
                     onMealClickListener.removeFromFav(mealList.get(position));
-                    holder.isFav = false;
+                    mealList.get(position).isFav = false;
                 } else {
                     holder.favButton.setImageResource(R.drawable.favorite_red);
                     onMealClickListener.addToFav(mealList.get(position));
-                    holder.isFav = true;
+                    mealList.get(position).isFav = true;
                 }
             }
         });
@@ -104,9 +113,11 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 Calendar selectedDate = Calendar.getInstance();
                                 selectedDate.set(year, monthOfYear, dayOfMonth);
-                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
-                                String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                                mealList.get(position).dateAndTime = formattedDate;
+                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(selectedDate.getTime());
+                                String formattedDate = String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                                mealList.get(position).date = formattedDate;
+                                mealList.get(position).day = dayOfWeek;
+                                mealList.get(position).dateAndTime = dayOfWeek + " " + formattedDate;
                                 onMealClickListener.addToWeekPlan(mealList.get(position));
                             }
                         }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));

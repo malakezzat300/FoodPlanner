@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MealLocalDataSourceImpl implements MealLocalDataSource {
@@ -41,6 +42,11 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource {
     }
 
     @Override
+    public List<MealDB> getAllStoredMealsCheck() {
+        return mealDao.getAllCheck();
+    }
+
+    @Override
     public MealDB getFavMealDB(int id) {
         return mealDao.loadById(id);
     }
@@ -58,6 +64,8 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource {
     @Override
     public void insertWeekMeal(MealDBWeek mealWeekDB) {
         new Thread(() -> {
+            mealWeekDB.mealKey = mealWeekDB.idMeal + mealWeekDB.date;
+            mealWeekDB.dateAndTime = mealWeekDB.day + " " + mealWeekDB.date;
             mealWeekDao.insert(mealWeekDB);
         }).start();
     }
@@ -65,6 +73,8 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource {
     @Override
     public void deleteWeekMeal(MealDBWeek mealWeekDB) {
         new Thread(() -> {
+            mealWeekDB.mealKey = mealWeekDB.idMeal + mealWeekDB.date;
+            mealWeekDB.dateAndTime = mealWeekDB.day + " " + mealWeekDB.date;
             mealWeekDao.delete(mealWeekDB);
         }).start();
     }

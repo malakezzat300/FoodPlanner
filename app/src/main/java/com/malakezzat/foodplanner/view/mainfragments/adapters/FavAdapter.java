@@ -18,22 +18,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.local.MealDB;
+import com.malakezzat.foodplanner.model.local.MealDBWeek;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
 
-    private List<MealDB> meals;
+    private List<MealDB> meals,mealsToDelete;
     private OnMealClickListener onMealClickListener;
     private Context context;
 
     public FavAdapter(Context context , List<MealDB> meals , OnMealClickListener onMealClickListener) {
         this.context = context;
         this.meals = meals;
+        mealsToDelete = meals;
         this.onMealClickListener = onMealClickListener;
     }
 
@@ -72,9 +76,11 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             Calendar selectedDate = Calendar.getInstance();
                             selectedDate.set(year, monthOfYear, dayOfMonth);
-                            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
-                            String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                            meals.get(position).dateAndTime = formattedDate;
+                            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(selectedDate.getTime());
+                            String formattedDate = String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                            meals.get(position).date = formattedDate;
+                            meals.get(position).day = dayOfWeek;
+                            meals.get(position).dateAndTime = dayOfWeek + " " + formattedDate;
                             onMealClickListener.addToWeekPlan(meals.get(position).toMeal());
                         }
                     }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
@@ -84,6 +90,24 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
 
         });
 
+    }
+
+    private void deleteOldMeals() {
+        try {
+            for (MealDB meal : mealsToDelete) {
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE d-M-yyyy", Locale.US);
+                Date mealDate = sdf.parse(meal.dateAndTime);
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_YEAR, -2);
+                Date twoDaysAgo = calendar.getTime();
+
+                if (mealDate.before(twoDaysAgo)) {
+                    onMealClickListener.removeFromFav(meal.toMeal());
+                }
+            }
+        } catch (ParseException ex){
+            ex.printStackTrace();
+        }
     }
 
     public void setMeals(List<MealDB> meals){

@@ -68,10 +68,12 @@ public class WeekPlanFragment extends Fragment implements IWeekPlanView , OnMeal
         recyclerView.setAdapter(recyclerAdapter);
 
         iWeekPlanPresenter.getWeekPlanMeals().observe(getViewLifecycleOwner(), MealDB -> {
-            Log.i(TAG, "onViewCreated: "+ MealDB.get(0).idMeal );
-            recyclerAdapter = new WeekPlanAdapter(context, MealDB, this);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(recyclerAdapter);
+            if(!MealDB.isEmpty()) {
+                Log.i(TAG, "onViewCreated: " + MealDB.get(0).idMeal);
+                recyclerAdapter = new WeekPlanAdapter(context, MealDB, this);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(recyclerAdapter);
+            }
         });
     }
 

@@ -171,6 +171,7 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
             @Override
             public void onResponse(Call<MealList> call, Response<MealList> response) {
                 if (response.isSuccessful()) {
+
                     networkCallBack.onSuccessResult(response.body().meals,saveMode);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
                 }

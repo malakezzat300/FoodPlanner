@@ -71,7 +71,6 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     CardView mealOfDayButton;
     FirebaseUser user;
     ViewPager viewPager;
-    ConstraintLayout constraintLayout;
     private static final String PREFS_NAME = "MyPrefs";
     private static final String KEY_SAVED_TIME = "saved_time";
     public final static String MEALLIST = "mealList";
@@ -110,7 +109,6 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         context = view.getContext();
         mealList = new ArrayList<>();
         viewPager = requireActivity().findViewById(R.id.viewPager);
-        constraintLayout = view.findViewById(R.id.home_fragment);
         user = FirebaseAuth.getInstance().getCurrentUser();
         iHomePresenter = new HomePresenter(this, new MealRemoteDataSourceImpl(), new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0);
@@ -145,20 +143,28 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
             mealDetailsFragment.show(getParentFragmentManager(), mealDetailsFragment.getTag());
         });
 
+        if(mealOfDay.isFav){
+            //holder.isFav = true;
+            favButton.setImageResource(R.drawable.favorite_red);
+        } else {
+            //holder.isFav = false;
+            favButton.setImageResource(R.drawable.favorite_border);
+        }
+
         favButton.setOnClickListener(v -> {
-                if(user != null && user.isAnonymous()){
-                    Toast.makeText(context, getString(R.string.fav_guest), Toast.LENGTH_SHORT).show();
+            if(user != null && user.isAnonymous()){
+                Toast.makeText(context, getString(R.string.fav_guest), Toast.LENGTH_SHORT).show();
+            } else {
+                if (mealOfDay.isFav) {
+                    favButton.setImageResource(R.drawable.favorite_border);
+                    this.removeFromFav(mealOfDay);
+                    mealOfDay.isFav = false;
                 } else {
-                    if (isFav) {
-                        favButton.setImageResource(R.drawable.favorite_border);
-                        this.removeFromFav(mealOfDay);
-                        isFav = false;
-                    } else {
-                        favButton.setImageResource(R.drawable.favorite_red);
-                        this.addToFav(mealOfDay);
-                        isFav = true;
-                    }
+                    favButton.setImageResource(R.drawable.favorite_red);
+                    this.addToFav(mealOfDay);
+                    mealOfDay.isFav = true;
                 }
+            }
         });
 
         weekPlanButton.setOnClickListener(v -> {
@@ -174,9 +180,11 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 Calendar selectedDate = Calendar.getInstance();
                                 selectedDate.set(year, monthOfYear, dayOfMonth);
-                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedDate.getTime());
-                                String formattedDate = dayOfWeek + " " + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                                mealOfDay.dateAndTime = formattedDate;
+                                String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(selectedDate.getTime());
+                                String formattedDate = String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                                mealOfDay.date = formattedDate;
+                                mealOfDay.day = dayOfWeek;
+                                mealOfDay.dateAndTime = dayOfWeek + " " + formattedDate;
                                 iHomePresenter.addToWeekPlan(mealOfDay);
                             }
                         }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
@@ -198,26 +206,37 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     }
 
     @Override
-    public void getMeal(List<Meal> meal) {
-        mealOfDay = meal.get(0);
-        Glide.with(context).load(mealOfDay.strMealThumb)
-                .apply(new RequestOptions().override(200,200))
-                .placeholder(R.drawable.new_logo3)
-                .into(mealImage);
-        String mealArea = getString(R.string.country) + " : "+ mealOfDay.strArea;
-        mealTitle.setText(mealOfDay.strMeal);
-        mealCountry.setText(mealArea);
-        editor = sharedPreferences.edit();
-        editor.putString(MEAL_OF_DAY_ID,mealOfDay.idMeal);
-        editor.apply();
+    public void getMeal(List<Meal> meal,int saveMode) {
+        if(saveMode == 0) {
+            mealOfDay = meal.get(0);
+            if (mealOfDay.isFav) {
+                //holder.isFav = true;
+                favButton.setImageResource(R.drawable.favorite_red);
+            } else {
+                //holder.isFav = false;
+                favButton.setImageResource(R.drawable.favorite_border);
+            }
+            Glide.with(context).load(mealOfDay.strMealThumb)
+                    .apply(new RequestOptions().override(200, 200))
+                    .placeholder(R.drawable.new_logo3)
+                    .into(mealImage);
+            String mealArea = getString(R.string.country) + " : " + mealOfDay.strArea;
+            mealTitle.setText(mealOfDay.strMeal);
+            mealCountry.setText(mealArea);
+            editor = sharedPreferences.edit();
+            editor.putString(MEAL_OF_DAY_ID, mealOfDay.idMeal);
+            editor.apply();
+        }
     }
 
     @Override
     public void getMeals(List<Meal> mealList) {
-        Log.i(TAG, "getMeals: " + mealList.get(0));
-        this.mealList = mealList;
-        adapter = new CarouselAdapter(context, mealList,this,CarouselAdapter.HOME_FRAGMENT);
-        recyclerView.setAdapter(adapter);
+        if(mealList != null || !mealList.isEmpty()){
+            Log.i(TAG, "getMeals: " + mealList.get(0));
+            this.mealList = mealList;
+            adapter = new CarouselAdapter(context, mealList, this, CarouselAdapter.HOME_FRAGMENT);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -248,12 +267,12 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
 
     @Override
     public void addToFav(String Id, int modeSave) {
-
+        iHomePresenter.getMealById(Id,modeSave);
     }
 
     @Override
     public void removeFromFav(String Id, int modeSave) {
-
+        iHomePresenter.getMealById(Id,modeSave);
     }
 
     @Override

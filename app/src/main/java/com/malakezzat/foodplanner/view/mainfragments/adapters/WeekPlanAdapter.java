@@ -90,9 +90,6 @@ public class WeekPlanAdapter extends RecyclerView.Adapter<WeekPlanAdapter.WeekPl
         } catch (ParseException ex){
             ex.printStackTrace();
         }
-
-
-
     }
 
     @NonNull

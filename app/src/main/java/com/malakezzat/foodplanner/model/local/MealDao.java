@@ -15,6 +15,9 @@ public interface MealDao {
     LiveData<List<MealDB>> getAll();
 
     @Query("SELECT * FROM MealDB")
+    List<MealDB> getAllCheck();
+
+    @Query("SELECT * FROM MealDB")
     List<MealDB> getAllMealsList();
 
     @Query("SELECT * FROM MealDB WHERE idMeal IN (:mealIds)")
@@ -32,7 +35,7 @@ public interface MealDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(MealDB meal);
 
-    @Query("DELETE FROM MealDB") // Replace with your table name
+    @Query("DELETE FROM MealDB")
     void clearTable();
 
     @Delete

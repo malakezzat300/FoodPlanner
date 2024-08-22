@@ -8,6 +8,7 @@ public interface MealLocalDataSource {
  void insertMeal(MealDB mealDB);
  void deleteMeal(MealDB mealDB);
  LiveData<List<MealDB>> getAllStoredMeals();
+ List<MealDB> getAllStoredMealsCheck();
  MealDB getFavMealDB(int id);
  void backupFavMeals();
  void restoreFavMeals();
