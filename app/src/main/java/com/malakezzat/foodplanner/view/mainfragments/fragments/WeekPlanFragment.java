@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import java.util.List;
 
 public class WeekPlanFragment extends Fragment implements IWeekPlanView , OnMealClickListener {
 
+    private static final String TAG = "WeekPlanFragment";
     List<MealDBWeek> mealDBS;
     Context context;
     RecyclerView recyclerView;
@@ -66,6 +68,7 @@ public class WeekPlanFragment extends Fragment implements IWeekPlanView , OnMeal
         recyclerView.setAdapter(recyclerAdapter);
 
         iWeekPlanPresenter.getWeekPlanMeals().observe(getViewLifecycleOwner(), MealDB -> {
+            Log.i(TAG, "onViewCreated: "+ MealDB.get(0).idMeal );
             recyclerAdapter = new WeekPlanAdapter(context, MealDB, this);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(recyclerAdapter);

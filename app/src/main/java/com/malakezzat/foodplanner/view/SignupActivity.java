@@ -176,10 +176,10 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
         return !Character.isLetterOrDigit(c) && !Character.isWhitespace(c);
     }
 
-    public static boolean checkValidation(TextInputLayout InputLayout,String text,int mode){
+    public boolean checkValidation(TextInputLayout InputLayout, String text, int mode){
         if(mode == 1) {
             if (text.isEmpty()) {
-                InputLayout.setHelperText(getSystem().getString(R.string.email_empty));
+                InputLayout.setHelperText(getResources().getString(R.string.email_empty));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else if (!isValidEmail(text)) {
@@ -192,11 +192,11 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
             }
         } else if (mode == 2) {
             if (text.isEmpty()) {
-                InputLayout.setHelperText(getSystem().getString(R.string.password_empty));
+                InputLayout.setHelperText(getResources().getString(R.string.password_empty));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else if (!isValidPassword(text)) {
-                InputLayout.setHelperText(getSystem().getString(R.string.password_format));
+                InputLayout.setHelperText(getResources().getString(R.string.password_format));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else {
@@ -205,11 +205,11 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
             }
         } else if(mode == 3) {
             if (text.isEmpty()) {
-                InputLayout.setHelperText(getSystem().getString(R.string.username_empty));
+                InputLayout.setHelperText(getResources().getString(R.string.username_empty));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else if (text.substring(0,1).matches("^[0-9].*")) {
-                InputLayout.setHelperText(getSystem().getString(R.string.username_start_number));
+                InputLayout.setHelperText(getResources().getString(R.string.username_start_number));
                 InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
                 return true;
             } else {

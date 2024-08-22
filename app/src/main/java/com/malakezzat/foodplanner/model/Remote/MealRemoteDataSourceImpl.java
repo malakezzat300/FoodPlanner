@@ -48,7 +48,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
             @Override
@@ -69,7 +68,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                     if (response.isSuccessful()) {
                         networkCallBack.onSuccessResult(response.body().meals);
                         Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                        //TODO correct the implementation
                     }
                 }
 
@@ -118,7 +116,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().categories);
                     Log.i(TAG, "onResponse: " + response.body().categories.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
             @Override
@@ -137,7 +134,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 
@@ -157,7 +153,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 
@@ -199,7 +194,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 
@@ -220,7 +214,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 
@@ -243,7 +236,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 
@@ -264,7 +256,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 
@@ -285,7 +276,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 
@@ -306,7 +296,6 @@ public class MealRemoteDataSourceImpl implements MealRemoteDataSource {
                 if (response.isSuccessful()) {
                     networkCallBack.onSuccessResult(response.body().meals);
                     Log.i(TAG, "onResponse: " + response.body().meals.get(0).toString());
-                    //TODO correct the implementation
                 }
             }
 

@@ -43,7 +43,7 @@ public class WeekPlanAdapter extends RecyclerView.Adapter<WeekPlanAdapter.WeekPl
     }
 
     private void sortAndFilterMeals() {
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE d-M-yyyy", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE d-M-yyyy", Locale.US);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -1);
         Date yesterday = calendar.getTime();
@@ -77,7 +77,7 @@ public class WeekPlanAdapter extends RecyclerView.Adapter<WeekPlanAdapter.WeekPl
     private void deleteOldMeals() {
         try {
             for (MealDBWeek meal : mealsToDelete) {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE d-M-yyyy", Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE d-M-yyyy", Locale.US);
                 Date mealDate = sdf.parse(meal.dateAndTime);
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.DAY_OF_YEAR, -2);

@@ -1,12 +1,16 @@
 package com.malakezzat.foodplanner.view;
 
+import static android.content.res.Resources.getSystem;
 import static com.malakezzat.foodplanner.view.SignupActivity.EMAIL_MODE;
 import static com.malakezzat.foodplanner.view.SignupActivity.PASSWORD_MODE;
-import static com.malakezzat.foodplanner.view.SignupActivity.checkValidation;
+import static com.malakezzat.foodplanner.view.SignupActivity.isValidEmail;
+import static com.malakezzat.foodplanner.view.SignupActivity.isValidPassword;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -131,6 +135,52 @@ public class LoginActivity extends AppCompatActivity implements ConnectionListen
             }
         });
 
+    }
+
+
+
+    public boolean checkValidation(TextInputLayout InputLayout, String text, int mode){
+        if(mode == 1) {
+            if (text.isEmpty()) {
+                InputLayout.setHelperText(getResources().getString(R.string.email_empty));
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else if (!isValidEmail(text)) {
+                InputLayout.setHelperText(getSystem().getString(R.string.invalid_email));
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else {
+                InputLayout.setHelperText("");
+                return false;
+            }
+        } else if (mode == 2) {
+            if (text.isEmpty()) {
+                InputLayout.setHelperText(getResources().getString(R.string.password_empty));
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else if (!isValidPassword(text)) {
+                InputLayout.setHelperText(getResources().getString(R.string.password_format));
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else {
+                InputLayout.setHelperText("");
+                return false;
+            }
+        } else if(mode == 3) {
+            if (text.isEmpty()) {
+                InputLayout.setHelperText(getResources().getString(R.string.username_empty));
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else if (text.substring(0,1).matches("^[0-9].*")) {
+                InputLayout.setHelperText(getResources().getString(R.string.username_start_number));
+                InputLayout.setHelperTextColor(ColorStateList.valueOf(Color.RED));
+                return true;
+            } else {
+                InputLayout.setHelperText("");
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
