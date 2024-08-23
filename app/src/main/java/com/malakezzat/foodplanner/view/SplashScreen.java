@@ -24,7 +24,7 @@ public class SplashScreen extends AppCompatActivity {
                     startActivity(new Intent(SplashScreen.this, WelcomeActivity.class));
                     finish();
                 }
-            }, 0);  // TODO make it 2000 or 2900
+            }, 2900);  // TODO make it 2000 or 2900
 
             splashLoaded = true;
         } else {
