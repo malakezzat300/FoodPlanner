@@ -34,11 +34,13 @@ import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.UserFragment;
 import com.malakezzat.foodplanner.view.mainfragments.fragments.HomeFragment;
+import com.malakezzat.foodplanner.view.mainfragments.fragments.SearchFragment;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
 
 
 
-public class MainActivity extends AppCompatActivity implements OnItemSelectedListener, ConnectionListener {
+public class MainActivity extends AppCompatActivity implements OnItemSelectedListener, ConnectionListener
+        ,OnDataPass , SendToMain {
 
     private static final String TAG = "MainActivity";
     public static final String MEALS_TITLE = "title";
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     ConstraintLayout constraintLayout;
     TextView guestText;
     IHomeView iHomeView;
+    public static int mode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -378,5 +381,30 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             connectionReceiver = null;
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onDataPass(boolean state) {
+        int CurrentFragment = viewPager.getCurrentItem();
+        FragmentStatePagerAdapter adapter = (FragmentStatePagerAdapter) viewPager.getAdapter();
+        if (adapter != null) {
+            if(CurrentFragment == 0){
+                HomeFragment fragment = (HomeFragment) adapter.instantiateItem(viewPager, CurrentFragment);
+                if (fragment != null) {
+                    fragment.updateData(state,MainActivity.mode);
+                }
+            } else if(CurrentFragment == 1){
+                SearchFragment fragment = (SearchFragment) adapter.instantiateItem(viewPager, CurrentFragment);
+                if (fragment != null) {
+                    fragment.updateData(state);
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void send(int mode) {
+        MainActivity.mode = mode;
     }
 }

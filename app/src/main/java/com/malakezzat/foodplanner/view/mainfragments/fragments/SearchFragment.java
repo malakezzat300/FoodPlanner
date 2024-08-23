@@ -370,5 +370,11 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         iSearchPresenter.getMealById(Id);
     }
 
+    public void updateData(Boolean data) {
+        Log.i("FavTest", "updateData: " + data);
+        recyclerAdapter.updateData(data);
+        Log.d("TargetFragment", "Received data: search " + data);
+    }
+
 
 }

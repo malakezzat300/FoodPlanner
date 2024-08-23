@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Meal;
+import com.malakezzat.foodplanner.view.MainActivity;
 import com.malakezzat.foodplanner.view.MealTypeDialog;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
@@ -37,6 +38,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
     public static final int HOME_FRAGMENT = 0;
     public static final int SEARCH_FRAGMENT = 1;
     FirebaseUser user;
+    int mealClicked;
     public CarouselAdapter(Context context, List<Meal> mealList, OnMealClickListener onMealClickListener, int source) {
         this.context = context;
         this.mealList = mealList;
@@ -59,7 +61,6 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
 
     @Override
     public void onBindViewHolder(@NonNull CarouselViewHolder holder, int position) {
-
         holder.favButton.setVisibility(View.VISIBLE);
         holder.cardTitle.setText(mealList.get(position).strMeal);
         Glide.with(context).load(mealList.get(position).strMealThumb)
@@ -93,7 +94,9 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
 
         if(holder.meal != null) {
             holder.meal.setOnClickListener(v -> {
+                mealClicked = position;
                 if(source == HOME_FRAGMENT) {
+                    MainActivity.mode = 2;
                     onMealClickListener.showMealDetails(mealList.get(position));
                 } else if(source == SEARCH_FRAGMENT){
                     onMealClickListener.getMealById(mealList.get(position).idMeal);
@@ -152,5 +155,10 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
             weekPlanButton = itemView.findViewById(R.id.week_plan_button);
             isFav = false;
         }
+    }
+
+    public void updateData(boolean newData) {
+        mealList.get(mealClicked).isFav = newData;
+        notifyDataSetChanged();
     }
 }

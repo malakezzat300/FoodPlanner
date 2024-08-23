@@ -38,7 +38,10 @@ import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.HomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
+import com.malakezzat.foodplanner.view.MainActivity;
 import com.malakezzat.foodplanner.view.MealTypeDialog;
+import com.malakezzat.foodplanner.view.OnDataPass;
+import com.malakezzat.foodplanner.view.SendToMain;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.CarouselAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
@@ -78,10 +81,18 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
     public final static String MEAL_OF_DAY = "meal";
     public final static String MEAL_OF_DAY_ID = "mealId";
     private final static String TAG ="HomeFragment";
-
+    SendToMain sendToMain;
 
     public HomeFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof SendToMain) {
+            sendToMain = (SendToMain) context;
+        }
     }
 
     @Override
@@ -115,7 +126,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0);
         long savedTime = sharedPreferences.getLong(KEY_SAVED_TIME, 0);
         MealOfDayId = sharedPreferences.getString(MEAL_OF_DAY_ID, "");
-        
+
         if (savedTime == 0) {
             saveCurrentTimeToPreferences();
         }
@@ -140,6 +151,9 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         snapHelper.attachToRecyclerView(recyclerView);
 
         mealOfDayButton.setOnClickListener(v -> {
+            if (sendToMain != null) {
+                sendToMain.send(1);
+            }
             MealDetailsFragment mealDetailsFragment = new MealDetailsFragment(mealOfDay, this);
             mealDetailsFragment.show(getParentFragmentManager(), mealDetailsFragment.getTag());
         });
@@ -321,4 +335,28 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         mealTitle.setText(mealOfDay.strMeal);
         mealCountry.setText(mealArea);
     }
+
+    public void updateData(Boolean data,int mode) {
+        // Handle the passed data
+        mealOfDay.isFav = data;
+        Log.d("TargetFragment", "Received data: home " + data);
+        if(mode == 1 ) {
+            if (mealOfDay.isFav) {
+                favButton.setImageResource(R.drawable.favorite_red);
+            } else {
+                favButton.setImageResource(R.drawable.favorite_border);
+            }
+        } else if (mode == 2){
+            adapter.updateData(data);
+        }
+        MainActivity.mode = 0;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        sendToMain = null;
+    }
+
+
 }

@@ -33,6 +33,7 @@ import com.malakezzat.foodplanner.model.data.IngredientList;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.view.MealTypeDialog;
+import com.malakezzat.foodplanner.view.OnDataPass;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.IngredientsAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
@@ -63,6 +64,7 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
     Boolean isFav = false;
     FirebaseUser user;
     Context context;
+    OnDataPass dataPasser;
     public MealDetailsFragment(Meal meal,OnMealClickListener onMealClickListener) {
         this.meal = meal;
         this.onMealClickListener = onMealClickListener;
@@ -73,6 +75,16 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            dataPasser = (OnDataPass) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+        }
     }
 
     @Override
@@ -165,11 +177,13 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
                     onMealClickListener.removeFromFav(meal);
                     onMealClickListener.removeFromFav(meal.idMeal,2);
                     meal.isFav = false;
+                    dataPasser.onDataPass(meal.isFav);
                 } else {
                     favButton.setImageResource(R.drawable.favorite_red);
                     onMealClickListener.addToFav(meal);
                     onMealClickListener.addToFav(meal.idMeal,1);
                     meal.isFav = true;
+                    dataPasser.onDataPass(meal.isFav);
                 }
             }
         });

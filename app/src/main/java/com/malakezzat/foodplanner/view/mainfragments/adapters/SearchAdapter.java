@@ -2,6 +2,7 @@ package com.malakezzat.foodplanner.view.mainfragments.adapters;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     private OnMealClickListener onMealClickListener;
     private Context context;
     FirebaseUser user;
+    int mealClicked;
     public SearchAdapter(Context context, List<Meal> mealList, OnMealClickListener onMealClickListener) {
         this.context = context;
         this.mealList = mealList;
@@ -84,6 +86,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
         if(holder.meal != null) {
             holder.meal.setOnClickListener(v -> {
+                mealClicked = position;
                 onMealClickListener.getMealById(mealList.get(position).idMeal);
             });
         }
@@ -139,5 +142,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             weekPlanButton = itemView.findViewById(R.id.week_plan_button);
             isFav = false;
         }
+    }
+
+    public void updateData(boolean newData) {
+        Log.i("FavTest", "updateData: " + newData);
+        mealList.get(mealClicked).isFav = newData;
+        notifyDataSetChanged();
     }
 }

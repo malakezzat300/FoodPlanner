@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
 
@@ -100,7 +101,17 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
 
     @Override
     public void onSuccessResult(List<? extends Data> listOfItems) {
+        CountDownLatch latch = new CountDownLatch(1);
+        new Thread(() -> {
+            updateFavMeals();
+            latch.countDown();
+        }).start();
 
+        try {
+            latch.await();  // Wait for the background thread to complete
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Log.i(TAG, "onSuccessResult: " + listOfItems.get(0));
         if(listOfItems.get(0) instanceof Meal){
             List<Meal> meals = (List<Meal>) listOfItems;
@@ -123,6 +134,17 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
 
     @Override
     public void onSuccessResult(List<? extends Data> listOfItems, int saveMode) {
+        CountDownLatch latch = new CountDownLatch(1);
+        new Thread(() -> {
+            updateFavMeals();
+            latch.countDown();
+        }).start();
+
+        try {
+            latch.await();  // Wait for the background thread to complete
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         List<Meal> meals = (List<Meal>) listOfItems;
         meals = checkFavMeals(favMeals,meals);
         iSearchView.getMealById(meals.get(0),saveMode);
@@ -152,25 +174,7 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
         return meals;
     }
 
-
-//    public static List<Meal> checkFavMeals(List<MealDB> favMeals,List<Meal> mealsToCheck){
-//        List<Meal> meals;
-//        if(!favMeals.isEmpty()) {
-//            meals = new ArrayList<>();
-//            for (Meal meal : mealsToCheck) {
-//                for (MealDB favMeal : favMeals) {
-//                    if (favMeal.idMeal.equals(meal.idMeal)) {
-//                        meal.isFav = true;
-//                    }
-//                }
-//                //if(!meals.contains(meal)) {
-//                    meals.add(meal);
-//                //}
-//            }
-//        } else {
-//            meals = mealsToCheck;
-//        }
-//        return meals;
-//    }
-
+    private synchronized void updateFavMeals() {
+        favMeals = mealLocalDataSource.getAllStoredMealsCheck();
+    }
 }

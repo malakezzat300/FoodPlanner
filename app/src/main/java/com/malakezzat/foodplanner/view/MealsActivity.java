@@ -50,7 +50,7 @@ import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListen
 import java.util.ArrayList;
 import java.util.List;
 
-public class MealsActivity extends AppCompatActivity implements ISearchView, OnMealClickListener {
+public class MealsActivity extends AppCompatActivity implements ISearchView, OnMealClickListener ,OnDataPass {
     Intent intent;
     TextView mealsTitle;
     private static final String TAG = "MealsActivity";
@@ -217,5 +217,10 @@ public class MealsActivity extends AppCompatActivity implements ISearchView, OnM
     @Override
     public void getMealById(String Id) {
         iSearchPresenter.getMealById(Id);
+    }
+
+    @Override
+    public void onDataPass(boolean state) {
+        recyclerAdapter.updateData(state);
     }
 }
