@@ -69,6 +69,7 @@ public class MealDBWeek {
     public boolean isFav;
     public String day;
     public String date;
+    public String mealType;
 
     public Meal toMeal() {
         Meal meal = new Meal();
@@ -130,6 +131,7 @@ public class MealDBWeek {
         meal.isFav = this.isFav;
         meal.date = this.date;
         meal.day = this.day;
+        meal.mealType = this.mealType;
 
         return meal;
     }

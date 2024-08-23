@@ -38,6 +38,7 @@ import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.presenter.HomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
+import com.malakezzat.foodplanner.view.MealTypeDialog;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.CarouselAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IHomeView;
@@ -182,10 +183,13 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
                                 selectedDate.set(year, monthOfYear, dayOfMonth);
                                 String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(selectedDate.getTime());
                                 String formattedDate = String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                                mealOfDay.date = formattedDate;
-                                mealOfDay.day = dayOfWeek;
-                                mealOfDay.dateAndTime = dayOfWeek + " " + formattedDate;
-                                iHomePresenter.addToWeekPlan(mealOfDay);
+                                MealTypeDialog.showMealSelectionDialog(context, selectedItem -> {
+                                    mealOfDay.date = formattedDate;
+                                    mealOfDay.day = dayOfWeek;
+                                    mealOfDay.dateAndTime = dayOfWeek + " " + formattedDate;
+                                    mealOfDay.mealType = selectedItem;
+                                    iHomePresenter.addToWeekPlan(mealOfDay);
+                                });
                             }
                         }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());

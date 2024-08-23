@@ -9,6 +9,7 @@
     <color name="secondary">#A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
     <color name="secondary_transparent">#99A3B2F2</color> <!-- Slightly Lighter Calm Blue -->
     <color name="background">#3C3C3C</color> <!-- Dark Background -->
+    <color name="dialog">#3C3C3C</color> <!-- White Background -->
     <color name="surface">#2E2E2E</color> <!-- Darker Surface -->
     <color name="on_primary">#FFFFFF</color> <!-- White Text on Primary -->
     <color name="on_secondary">#CAD9FF</color> <!-- Deep Teal Text on Secondary -->

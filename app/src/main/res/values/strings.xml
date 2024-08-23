@@ -62,5 +62,9 @@
     <string name="username_start_number">Username Shouldn\'t start with Number</string>
     <string name="google_failed">Google sign in failed. Please try again.</string>
     <string name="auth_failed">Authentication Failed.</string>
+    <string name="select_meal_type">Select Meal Type</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="added_to_week_plan">Added to Week Plan</string>
 
 </resources>

@@ -102,7 +102,7 @@ public class WeekPlanAdapter extends RecyclerView.Adapter<WeekPlanAdapter.WeekPl
     @Override
     public void onBindViewHolder(@NonNull WeekPlanAdapter.WeekPlanHolder holder, int position) {
         MealDBWeek currentMeal = meals.get(position);
-
+        holder.mealType.setText(currentMeal.mealType);
         holder.cardTitle.setText(currentMeal.strMeal);
         Glide.with(context).load(currentMeal.strMealThumb)
                 .apply(new RequestOptions().override(200, 200))
@@ -117,12 +117,11 @@ public class WeekPlanAdapter extends RecyclerView.Adapter<WeekPlanAdapter.WeekPl
             onMealClickListener.showMealDetails(currentMeal.toMeal());
         });
 
-        // Show date only if it's the first occurrence for the day
         if (position == 0 || !currentMeal.dateAndTime.equals(meals.get(position - 1).dateAndTime)) {
             holder.dateAndTime.setText(currentMeal.dateAndTime);
             holder.dateAndTime.setVisibility(View.VISIBLE);
         } else {
-            holder.dateAndTime.setVisibility(View.GONE);
+            holder.dateAndTime.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -139,7 +138,7 @@ public class WeekPlanAdapter extends RecyclerView.Adapter<WeekPlanAdapter.WeekPl
 
     public static class WeekPlanHolder extends RecyclerView.ViewHolder {
         ImageView cardImage, favButton;
-        TextView cardTitle, dateAndTime;
+        TextView cardTitle, dateAndTime,mealType;
         ConstraintLayout meal;
 
         public WeekPlanHolder(@NonNull View itemView) {
@@ -149,6 +148,7 @@ public class WeekPlanAdapter extends RecyclerView.Adapter<WeekPlanAdapter.WeekPl
             favButton = itemView.findViewById(R.id.fav_button);
             meal = itemView.findViewById(R.id.meal_material);
             dateAndTime = itemView.findViewById(R.id.date_and_time);
+            mealType = itemView.findViewById(R.id.type);
         }
     }
 }

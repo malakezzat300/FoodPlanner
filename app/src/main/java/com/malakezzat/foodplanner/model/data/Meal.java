@@ -71,6 +71,7 @@ public class Meal implements Data, Parcelable {
     public boolean isFav;
     public String date;
     public String day;
+    public String mealType;
 
     @NonNull
     @Override
@@ -137,6 +138,7 @@ public class Meal implements Data, Parcelable {
                 ", dateAndTime=" + dateAndTime +
                 ", date=" + date +
                 ", day=" + day +
+                ", mealType=" + mealType +
                 '}';
     }
 
@@ -208,6 +210,7 @@ public class Meal implements Data, Parcelable {
         dest.writeByte((byte) (isFav ? 1 : 0));
         dest.writeString(date);
         dest.writeString(day);
+        dest.writeString(mealType);
     }
     public Meal() {
     }
@@ -274,6 +277,7 @@ public class Meal implements Data, Parcelable {
         isFav = in.readInt() == 1;
         date = in.readString();
         day = in.readString();
+        mealType = in.readString();
     }
 
     public static final Creator<Meal> CREATOR = new Creator<Meal>() {
@@ -348,6 +352,7 @@ public class Meal implements Data, Parcelable {
         mealDB.isFav = this.isFav;
         mealDB.date = this.date;
         mealDB.day = this.day;
+        mealDB.mealType = this.mealType;
 
         return mealDB;
     }
@@ -412,6 +417,7 @@ public class Meal implements Data, Parcelable {
         mealDB.isFav = this.isFav;
         mealDB.date = this.date;
         mealDB.day = this.day;
+        mealDB.mealType = this.mealType;
 
         return mealDB;
     }

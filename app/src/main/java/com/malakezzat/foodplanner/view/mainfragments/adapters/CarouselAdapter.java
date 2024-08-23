@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Meal;
+import com.malakezzat.foodplanner.view.MealTypeDialog;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.text.SimpleDateFormat;
@@ -115,10 +116,13 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
                                 selectedDate.set(year, monthOfYear, dayOfMonth);
                                 String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(selectedDate.getTime());
                                 String formattedDate = String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
+                                MealTypeDialog.showMealSelectionDialog(context, selectedItem -> {
                                 mealList.get(position).date = formattedDate;
                                 mealList.get(position).day = dayOfWeek;
                                 mealList.get(position).dateAndTime = dayOfWeek + " " + formattedDate;
+                                mealList.get(position).mealType = selectedItem;
                                 onMealClickListener.addToWeekPlan(mealList.get(position));
+                                });
                             }
                         }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());

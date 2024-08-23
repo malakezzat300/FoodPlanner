@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.File;
 import java.util.Objects;
 
-@Database(entities = {MealDB.class, MealDBWeek.class}, version = 4)
+@Database(entities = {MealDB.class, MealDBWeek.class}, version = 5)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance = null;
     public abstract MealDao getMealDAO();

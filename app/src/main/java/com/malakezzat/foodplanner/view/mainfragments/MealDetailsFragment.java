@@ -32,6 +32,7 @@ import com.malakezzat.foodplanner.model.data.Ingredient;
 import com.malakezzat.foodplanner.model.data.IngredientList;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.MealDB;
+import com.malakezzat.foodplanner.view.MealTypeDialog;
 import com.malakezzat.foodplanner.view.mainfragments.adapters.IngredientsAdapter;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
@@ -131,9 +132,14 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
                                 selectedDate.set(year, monthOfYear, dayOfMonth);
                                 String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(selectedDate.getTime());
                                 String formattedDate = String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                                meal.date = formattedDate;
-                                meal.day = dayOfWeek;
-                                onMealClickListener.addToWeekPlan(meal);
+
+                                MealTypeDialog.showMealSelectionDialog(context, selectedItem -> {
+                                    meal.date = formattedDate;
+                                    meal.day = dayOfWeek;
+                                    meal.dateAndTime = dayOfWeek + " " + formattedDate;
+                                    meal.mealType = selectedItem;
+                                    onMealClickListener.addToWeekPlan(meal);
+                                });
                             }
                         }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());

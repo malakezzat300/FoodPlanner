@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.model.local.MealDBWeek;
+import com.malakezzat.foodplanner.view.MealTypeDialog;
 import com.malakezzat.foodplanner.view.mainfragments.listeners.OnMealClickListener;
 
 import java.text.ParseException;
@@ -78,10 +79,13 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder> {
                             selectedDate.set(year, monthOfYear, dayOfMonth);
                             String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(selectedDate.getTime());
                             String formattedDate = String.format("%02d", dayOfMonth) + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + year;
-                            meals.get(position).date = formattedDate;
-                            meals.get(position).day = dayOfWeek;
-                            meals.get(position).dateAndTime = dayOfWeek + " " + formattedDate;
-                            onMealClickListener.addToWeekPlan(meals.get(position).toMeal());
+                            MealTypeDialog.showMealSelectionDialog(context, selectedItem -> {
+                                meals.get(position).date = formattedDate;
+                                meals.get(position).day = dayOfWeek;
+                                meals.get(position).dateAndTime = dayOfWeek + " " + formattedDate;
+                                meals.get(position).mealType = selectedItem;
+                                onMealClickListener.addToWeekPlan(meals.get(position).toMeal());
+                            });
                         }
                     }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
