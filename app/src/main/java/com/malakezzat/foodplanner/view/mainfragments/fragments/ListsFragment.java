@@ -25,6 +25,7 @@ import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Meal;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.ListsPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IListsPresenter;
 import com.malakezzat.foodplanner.view.OnItemSelectedListener;
@@ -77,7 +78,7 @@ public class ListsFragment extends Fragment implements IListsView , OnListsListe
         categoriesChip = view.findViewById(R.id.categories_list);
         recyclerView = view.findViewById(R.id.lists_recycler_view);
         context = view.getContext();
-        iListsPresenter = new ListsPresenter(this,new MealRemoteDataSourceImpl());
+        iListsPresenter = new ListsPresenter(this,new MealRepositoryImpl(new MealRemoteDataSourceImpl()));
         countries = new ArrayList<>();
         categories = new ArrayList<>();
         viewPager = requireActivity().findViewById(R.id.viewPager);

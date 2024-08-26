@@ -32,6 +32,7 @@ import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.SearchPresenter;
 import com.malakezzat.foodplanner.presenter.interview.ISearchPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
@@ -99,8 +100,8 @@ public class SearchFragment extends Fragment implements ISearchView, OnMealClick
         autoCompleteTextView= view.findViewById(R.id.auto_complete_edit_text);
         context = view.getContext();
         iSearchPresenter = new SearchPresenter(this
-                ,new MealRemoteDataSourceImpl()
-                , new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
+                ,new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(context))
+                ,new MealRemoteDataSourceImpl()));
         countryItemList = new ArrayList<>();
         ingredientItemList = new ArrayList<>();
         categoryItemList = new ArrayList<>();

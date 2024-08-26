@@ -7,6 +7,7 @@ import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSource;
 import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
+import com.malakezzat.foodplanner.model.repository.MealRepository;
 import com.malakezzat.foodplanner.presenter.interview.IListsPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IListsView;
 
@@ -16,22 +17,21 @@ public class ListsPresenter implements NetworkCallBack,IListsPresenter {
 
     private static final String TAG = "ListsPresenter";
     IListsView iListsView;
-    MealRemoteDataSource mealRemoteDataSource;
-
-    public ListsPresenter(IListsView iListsView, MealRemoteDataSource mealRemoteDataSource) {
+    MealRepository mealRepository;
+    public ListsPresenter(IListsView iListsView, MealRepository mealRepository) {
         this.iListsView = iListsView;
-        this.mealRemoteDataSource = mealRemoteDataSource;
+        this.mealRepository = mealRepository;
 
     }
 
     @Override
     public void getCategoriesList() {
-        mealRemoteDataSource.getCategories(this);
+        mealRepository.getCategories(this);
     }
 
     @Override
     public void getCountriesList() {
-        mealRemoteDataSource.getCountriesList(this);
+        mealRepository.getCountriesList(this);
     }
 
     @Override

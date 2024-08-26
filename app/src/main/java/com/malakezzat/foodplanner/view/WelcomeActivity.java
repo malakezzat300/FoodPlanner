@@ -3,7 +3,6 @@ package com.malakezzat.foodplanner.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,10 +28,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.UserPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
-
-import java.util.Locale;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionListener;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionReceiver;
 
 public class WelcomeActivity extends AppCompatActivity implements ConnectionListener {
     private Button signupWithEmail, loginWithEmail,guest;
@@ -127,8 +127,7 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
                     if (task.isSuccessful()) {
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = mAuth.getCurrentUser();
-                        iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
-                        updateUI(user);
+                        iUserPresenter = new UserPresenter(new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext()))));                        updateUI(user);
                         iUserPresenter.restoreUserData();
                     } else {
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -168,8 +167,7 @@ public class WelcomeActivity extends AppCompatActivity implements ConnectionList
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
-        }
+            iUserPresenter = new UserPresenter(new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext()))));        }
         updateUI(currentUser);
     }
 

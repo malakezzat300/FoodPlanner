@@ -32,6 +32,8 @@ import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.data.Category;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionListener;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionReceiver;
 import com.malakezzat.foodplanner.view.mainfragments.UserFragment;
 import com.malakezzat.foodplanner.view.mainfragments.fragments.HomeFragment;
 import com.malakezzat.foodplanner.view.mainfragments.fragments.SearchFragment;

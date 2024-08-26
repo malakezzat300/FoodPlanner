@@ -36,6 +36,7 @@ import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.HomePresenter;
 import com.malakezzat.foodplanner.presenter.interview.IHomePresenter;
 import com.malakezzat.foodplanner.view.MainActivity;
@@ -122,7 +123,7 @@ public class HomeFragment extends Fragment implements IHomeView, OnMealClickList
         mealList = new ArrayList<>();
         viewPager = requireActivity().findViewById(R.id.viewPager);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        iHomePresenter = new HomePresenter(this, new MealRemoteDataSourceImpl(), new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
+        iHomePresenter = new HomePresenter(this,new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(context)),new MealRemoteDataSourceImpl()));
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0);
         long savedTime = sharedPreferences.getLong(KEY_SAVED_TIME, 0);
         MealOfDayId = sharedPreferences.getString(MEAL_OF_DAY_ID, "");

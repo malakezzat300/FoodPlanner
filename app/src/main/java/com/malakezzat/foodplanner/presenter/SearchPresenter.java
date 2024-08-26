@@ -8,6 +8,7 @@ import com.malakezzat.foodplanner.model.data.Data;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSource;
+import com.malakezzat.foodplanner.model.repository.MealRepository;
 import com.malakezzat.foodplanner.presenter.interview.ISearchPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.ISearchView;
 
@@ -21,82 +22,73 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
 
     private static final String TAG = "SearchPresenter";
     ISearchView iSearchView;
-    MealRemoteDataSource mealRemoteDataSource;
-    MealLocalDataSource mealLocalDataSource;
+    MealRepository mealRepository;
     List<Meal> mealList;
     List<MealDB> favMeals;
-    public SearchPresenter(ISearchView iSearchView, MealRemoteDataSource mealRemoteDataSource, MealLocalDataSource mealLocalDataSource) {
+    public SearchPresenter(ISearchView iSearchView,MealRepository mealRepository) {
         mealList = new ArrayList<>();
         this.iSearchView = iSearchView;
-        this.mealRemoteDataSource = mealRemoteDataSource;
-        this.mealLocalDataSource = mealLocalDataSource;
+        this.mealRepository = mealRepository;
         new Thread(()->{
-            favMeals = mealLocalDataSource.getAllStoredMealsCheck();
+            favMeals = mealRepository.getAllStoredMealsCheck();
         }).start();
-    }
-
-    public SearchPresenter(ISearchView iSearchView, MealLocalDataSource mealLocalDataSource) {
-        mealList = new ArrayList<>();
-        this.iSearchView = iSearchView;
-        this.mealLocalDataSource = mealLocalDataSource;
-
     }
 
     @Override
     public void getCountryList() {
-        mealRemoteDataSource.getCountriesList(this);
+        mealRepository.getCountriesList(this);
     }
 
     @Override
     public void getIngredientList() {
-        mealRemoteDataSource.getIngredientsList(this);
+        mealRepository.getIngredientsList(this);
     }
 
     @Override
     public void getCategoryList() {
-        mealRemoteDataSource.getCategoriesList(this);
+        mealRepository.getCategoriesList(this);
     }
 
     @Override
     public void searchByCountry(String country) {
-        mealRemoteDataSource.filterByCountry(country,this);
+        mealRepository.filterByCountry(country,this);
     }
 
     @Override
     public void searchByIngredient(String ingredient) {
-        mealRemoteDataSource.filterByIngredient(ingredient,this);
+        mealRepository.filterByIngredient(ingredient,this);
     }
 
     @Override
     public void searchByCategory(String category) {
-        mealRemoteDataSource.filterByCategory(category,this);
+        mealRepository.filterByCategory(category,this);
     }
 
     @Override
     public void addToFav(Meal meal) {
         meal.isFav = true;
-        mealLocalDataSource.insertMeal(meal.toMealDB());
+        mealRepository.insertMeal(meal.toMealDB());
     }
 
     @Override
     public void removeFromFav(Meal meal) {
         meal.isFav = false;
-        mealLocalDataSource.deleteMeal(meal.toMealDB());
+        mealRepository.deleteMeal(meal.toMealDB());
     }
 
     @Override
     public void addToWeekPlan(Meal meal) {
-        mealLocalDataSource.insertWeekMeal(meal.toMealDBWeek());
+        mealRepository.insertWeekMeal(meal.toMealDBWeek());
     }
 
     @Override
     public void getMealById(String id) {
-        mealRemoteDataSource.searchById(Integer.parseInt(id),this,0);
+        mealRepository.searchById(Integer.parseInt(id),this,0);
     }
 
     @Override
     public void getMealById(String id, int saveMode) {
-        mealRemoteDataSource.searchById(Integer.parseInt(id),this,saveMode);
+        mealRepository.searchById(Integer.parseInt(id),this,saveMode);
     }
 
     @Override
@@ -175,6 +167,6 @@ public class SearchPresenter implements NetworkCallBack, ISearchPresenter {
     }
 
     private synchronized void updateFavMeals() {
-        favMeals = mealLocalDataSource.getAllStoredMealsCheck();
+        favMeals = mealRepository.getAllStoredMealsCheck();
     }
 }

@@ -28,18 +28,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.UserPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
-import com.malakezzat.foodplanner.view.ConnectionListener;
-import com.malakezzat.foodplanner.view.ConnectionReceiver;
-import com.malakezzat.foodplanner.view.SignupActivity;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionListener;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionReceiver;
 import com.malakezzat.foodplanner.view.WelcomeActivity;
 
 public class UserFragment extends BottomSheetDialogFragment  implements ConnectionListener {
@@ -95,8 +94,7 @@ public class UserFragment extends BottomSheetDialogFragment  implements Connecti
             isConnected = true;
         }
 
-        iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
-
+        iUserPresenter = new UserPresenter(new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(context))));
         if(user != null) {
             username.setText(user.getDisplayName());
             email.setText(user.getEmail());

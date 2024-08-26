@@ -39,6 +39,7 @@ import com.malakezzat.foodplanner.model.Remote.MealRemoteDataSourceImpl;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.SearchPresenter;
 import com.malakezzat.foodplanner.presenter.interview.ISearchPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
@@ -74,8 +75,8 @@ public class MealsActivity extends AppCompatActivity implements ISearchView, OnM
         context = getApplicationContext();
         mealsTitle = findViewById(R.id.title_meals);
         iSearchPresenter = new SearchPresenter(this
-                ,new MealRemoteDataSourceImpl()
-                , new MealLocalDataSourceImpl(AppDatabase.getInstance(this)));
+                ,new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(this))
+                ,new MealRemoteDataSourceImpl()));
         dateTime = "Today 1-1-2000";
         dataType = intent.getIntExtra(DATA_TYPE,0);
 

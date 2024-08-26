@@ -18,6 +18,7 @@ import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.FavPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IFavPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
@@ -61,7 +62,7 @@ public class FavoriteFragment extends Fragment implements IFavView, OnMealClickL
         mealDBS = new ArrayList<>();
         recyclerView = view.findViewById(R.id.fav_recycler_view);
         layoutManager = new LinearLayoutManager(context);
-        iFavPresenter = new FavPresenter(this,new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
+        iFavPresenter = new FavPresenter(this,new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(context))));
         recyclerView.setLayoutManager(layoutManager);
         recyclerAdapter = new FavAdapter(context,mealDBS,this);
         recyclerView.setAdapter(recyclerAdapter);

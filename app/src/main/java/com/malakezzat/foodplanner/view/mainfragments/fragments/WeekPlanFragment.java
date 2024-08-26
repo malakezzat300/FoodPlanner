@@ -19,6 +19,7 @@ import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
 import com.malakezzat.foodplanner.model.local.MealDBWeek;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.WeekPlanPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IWeekPlanPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.MealDetailsFragment;
@@ -62,7 +63,7 @@ public class WeekPlanFragment extends Fragment implements IWeekPlanView , OnMeal
         mealDBS = new ArrayList<>();
         recyclerView = view.findViewById(R.id.week_plan_recycler);
         layoutManager = new LinearLayoutManager(context);
-        iWeekPlanPresenter = new WeekPlanPresenter(this,new MealLocalDataSourceImpl(AppDatabase.getInstance(context)));
+        iWeekPlanPresenter = new WeekPlanPresenter(this,new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(context))));
         recyclerView.setLayoutManager(layoutManager);
         recyclerAdapter = new WeekPlanAdapter(context,mealDBS,this);
         recyclerView.setAdapter(recyclerAdapter);

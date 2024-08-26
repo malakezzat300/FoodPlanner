@@ -1,12 +1,9 @@
 package com.malakezzat.foodplanner.view;
 
-import static android.content.res.Resources.getSystem;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -30,10 +27,13 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.UserPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionListener;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionReceiver;
 
-public class SignupActivity extends AppCompatActivity implements ConnectionListener{
+public class SignupActivity extends AppCompatActivity implements ConnectionListener {
 
     private TextInputLayout userInputLayout,emailInputLayout, passwordInputLayout;
     private TextInputEditText inputUser,inputEmail, inputPassword;
@@ -107,8 +107,7 @@ public class SignupActivity extends AppCompatActivity implements ConnectionListe
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(SignupActivity.this, getString(R.string.signup_successful), Toast.LENGTH_SHORT).show();
-                                                    iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
-                                                    iUserPresenter.restoreUserData();
+                                                    iUserPresenter = new UserPresenter(new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext()))));                                                    iUserPresenter.restoreUserData();
                                                 }
                                             }
                                         });

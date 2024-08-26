@@ -32,8 +32,6 @@ public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListsViewHol
     public static final int COUNTRIES = 1;
     public static final int CATEGORIES = 2;
     private int source;
-    private FragmentTransaction fragmentTransaction;
-
 
     public ListsAdapter(Context context , List<? extends Data> items
             , OnListsListener onListsListener, FragmentTransaction fragmentTransaction) {

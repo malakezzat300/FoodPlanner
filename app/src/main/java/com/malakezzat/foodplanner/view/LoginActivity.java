@@ -35,8 +35,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.malakezzat.foodplanner.R;
 import com.malakezzat.foodplanner.model.local.AppDatabase;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSourceImpl;
+import com.malakezzat.foodplanner.model.repository.MealRepositoryImpl;
 import com.malakezzat.foodplanner.presenter.UserPresenter;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionListener;
+import com.malakezzat.foodplanner.view.connectionreceiver.ConnectionReceiver;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionListener {
 
@@ -105,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionListen
                                     FirebaseUser currentUser = auth.getCurrentUser();
                                     intent.putExtra(USER, currentUser.getDisplayName());
                                     startActivity(intent);
-                                    iUserPresenter = new UserPresenter(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext())));
+                                    iUserPresenter = new UserPresenter(new MealRepositoryImpl(new MealLocalDataSourceImpl(AppDatabase.getInstance(getApplicationContext()))));
                                     iUserPresenter.restoreUserData();
                                 } else {
                                     progressBar.setVisibility(View.GONE);

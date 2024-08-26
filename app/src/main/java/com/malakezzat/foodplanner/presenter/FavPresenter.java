@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.malakezzat.foodplanner.model.data.Meal;
 import com.malakezzat.foodplanner.model.local.MealDB;
 import com.malakezzat.foodplanner.model.local.MealLocalDataSource;
+import com.malakezzat.foodplanner.model.repository.MealRepository;
 import com.malakezzat.foodplanner.presenter.interview.IFavPresenter;
 import com.malakezzat.foodplanner.view.mainfragments.interpresenter.IFavView;
 
@@ -16,29 +17,29 @@ import java.util.List;
 public class FavPresenter implements IFavPresenter {
     private static final String TAG = "FavPresenter";
     IFavView iFavView;
-    MealLocalDataSource mealLocalDataSource;
+    MealRepository mealRepository;
     List<Meal> mealList;
-    public FavPresenter(IFavView iFavView, MealLocalDataSource mealLocalDataSource) {
+    public FavPresenter(IFavView iFavView, MealRepository mealRepository) {
         mealList = new ArrayList<>();
         this.iFavView = iFavView;
-        this.mealLocalDataSource = mealLocalDataSource;
+        this.mealRepository = mealRepository;
     }
 
     @Override
     public LiveData<List<MealDB>> getStoredMeals() {
         Log.i(TAG, "getStoredMeals: ");
-        return mealLocalDataSource.getAllStoredMeals();
+        return mealRepository.getAllStoredMeals();
     }
 
     @Override
     public void addToWeekPlan(MealDB mealDB) {
-        mealLocalDataSource.insertWeekMeal(mealDB.toMeal().toMealDBWeek());
+        mealRepository.insertWeekMeal(mealDB.toMeal().toMealDBWeek());
     }
 
 
     @Override
     public void removeFromFav(MealDB mealDB) {
-        mealLocalDataSource.deleteMeal(mealDB);
+        mealRepository.deleteMeal(mealDB);
     }
 
 

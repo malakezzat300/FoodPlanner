@@ -61,7 +61,6 @@ public class MealDetailsFragment extends BottomSheetDialogFragment {
     GridLayoutManager gridLayoutManager;
     List<Ingredient> ingredients;
     ConstraintLayout youtubePlayerConstraintlayout;
-    Boolean isFav = false;
     FirebaseUser user;
     Context context;
     OnDataPass dataPasser;

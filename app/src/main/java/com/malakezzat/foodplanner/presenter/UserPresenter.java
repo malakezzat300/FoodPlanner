@@ -1,24 +1,25 @@
 package com.malakezzat.foodplanner.presenter;
 
 import com.malakezzat.foodplanner.model.local.MealLocalDataSource;
+import com.malakezzat.foodplanner.model.repository.MealRepository;
 import com.malakezzat.foodplanner.presenter.interview.IUserPresenter;
 
 public class UserPresenter implements IUserPresenter {
 
-    MealLocalDataSource mealLocalDataSource;
-    public UserPresenter(MealLocalDataSource mealLocalDataSource){
-        this.mealLocalDataSource = mealLocalDataSource;
+    MealRepository mealRepository;
+    public UserPresenter(MealRepository mealRepository){
+        this.mealRepository = mealRepository;
     }
 
     @Override
     public void backupUserData() {
-        mealLocalDataSource.backupFavMeals();
-        mealLocalDataSource.backupWeekPlan();
+        mealRepository.backupFavMeals();
+        mealRepository.backupWeekPlan();
     }
 
     @Override
     public void restoreUserData() {
-        mealLocalDataSource.restoreFavMeals();
-        mealLocalDataSource.restoreWeekPlan();
+        mealRepository.restoreFavMeals();
+        mealRepository.restoreWeekPlan();
     }
 }
