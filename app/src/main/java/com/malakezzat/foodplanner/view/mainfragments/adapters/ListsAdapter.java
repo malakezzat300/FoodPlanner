@@ -48,7 +48,6 @@ public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListsViewHol
             }
         }
         this.onListsListener = onListsListener;
-        this.fragmentTransaction = fragmentTransaction;
     }
 
 
